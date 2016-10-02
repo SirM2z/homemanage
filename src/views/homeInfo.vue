@@ -156,7 +156,7 @@
                 </tab>
                 <tab-group header="密码管理">
                     <tab header="租客密码管理">
-                        <div v-if="0" class="no-password">
+                        <div class="no-password">
                             <div class="no-password-btn">添加租客密码</div>
                         </div>
                         <table class="table table-striped rent-pass-manage">
@@ -181,34 +181,50 @@
                             <tr>
                                 <td>001</td>
                                 <td>备用密码001</td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td>002</td>
                                 <td>备用密码001</td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td>003</td>
                                 <td>备用密码001</td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr class="no-set">
                                 <td>004</td>
                                 <td>无</td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr class="no-set">
                                 <td>005</td>
                                 <td>无</td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td>006</td>
                                 <td>备用密码001</td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td>007</td>
                                 <td>备用密码001</td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td>008</td>
                                 <td>备用密码001</td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </table>
                         <div class="page">
@@ -288,7 +304,6 @@
     export default {
         data: function() {
             return {
-
             }
         },
         ready: function() {
