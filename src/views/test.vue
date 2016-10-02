@@ -1,23 +1,45 @@
-<style scoped>
-.modal-ne{background: #fff;height: 300px;width: 300px;padding: 10px;box-shadow: 0 0 10px #ccc; border-radius: 5px;}
-    h1{
+<style>
+    /*.modal-ne {
+        background: #fff;
+        height: 300px;
+        width: 300px;
+        padding: 10px;
+        box-shadow: 0 0 10px #ccc;
+        border-radius: 5px;
+    }
+    
+    h1 {
         color: #28a7e1;
         text-align: center;
         font-size: 25px;
         font-weight: bold;
         margin-top: 100px;
     }
-    h2{
+    
+    h2 {
         text-align: center;
         font-size: 20px;
         margin-top: 50px;
     }
-    img{
+    
+    img {
         width: 150px;
+    }*/
+    
+    .personal-box {
+        padding: 50px 250px 20px;
+    }
+    
+    .personal-box button {
+        margin-right: 10px;
+    }
+    
+    .personal-info .infos {
+        margin-bottom: 30px;
     }
 </style>
 <template>
-<div style="height: 1200px;">
+    <!--<div style="height: 1200px;">
     <nav-list></nav-list>
     <p><a href="#" @click="showModal">showModal</a></p>
     <p><a href="#" @click="showLoadingFun">showLoading</a></p>
@@ -39,7 +61,40 @@
         {{ 3731700153 |  NumberSeparator }}
     </h1>
     <h2 v-time></h2>
-</div>
+</div>-->
+    <div class="personal-box">
+        <div class="row info-head">
+            <div class="col-md-8">
+                <h1 class="head-title fl">
+                    个人中心
+                </h1>
+            </div>
+        </div>
+        <div class="personal-info">
+            <div class="infos">
+                <label for="name" class="">姓　　名：</label>
+                <input type="text" class="" value="张伟" />
+            </div>
+            <div class="infos">
+                <label class="">个人照片：</label>
+                <img src="../images/default.png" class="img-circle" />
+                <input type="file" accept="image/*" />
+            </div>
+            <div class="infos">
+                <div>
+                    <label class="">登录密码：</label>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-link">修改密码</button>
+                    <button type="button" class="btn btn-link">忘记密码？</button>
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">保存</button>
+                <button type="submit" class="btn btn-default">取消</button>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
     import navList from '../components/comon/navList.vue'

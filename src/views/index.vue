@@ -110,10 +110,11 @@
             <div class="fc-info"></div>
         </div>
     </div>
+    <foot></foot>
 </template>
 <script>
     import navList from '../components/comon/navList.vue'
-
+    import foot from '../components/comon/foot.vue'
     export default {
         data: function() {
             return {
@@ -124,7 +125,8 @@
 
         },
         components: {
-            navList
+            navList,
+            foot
         },
         beforeDestroy: function() {
 
