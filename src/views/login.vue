@@ -1,15 +1,13 @@
 <style>
     .login-box{
-        width: 100%;
-        height: 100%;
-        position: relative;
     }
     .login-box .login-modal{
         position: absolute;
         width: 520px;
         height: 530px;
-        top: 180px;
-        margin: 100px auto;
+        top: 50%;
+        left: 50%;
+        margin: -265px 0 0 -260px;
         background-color: #f5f9fc;
         border-radius: 10px;
         z-index: 100;
