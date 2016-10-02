@@ -1,0 +1,15 @@
+
+.fl{
+    float: left;
+    display: inline-block;
+}
+.fr{
+    float: right;
+    display: inline-block;
+}
+.blue{
+    color: #0275d8;
+}
+.home_red{
+    color: #d9736a;
+}
