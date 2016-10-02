@@ -43,8 +43,6 @@
 		font-size: 14px;
 		line-height: 1.42857143;
 		color: #555;
-		background-color: #fff;
-		background-image: none;
 		border: 1px solid #ccc;
 		border-radius: 4px;
 		-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
@@ -52,6 +50,26 @@
 		-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
 		-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 		transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+		background: #fff url("../../images/search.png") 95% center no-repeat;
+		padding-right: 40px;
+	}
+	.nav-box .personal-list .dropdown-toggle{
+		background: url("../../images/tx.png") center left no-repeat;
+		padding-left: 40px;
+	}
+	.nav-box .personal-center{
+		background: url("../../images/personal.png") center left no-repeat;
+		padding-left: 40px;
+	}
+	.nav-box .sign-out{
+		background: url("../../images/signOut.png") center left no-repeat;
+		padding-left: 40px;
+	}
+	.nav-box .dropdown-menu{
+		padding: 15px 20px;
+	}
+	.nav-box .dropdown-menu>li:first-child{
+		padding-bottom: 10px;
 	}
 </style>
 <template>
@@ -64,9 +82,9 @@
 			<li slot="right" class="nav-input">
 				<input type="text" placeholder="输入要搜索的关键词">
 			</li>
-			<dropdown slot="right" text="张伟">
-				<li><a href="link">个人中心</a></li>
-				<li><a href="link">退出登录</a></li>
+			<dropdown class="personal-list" slot="right" text="张伟">
+				<li><a class="personal-center" href="link">个人中心</a></li>
+				<li><a class="sign-out" href="link">退出登录</a></li>
 			</dropdown>
 		</navbar>
 	</div>

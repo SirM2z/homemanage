@@ -45,9 +45,31 @@
         height: 50px;
         line-height: 50px;
         text-align: center;
-        background-color: #f5f9fc;
         border-radius: 2px;
         color: #0275d8;
+		background: #f5f9fc url("../images/addPass.png") 15px no-repeat;
+        padding-left: 28px;
+    }
+    .home-box .info-tab .rent-pass-manage .rent-password-btn{
+        padding-left: 22px;
+    }
+    .home-box .info-tab .rent-pass-manage .ice-password{
+		background: url("../images/icePass.png") center left no-repeat;
+    }
+    .home-box .info-tab .rent-pass-manage .change-password{
+		background: url("../images/changePass.png") center left no-repeat;
+    }
+    .home-box .info-tab .rent-pass-manage .delete-password{
+		background: url("../images/deletePass.png") center left no-repeat;
+    }
+    .home-box .info-tab .rent-pass-manage .solve-password{
+		background: url("../images/solvePass.png") center left no-repeat;
+    }
+    .home-box .info-tab .rent-pass-manage .reset-password{
+		background: url("../images/resetPass.png") center left no-repeat;
+    }
+    .home-box .info-tab .rent-pass-manage .no-use{
+        color: #b3d5f3;
     }
     .home-box .info-tab .ready-pass .no-set{
         color: #9f9f9f;
@@ -137,13 +159,20 @@
                         <div v-if="0" class="no-password">
                             <div class="no-password-btn">添加租客密码</div>
                         </div>
-                        <table class="table table-striped">
+                        <table class="table table-striped rent-pass-manage">
                             <tr>
                                 <td class="blue">明水原101租客密码</td>
                                 <td>2016.09.23 16:00失效</td>
-                                <td class="blue">冻结密码</td>
-                                <td class="blue">修改密码</td>
-                                <td class="blue">删除密码</td>
+                                <td class="blue rent-password-btn ice-password">冻结密码</td>
+                                <td class="blue rent-password-btn  change-password">修改密码</td>
+                                <td class="blue rent-password-btn  delete-password">删除密码</td>
+                            </tr>
+                            <tr>
+                                <td class="no-use">明水原101租客密码</td>
+                                <td class="color_999">2016.09.23 16:00失效</td>
+                                <td class="blue rent-password-btn solve-password">解冻密码</td>
+                                <td class="blue rent-password-btn  reset-password">重置密码</td>
+                                <td></td>
                             </tr>
                         </table>
                     </tab>
