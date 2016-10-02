@@ -27,7 +27,7 @@
     
     .index-box .fc-info .fc-name {
         font-size: 20px;
-        font-weight: 500;
+        font-weight: 600;
     }
     
     .index-box .add-info {
@@ -43,6 +43,7 @@
         border-radius: 5px;
         background-color: #f5f9fc;
         border: dashed 1px rgba(26, 57, 80, 0.18);
+        cursor: pointer;
     }
     
     .index-box .add-info img {
