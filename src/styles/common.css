@@ -10,8 +10,7 @@ body {
 
 #app {
     min-height:100%;
-    height: auto !important;
-    height: 100%; /*IE6不识别min-height*/
+    height: 100%;
     position: relative;
 }
 
