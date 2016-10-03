@@ -1,7 +1,7 @@
 <style>
-    .login-box{
-    }
-    .login-box .login-modal{
+    .login-box {}
+    
+    .login-box .login-modal {
         position: absolute;
         width: 520px;
         height: 530px;
@@ -11,14 +11,42 @@
         background-color: #f5f9fc;
         border-radius: 10px;
         z-index: 100;
+        padding: 20px 80px;
+    }
+    
+    .login-box .text-input {
+        margin-bottom: 20px;
+        height: 50px;
+    }
+    
+    .login-box .text-title {
+        margin-bottom: 40px;
+        font-weight: bold;
+    }
+    
+    .login-box .login-btn {
+        margin-top: 80px;
     }
 </style>
 <template>
     <div id="particles-js"></div>
     <div class="login-box">
         <div class="login-modal">
-
+            <div class="form-group text-title">
+                <h1 class="text-center text-primary">天策房屋管理后台</h1>
+            </div>
+            <div class="text-title">
+                <p class="text-center">用户登录</p>
+            </div>
+            <input type="text" class="form-control text-input" placeholder="输入注册手机号">
+            <input type="text" class="form-control text-input" placeholder="输入密码">
+            <a href="" class="text-left">申请开通</a>
+            <a href="" class="pull-right">忘记密码</a>
+            <div class="login-btn">
+                <button type="submit" class="btn btn-primary btn-lg btn-block">登录</button>
+            </div>
         </div>
+    </div>
     </div>
 </template>
 <script>
