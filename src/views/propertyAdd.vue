@@ -1,6 +1,8 @@
 <style>
     .propertyadd-box {
         padding: 50px 250px 20px;
+        width: 1200px;
+        margin: 0 auto;
     }
     
     .propertyadd-box button {
@@ -76,7 +78,7 @@
         <div class="row info-head">
             <div class="col-md-8">
                 <h1 class="head-title fl">
-                    添加房产：
+                    添加房产
                 </h1>
             </div>
         </div>
@@ -126,7 +128,6 @@
                             <div class="add-wg-btn">添加网关</div>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div class="info-item">
@@ -140,6 +141,8 @@
                 <button class="btn btn-default btn-lg">取消</button>
             </div>
         </div>
+    </div>
+        <foot></foot>
 </template>
 <script>
     import navList from '../components/comon/navList.vue'

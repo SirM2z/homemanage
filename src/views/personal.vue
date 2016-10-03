@@ -1,6 +1,8 @@
 <style>
     .personal-box {
         padding: 50px 250px 20px;
+        width: 1200px;
+        margin: 0 auto;
     }
     .personal-box button {
         margin-right: 10px;
@@ -57,6 +59,7 @@
                 <button class="btn btn-default btn-lg">取消</button>
             </div>
         </div>
+    </div>
         <foot></foot>
 </template>
 <script>
