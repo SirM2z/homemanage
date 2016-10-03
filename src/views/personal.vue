@@ -1,6 +1,9 @@
 <style>
     .personal-box {
         padding: 50px 250px 100px;
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
     }
     .personal-box button {
         margin-right: 10px;

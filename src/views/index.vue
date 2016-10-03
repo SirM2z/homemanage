@@ -1,6 +1,9 @@
 <style>
     .index-box {
         padding: 50px 250px 100px;
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
     }
     
     .index-box .fc-items {
