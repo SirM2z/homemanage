@@ -1,6 +1,6 @@
 <style>
     .list-box{
-        padding: 50px 250px 20px; 
+        padding: 50px 250px 100px;
     }
     .list-box .info-body{
         margin-top: 20px;

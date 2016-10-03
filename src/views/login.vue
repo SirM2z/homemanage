@@ -64,7 +64,7 @@
             this.particlesApp()
         },
         beforeDestroy: function() {
-
+            window.particlesJS = null;
         },
         methods: {
             particlesApp:function(){

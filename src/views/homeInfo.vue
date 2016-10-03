@@ -1,6 +1,6 @@
 <style>
     .home-box{
-        padding: 50px 250px 20px; 
+        padding: 50px 250px 100px;
     }
     .home-box .info-head .status-btn{
         margin-top: 20px;
