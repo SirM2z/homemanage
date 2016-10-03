@@ -1,10 +1,11 @@
 <style>
 	.foot-box{
         width: 90%;
-		position: absolute;
+		position: relative;
         bottom: 0;
         left: 0;
-        margin: 0 5%;
+        margin: -100px 5% 0;
+        clear:both;
         padding: 20px 0;
         border-top: 1px solid #e5e5e5;
         text-align: center;

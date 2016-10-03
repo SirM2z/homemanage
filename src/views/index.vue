@@ -1,6 +1,9 @@
 <style>
     .index-box {
-        padding: 50px 250px 20px;
+        padding: 50px 250px 100px;
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
     }
     
     .index-box .fc-items {
@@ -67,6 +70,52 @@
                 <h1 class="head-title fl">
                     房产管理
                 </h1>
+            </div>
+        </div>
+        <div class="fc-items">
+            <div class="fc-info">
+                <div class="fc-item">
+                    <img src="../images/tmp.png">
+                    <p class="fc-name">海创基地</p>
+                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
+                </div>
+            </div>
+            <div class="fc-info">
+                <div class="fc-item">
+                    <img src="../images/tmp.png">
+                    <p class="fc-name">海创基地</p>
+                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
+                </div>
+            </div>
+            <div class="fc-info">
+                <div class="fc-item">
+                    <img src="../images/tmp.png">
+                    <p class="fc-name">海创基地</p>
+                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
+                </div>
+            </div>
+        </div>
+        <div class="fc-items">
+            <div class="fc-info">
+                <div class="fc-item">
+                    <img src="../images/tmp.png">
+                    <p class="fc-name">海创基地</p>
+                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
+                </div>
+            </div>
+            <div class="fc-info">
+                <div class="fc-item">
+                    <img src="../images/tmp.png">
+                    <p class="fc-name">海创基地</p>
+                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
+                </div>
+            </div>
+            <div class="fc-info">
+                <div class="fc-item">
+                    <img src="../images/tmp.png">
+                    <p class="fc-name">海创基地</p>
+                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
+                </div>
             </div>
         </div>
         <div class="fc-items">

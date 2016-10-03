@@ -1,24 +1,43 @@
+/* ---- base ---- */
 
-.fl{
+html,
+body {
+    margin: 0;
+    padding:0;
+    width: 100%;
+    height: 100%;
+}
+
+#app {
+    height: 100%;
+}
+
+.fl {
     float: left;
     display: inline-block;
 }
-.fr{
+
+.fr {
     float: right;
     display: inline-block;
 }
-.blue{
+
+.blue {
     color: #0275d8;
 }
-.home_red{
+
+.home_red {
     color: #d9736a;
 }
-.color_999{
+
+.color_999 {
     color: #999;
 }
-.color_666{
+
+.color_666 {
     color: #666;
 }
-.color_333{
+
+.color_333 {
     color: #333;
 }

@@ -1,8 +1,10 @@
 <style>
     .propertyadd-box {
-        padding: 50px 250px 20px;
-        width: 1200px;
+        padding: 50px 250px 100px;
         margin: 0 auto;
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
     }
     
     .propertyadd-box button {
