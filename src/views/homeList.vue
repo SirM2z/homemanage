@@ -33,6 +33,13 @@
     .list-box .table>tbody>tr>td{
         padding: 12px;
     }
+    .list-box .modal-ne .delete-bottom {
+        padding-top: 30px;
+        height: 150px;
+    }
+    .list-box .modal-ne .delete-bottom .delete-text {
+        margin-bottom: 30px;
+    }
 </style>
 <template>
     <nav-list></nav-list>
@@ -52,7 +59,7 @@
             </div>
             <div class="body-btn">
                 <button type="button" class="btn btn-primary">修改信息</button>
-                <button type="button" class="btn btn-default">删除信息</button>
+                <button type="button" class="btn btn-default" @click="showModal">删除信息</button>
             </div>
         </div>
         <table class="table table-striped home-list">
@@ -127,15 +134,34 @@
                 <td>已入住</td>
             </tr>
         </table>
-
+        <Modal>
+            <div class="modal-ne">
+                <div class="modal-head">删除房产</div>
+                <div class="modal-bottom delete-bottom">
+                    <p class="delete-text">这将同时删除房产旗下所有门锁的开锁记录与操作记录，是否继续？</p>
+                    <button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
+                    <button class="btn btn-primary btn-confirm" @click="hideModal">确认</button>
+                </div>
+            </div>
+        </Modal>
     </div>
     <foot></foot>
 </template>
 <script>
     import navList from '../components/comon/navList.vue'
+    import Modal from '../components/popup/Modal.vue'
+    import {showModal, hideModal, showLoading, showMsg} from '../vuex/actions/popupActions'
     import foot from '../components/comon/foot.vue'
 
     export default {
+        vuex: {
+            actions: {
+                showModal,
+                hideModal,
+                showLoading,
+                showMsg
+            }
+        },
         data: function() {
             return {
 
@@ -145,6 +171,7 @@
             
         },
         components: {
+            Modal,
             navList,
             foot
         },

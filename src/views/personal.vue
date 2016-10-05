@@ -6,7 +6,7 @@
         height: auto !important;
         height: 100%;
     }
-    .personal-box button {
+    .personal-box .btn-s,.btn-c {
         margin-right: 10px;
         width: 150px;
     }
@@ -38,7 +38,6 @@
                 </h1>
             </div>
         </div>
-
         <div class="personal-info">
             <div class="info-item">
                 <div class="fl item-title name-title">姓　　名：</div>
@@ -52,22 +51,49 @@
             <div class="info-item">
                 <div class="fl item-title">登录密码：</div>
                 <div class="fl pass-link">
-                    <div class=""><a href="#">修改密码</a></div>
-                    <div class=""><a href="#">忘记密码？</a></div>
+                    <div class=""><a href="#" @click="showModal">修改密码</a></div>
+                    <div class=""><a href="#" @click="showModal">忘记密码？</a></div>
                 </div>
             </div>
             <div class="info-item pass-btn">
-                <button class="btn btn-primary btn-lg">保存</button>
-                <button class="btn btn-default btn-lg">取消</button>
+                <button class="btn btn-primary btn-lg btn-s">保存</button>
+                <button class="btn btn-default btn-lg btn-c">取消</button>
             </div>
         </div>
+        <Modal>
+            <div class="modal-ne">
+                <div class="modal-head">修改登录密码</div>
+                <div class="modal-bottom">
+                    <div class="modal-item">
+                        <div class="fl item-title name-title">输入原有密码密码</div>
+                        <div class="fl"><input type="password" class="form-control" placeholder="输入4~16位密码"></div>
+                    </div>
+                    <div class="modal-item">
+                        <div class="fl item-title name-title">输入新密码</div>
+                        <div class="fl"><input type="password" class="form-control" placeholder="输入4~16位密码"></div>
+                    </div>
+                    <button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
+                    <button class="btn btn-primary btn-confirm" @click="hideModal">确认</button>
+                </div>
+            </div>
+        </Modal>
     </div>
         <foot></foot>
 </template>
 <script>
     import navList from '../components/comon/navList.vue'
+    import Modal from '../components/popup/Modal.vue'
+    import {showModal, hideModal, showLoading, showMsg} from '../vuex/actions/popupActions'
     import foot from '../components/comon/foot.vue'
     export default {
+        vuex: {
+            actions: {
+                showModal,
+                hideModal,
+                showLoading,
+                showMsg
+            }
+        },
         data: function() {
             return {
 
@@ -77,6 +103,7 @@
             
         },
         components: {
+            Modal,
             navList,
             foot
         },
