@@ -189,6 +189,8 @@
             foot
         },
         beforeDestroy: function() {
+        },
+        methods: {
             getEstateList: function(){
                 showLoading(this.$store);//展示loading动画
                 this.$http.post(base_url+'/user/login', {
@@ -212,9 +214,6 @@
                     showMsg(this.$store, '请求超时！')//显示请求错误提示
                 })
             }
-        },
-        methods: {
-
         }
     }
 </script>
