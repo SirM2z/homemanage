@@ -75,9 +75,9 @@
 <template>
 	<div class="nav-box">
 		<navbar placement="top" type="default">
-			<a slot="brand" href="/" title="Home" class="navbar-brand">LOGO</a>
+			<a slot="brand" v-link="{name: 'index'}" title="Home" class="navbar-brand">LOGO</a>
 			<li class="dropdown">
-				<a href="#" class="dropdown-toggle">房产管理</a>
+				<a v-link="{name: 'index'}" class="dropdown-toggle">房产管理</a>
 			</li>
 			<li slot="right" class="nav-input">
 				<input type="text" placeholder="输入要搜索的关键词">
@@ -104,7 +104,7 @@
 		},
         data: function(){
 			return {
-				
+
 			}
         },
         ready: function() {
