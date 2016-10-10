@@ -58,7 +58,7 @@
                 <div>备注信息：无</div>
             </div>
             <div class="body-btn">
-                <button type="button" class="btn btn-primary">修改信息</button>
+                <button type="button" class="btn btn-primary" @click="goPropertyEdit">修改信息</button>
                 <button type="button" class="btn btn-default" @click="showModal">删除信息</button>
             </div>
         </div>
@@ -140,7 +140,7 @@
                 <div class="modal-bottom delete-bottom">
                     <p class="delete-text">这将同时删除房产旗下所有门锁的开锁记录与操作记录，是否继续？</p>
                     <button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-                    <button class="btn btn-primary btn-confirm" @click="hideModal">确认</button>
+                    <button class="btn btn-primary btn-confirm" @click="deleteEstate">确认</button>
                 </div>
             </div>
         </Modal>
@@ -152,7 +152,7 @@
     import Modal from '../components/popup/Modal.vue'
     import {showModal, hideModal, showLoading, showMsg} from '../vuex/actions/popupActions'
     import foot from '../components/comon/foot.vue'
-
+    import {base_url} from '../common.js'
     export default {
         vuex: {
             actions: {
@@ -168,7 +168,8 @@
             }
         },
         ready: function() {
-            
+            this.getEstate();
+            this.getLockList();
         },
         components: {
             Modal,
@@ -179,7 +180,73 @@
 
         },
         methods: {
-            
+            getEstate: function(){
+                // this.$route.query.id
+                this.$http.post(base_url+'/lock/getEstate', {
+                    id : '123'
+                }).then(function(response) {
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();
+                    console.log(resData);
+                    if (resData.code === 0) {
+                        // to do
+                    } else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
+                })
+            },
+            getLockList:function(){
+                this.$http.post(base_url+'/lock/getLockList', {
+                    id : '123'  
+                }).then(function(response) {
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();
+                    console.log(resData);
+                    if (resData.code === 0) {
+                        // to do
+                    } else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
+                })
+            },
+            deleteEstate: function(){
+                this.$http.post(base_url+'/lock/delEstate', { 
+                        id : '123'  
+                    }).then(function(response) {
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();
+                    console.log(resData);
+                    if (resData.code === 0) {
+                        showMsg(this.$store, "删除成功!")
+                        // to do
+                    } else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
+                })
+            },
+            goPropertyEdit: function(){
+                this.$router.go({
+                    name: 'propertyEdit',
+                    query: {
+                        id: 0
+                    }
+                })
+            }
         }
     }
 </script>

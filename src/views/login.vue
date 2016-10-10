@@ -33,69 +33,6 @@
     .login-box .modal-ne .modal-item .code-input {
         width: 200px;
     }
-    
-    /*.login-box .modal-ne {
-        width: 700px;
-        box-shadow: 0 0 10px #ccc;
-        border-radius: 5px;
-    }
-    
-    .login-box .modal-ne .identify-head,
-    .register-head {
-        font-size: 24px;
-        height: 70px;
-        line-height: 70px;
-        border-radius: 10px;
-        background-color: #fff;
-        font-weight: bold;
-        padding-left: 30px;
-    }
-    
-    .login-box .modal-ne .identify-bottom,
-    .register-bottom {
-        border-top: 1px solid #d9d9d9;
-        background-color: #f5f9fc;
-        height: 270px;
-        padding-left: 30px;
-        padding-top: 10px;
-        border-radius: 0 0 5px 5px;
-    }
-    
-    .login-box .modal-ne .identify-item {
-        overflow: hidden;
-        padding: 20px 20px 20px 0;
-    }
-    
-    .login-box .modal-ne .identify-item .tel-input {
-        width: 300px;
-    }
-    
-    .login-box .modal-ne .identify-item .code-input {
-        width: 200px;
-    }
-    
-    .login-box .modal-ne .name-title {
-        height: 34px;
-        width: 100px;
-        line-height: 34px;
-        margin-right: 50px;
-    }
-    
-    .login-box .modal-ne .btn {
-        margin-right: 30px;
-        height: 40px;
-    }
-    
-    .login-box .modal-ne .btn-cancle {
-        margin-left: 400px;
-    }
-    
-    .login-box .modal-ne .btn-confirm,.btn-register {
-        width: 90px;
-    }
-    .login-box .modal-ne .register-bottom {
-        height: 200px;
-    }*/
     .login-box .btn-verifi{
         margin-top: -5px;
     }
@@ -244,6 +181,7 @@
                     if (resData.code === 0) {
                         this.getUserInfo({},this.$router);//登陆后调用获取用户信息接口
                     } else {
+                        hideLoading(this.$store);//隐藏loading动画
                         showMsg(this.$store, resData.msg)//显示接口无法请求到正确数据的提示
                     }
                 }, function(response) {//请求出现问题
@@ -289,7 +227,7 @@
                     let resData = response.json();
                     // console.log(resData);
                     if (resData.code === 0) {
-                        this.getUserInfo({},this.$router);
+                        // to do
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
