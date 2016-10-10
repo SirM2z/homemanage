@@ -4,7 +4,7 @@ var webpack = require('webpack');
 module.exports = {
     // 入口
     entry: {
-        main: './src/main',
+        main: ['./src/main'],
         vendors: ['vue', 'vuex', 'vue-resource', 'vue-router', 'fastclick', 'normalize-css', 'vue-strap']  //公共组件
     },
     // 输出

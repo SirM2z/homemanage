@@ -82,9 +82,9 @@
 			<li slot="right" class="nav-input">
 				<input type="text" placeholder="输入要搜索的关键词">
 			</li>
-			<dropdown class="personal-list" slot="right" text="张伟">
-				<li><a class="personal-center" href="link">个人中心</a></li>
-				<li><a class="sign-out" href="link">退出登录</a></li>
+			<dropdown class="personal-list" slot="right" :text="name">
+				<li><a class="personal-center"  v-link="{name: 'personal'}">个人中心</a></li>
+				<li><a class="sign-out"  v-link="{name: 'index'}">退出登录</a></li>
 			</dropdown>
 		</navbar>
 	</div>
@@ -104,10 +104,17 @@
 		},
         data: function(){
 			return {
-
+				
 			}
         },
+        ready: function() {
+        },
 		methods: {
+		},
+		computed: {
+			name: function () {
+				return this.$store.state.userInfo.obj.name
+			}
 		}
 	}	
 </script>

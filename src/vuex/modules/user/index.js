@@ -1,0 +1,1 @@
+export const userInfo = require('./userInfo').default;

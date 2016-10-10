@@ -166,6 +166,14 @@
     import navList from '../components/comon/navList.vue'
     import foot from '../components/comon/foot.vue'
     export default {
+        vuex: {
+            getters: {
+                user_name:({userInfo})=>userInfo.obj.name,
+                user_image:({userInfo})=>userInfo.obj.image_add
+            },
+            actions:{
+            }
+        },
         data: function() {
             return {
 

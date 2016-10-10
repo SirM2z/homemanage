@@ -9,3 +9,7 @@ export const HIDE_POPUP_MSG = 'HIDE_POPUP_MSG'
 //popup loading
 export const SHOW_POPUP_LOADING = 'SHOW_POPUP_LOADING'
 export const HIDE_POPUP_LOADING = 'HIDE_POPUP_LOADING'
+
+//login
+export const SUCCESS_USER_INFO = 'SUCCESS_USER_INFO'
+export const FAILURE_USER_INFO = 'FAILURE_USER_INFO'

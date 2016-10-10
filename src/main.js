@@ -15,8 +15,10 @@ Vue.config.debug = true;
 // Vue.config.devtools = true;
 
 // HTTP相关
-Vue.http.options.crossOrigin = true
-Vue.http.options.emulateJSON = true
+// Vue.http.options.emulateHTTP = true
+// Vue.http.options.crossOrigin = true
+// Vue.http.options.emulateJSON = true
+Vue.http.headers.common['Content-type'] = 'application/x-www-form-urlencoded';
 Vue.http.options.xhr = {
 	withCredentials: true
 }

@@ -5,6 +5,9 @@ import {
 	Loading,
 	Modal
 } from './modules/popup'
+import {
+	userInfo
+} from './modules/user'
 
 Vue.use(Vuex)
 
@@ -14,6 +17,7 @@ export default new Vuex.Store({
 	modules: {
 		Msg,
 		Loading,
-		Modal
+		Modal,
+		userInfo
 	}
 })

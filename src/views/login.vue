@@ -4,14 +4,13 @@
     .login-box .login-modal {
         position: absolute;
         width: 520px;
-        height: 530px;
         top: 50%;
         left: 50%;
         margin: -265px 0 0 -260px;
         background-color: #f5f9fc;
         border-radius: 10px;
         z-index: 100;
-        padding: 20px 80px;
+        padding: 20px 80px 40px;
     }
     
     .login-box .text-input {
@@ -25,7 +24,7 @@
     }
     
     .login-box .login-btn {
-        margin-top: 80px;
+        margin-top: 40px;
     }
 </style>
 <template>
@@ -38,35 +37,70 @@
             <div class="text-title">
                 <p class="text-center">用户登录</p>
             </div>
-            <input type="text" class="form-control text-input" placeholder="输入注册手机号">
-            <input type="text" class="form-control text-input" placeholder="输入密码">
+            <input type="text" v-model="user_name" class="form-control text-input" placeholder="输入注册手机号">
+            <input type="text" v-model="user_password" class="form-control text-input" placeholder="输入密码">
             <a href="" class="text-left">申请开通</a>
             <a href="" class="pull-right">忘记密码</a>
             <div class="login-btn">
-                <button type="submit" class="btn btn-primary btn-lg btn-block">登录</button>
+                <button class="btn btn-primary btn-lg btn-block" @click="loginSystem">登录</button>
             </div>
         </div>
     </div>
     </div>
 </template>
 <script>
+    import {showMsg,showLoading,hideLoading} from '../vuex/actions/popupActions'
+    import {getUserInfo} from '../vuex/actions/userActions'
+    import {base_url} from '../common.js'
     export default {
+        vuex: {
+            getters: {
+            },
+            actions:{
+                getUserInfo
+            }
+        },
         filters: {
         },
         directives: {
         },
         data: function() {
             return {
-
+                user_name: '18888888881',
+                user_password: '123456'
             }
         },
         ready: function() {
             this.particlesApp()
         },
         beforeDestroy: function() {
-            window.particlesJS = null;
+            // window.particlesJS = null;
         },
         methods: {
+            loginSystem:function(){
+                showLoading(this.$store);
+                var self = this;
+                this.$http.post(base_url+'/user/login', {
+                    user: this.user_name.trim(),
+                    password: this.user_password.trim()
+                }).then(function(response) {
+                    if (!response.ok) {
+                        hideLoading(this.$store);
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();
+                    // console.log(resData);
+                    if (resData.code === 0) {
+                        this.getUserInfo({},this.$router);
+                    } else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    hideLoading(this.$store);
+                    showMsg(this.$store, '请求超时！')
+                })
+            },
             particlesApp:function(){
                 window.particlesJS('particles-js',
                     {

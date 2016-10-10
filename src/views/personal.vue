@@ -42,11 +42,12 @@
         <div class="personal-info">
             <div class="info-item">
                 <div class="fl item-title name-title">姓　　名：</div>
-                <div class="fl"><input type="text" class="form-control" id="name" value="张伟"></div>
+                <div class="fl"><input type="text" class="form-control" id="name" :value="user_name"></div>
             </div>
             <div class="info-item">
                 <div class="fl item-title">个人照片：</div>
-                <div class="fl"><img src="../images/default.png" class="img-circle"></div>
+                <div v-if="user_img==''" class="fl"><img src="../images/default.png" class="img-circle"></div>
+                <div v-else class="fl"><img :src="user_img" class="img-circle"></div>
                 <div class="fl"><input type="file" accept="image/*" /></div>
             </div>
             <div class="info-item">
@@ -68,6 +69,14 @@
     import navList from '../components/comon/navList.vue'
     import foot from '../components/comon/foot.vue'
     export default {
+        vuex: {
+            getters: {
+                user_name:({userInfo}) => userInfo.obj.name,
+                user_img:({userInfo}) => userInfo.obj.image_add
+            },
+            actions:{
+            }
+        },
         data: function() {
             return {
 
