@@ -82,7 +82,7 @@
 			<li slot="right" class="nav-input">
 				<input type="text" placeholder="输入要搜索的关键词">
 			</li>
-			<dropdown class="personal-list" slot="right" :text="name">
+			<dropdown class="personal-list" slot="right" :text="user_name">
 				<li><a class="personal-center"  v-link="{name: 'personal'}">个人中心</a></li>
 				<li><a class="sign-out"  v-link="{name: 'index'}">退出登录</a></li>
 			</dropdown>
@@ -93,9 +93,10 @@
 	import { navbar,dropdown } from 'vue-strap'
 	export default {
 		vuex:{
-			actions: {
-			},
 			getters:{
+				user_name:({userInfo})=>userInfo.obj.name,
+			},
+			actions: {
 			}
 		},
 		components: {
@@ -112,9 +113,9 @@
 		methods: {
 		},
 		computed: {
-			name: function () {
-				return this.$store.state.userInfo.obj.name
-			}
+			// name: function () {
+			// 	return this.$store.state.userInfo.obj.name
+			// }
 		}
 	}	
 </script>

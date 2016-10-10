@@ -87,7 +87,7 @@
         <div class="propertyadd-info">
             <div class="info-item">
                 <div class="fl item-title name-title">房产名称：</div>
-                <div class="fl"><input type="text" class="form-control" id="name"></div>
+                <div class="fl"><input type="text" v-model="name" class="form-control" id="name"></div>
             </div>
             <div class="info-item">
                 <div class="fl item-title">房产图片：</div>
@@ -95,39 +95,18 @@
             </div>
             <div class="info-item">
                 <div class="fl item-title name-title">房产地址：</div>
-                <div class="fl"><input type="text" class="form-control item-address" id="name"></div>
+                <div class="fl"><input type="text" v-model="address" class="form-control item-address" id="name"></div>
             </div>
             <div class="info-item wg-item">
                 <div class="fl item-title name-title wg-title">网关绑定：</div>
                 <div class="fl">
                     <div class="wg-options">
-                        <select class="form-control wg-option">
-                            <option>test1</option>
-                            <option>test2</option>
-                            <option>test3</option>
-                        </select>
-                        <select class="form-control wg-option">
-                            <option>test1</option>
-                            <option>test2</option>
-                            <option>test3</option>
-                        </select>
-                        <select class="form-control wg-option">
-                            <option>test1</option>
-                            <option>test2</option>
-                            <option>test3</option>
-                        </select>
-                        <select class="form-control wg-option">
-                            <option>test1</option>
-                            <option>test2</option>
-                            <option>test3</option>
-                        </select>
-                        <select class="form-control wg-option">
-                            <option>test1</option>
-                            <option>test2</option>
-                            <option>test3</option>
+                        <select v-for="n in gatewayListSelectNum" v-model="gatewayListSelected[n]" class="form-control wg-option">
+                            <option value="0" selected="selected">请选择</option>
+                            <option v-for="item in gatewayList" :value="item.id">{{item.name}}</option>
                         </select>
                         <div class="add-wg wg-option">
-                            <div class="add-wg-btn">添加网关</div>
+                            <div class="add-wg-btn" @click="addSelect">添加网关</div>
                         </div>
                     </div>
                 </div>
@@ -135,11 +114,11 @@
             <div class="info-item">
                 <div class="fl item-title name-title">备　　注：</div>
                 <div class="fl">
-                    <textarea class="form-control" cols="80" rows="3"></textarea>
+                    <textarea v-model="note" class="form-control" cols="80" rows="3"></textarea>
                 </div>
             </div>
             <div class="info-item pass-btn">
-                <button class="btn btn-primary btn-lg">保存</button>
+                <button @click="addEstate" class="btn btn-primary btn-lg">保存</button>
                 <button class="btn btn-default btn-lg">取消</button>
             </div>
         </div>
@@ -149,14 +128,31 @@
 <script>
     import navList from '../components/comon/navList.vue'
     import foot from '../components/comon/foot.vue'
+    import {showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
+    import {base_url} from '../common.js'
     export default {
+        vuex: {
+            getters: {
+            },
+            actions: {
+                showMsg,
+                showLoading,
+                hideLoading
+            }
+        },
         data: function() {
             return {
-
+                gatewayListSelectNum : 1,
+                gatewayList : null,
+                gatewayListSelected : [],
+                name : '',
+                address : '',
+                note : '',
+                gateways : ''
             }
         },
         ready: function() {
-            
+            this.getGatewayList();
         },
         components: {
             navList,
@@ -166,7 +162,54 @@
 
         },
         methods: {
-            
+            getGatewayList: function(){
+                this.$http.post(base_url+'/lock/getGatewayList').then(function(response) {
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();
+                    console.log(resData);
+                    if (resData.code === 0) {
+                        //TO DO
+                        this.gatewayList = resData.data;
+                    } else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
+                })
+            },
+            addSelect: function(){
+                this.gatewayListSelectNum++;
+            },
+            addEstate: function(){
+                console.log(this.gatewayListSelected);
+                return;
+                showLoading(this.$store);
+                this.$http.post(base_url+'/user/modifyPassword', {
+                    name : this.name.trim(),
+                    address : this.address.trim(),
+                    note : this.note.trim(),
+                    gateways : this.gateways.trim()
+                }).then(function(response) {
+                    hideLoading(this.$store);
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();
+                    // console.log(resData);
+                    if (resData.code === 0) {
+                        //TO DO
+                        showMsg(this.$store, '添加成功');
+                    } else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
+                })
+            }
         }
     }
 </script>

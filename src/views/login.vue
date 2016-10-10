@@ -96,6 +96,18 @@
     .login-box .modal-ne .register-bottom {
         height: 200px;
     }*/
+    .login-box .btn-verifi{
+        margin-top: -5px;
+    }
+    .login-box .btn-verifi:focus, .login-box .btn-verifi:active:focus {
+        outline: none;
+        outline-offset: -2px;
+    }
+    .login-box .verifi_time_down{
+        display: inline-block;
+        height: 40px;
+        line-height: 40px;
+    }
 </style>
 <template>
     <div id="particles-js"></div>
@@ -109,50 +121,51 @@
             </div>
             <input type="text" v-model="user_name" class="form-control text-input" placeholder="输入注册手机号">
             <input type="text" v-model="user_password" class="form-control text-input" placeholder="输入密码">
-            <a href="#" class="text-left" @click="showModal">申请开通</a>
-            <a href="#" class="pull-right" @click="showModal">忘记密码</a>
+            <a href="#" class="text-left" @click="changeModalType('registere')">申请开通</a>
+            <a href="#" class="pull-right" @click="changeModalType('verifi')">忘记密码</a>
             <div class="login-btn">
                 <button class="btn btn-primary btn-lg btn-block" @click="loginSystem">登录</button>
             </div>
         </div>
         <Modal>
-            <div class="modal-ne">
+            <!--身份验证-->
+            <div class="modal-ne" v-show="modal_type==='verifi'">
                 <div class="modal-head">身份验证</div>
                 <div class="modal-bottom">
                     <p class="text-muted">为了保障安全，请先验证身份。验证成功后可进行下一步操作。</p>
                     <div class="modal-item">
                         <div class="fl item-title name-title">注册手机号</div>
-                        <div class="fl"><input type="text" class="form-control tel-input"></div>
+                        <div class="fl"><input type="text" v-model="verifi_phone" class="form-control tel-input"></div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">输入验证码</div>
-                        <div class="fl"><input type="text" class="form-control code-input"></div>
-                        <button class="btn btn-link">获取验证码</button>
+                        <div class="fl"><input type="text" v-model="verifi_code" class="form-control code-input"></div>
+                        <button v-if="verifi_time===0" class="btn btn-link btn-verifi" @click="getVerifiCode">获取验证码</button>
+                        <button v-else class="btn btn-link btn-verifi">重新获取</button>
+                        <span v-if="verifi_time!==0" class="color_999 verifi_time_down">({{verifi_time}})</span>
                     </div>
-                    <button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-                    <button class="btn btn-primary btn-confirm" @click="hideModal">确认</button>
+                    <button class="btn btn-default btn-cancle" @click="cancleVerifi">取消</button>
+                    <button class="btn btn-primary btn-confirm" @click="sureVerifi">确认</button>
                 </div>
             </div>
-        </Modal>
-        <!--<Modal>
-            <div class="modal-ne">
+            <!--修改密码-->
+            <div class="modal-ne" v-show="modal_type==='change_pass'">
                 <div class="modal-head">修改密码</div>
                 <div class="modal-bottom">
                     <div class="modal-item">
                         <div class="fl item-title name-title">输入新密码</div>
-                        <div class="fl"><input type="password" class="form-control tel-input" placeholder="输入4~16位密码"></div>
+                        <div class="fl"><input type="password" v-model="new_password_verifi" class="form-control tel-input" placeholder="输入4~16位密码"></div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">再次输入密码</div>
-                        <div class="fl"><input type="password" class="form-control code-input" placeholder="输入4~16位密码"></div>
+                        <div class="fl"><input type="password" v-model="new_password" class="form-control code-input" placeholder="输入4~16位密码"></div>
                     </div>
-                    <button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-                    <button class="btn btn-primary btn-confirm" @click="hideModal">确认</button>
+                    <button class="btn btn-default btn-cancle" @click="cancleChangePass">取消</button>
+                    <button class="btn btn-primary btn-confirm" @click="sureChangePass">确认</button>
                 </div>
             </div>
-        </Modal>-->
-        <!--<Modal>
-            <div class="modal-ne">
+            <!--申请开通-->
+            <div class="modal-ne" v-show="modal_type==='registere'">
                 <div class="modal-head">申请开通</div>
                 <div class="modal-bottom">
                     <p>目前管理平台开启注册，如需使用请联系客服进行开通：</p>
@@ -161,14 +174,14 @@
                     <button class="btn btn-primary btn-confirm pull-right" @click="hideModal">确认</button>
                 </div>
             </div>
-        </Modal>-->
+        </Modal>
     </div>
 </template>
 <script>
     import navList from '../components/comon/navList.vue'
     import Modal from '../components/popup/Modal.vue'
-    import {showModal, hideModal, showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
     import {getUserInfo} from '../vuex/actions/userActions'
+    import {showModal, hideModal, showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
     import {base_url} from '../common.js'
     export default {
         vuex: {
@@ -196,14 +209,23 @@
         data: function() {
             return {
                 user_name: '18888888881',
-                user_password: '123456'
+                user_password: '123456',
+                modal_type: '',
+                verifi_phone: '',
+                verifi_time: 0,
+                time_down: null,
+                verifi_code: '',
+                new_password_verifi: '',
+                new_password: ''
             }
         },
         ready: function() {
             this.particlesApp()
         },
         beforeDestroy: function() {
-            // window.particlesJS = null;
+            if(this.time_down){
+                clearInterval(this.time_down);
+            }
         },
         methods: {
             loginSystem:function(){
@@ -227,6 +249,83 @@
                 }, function(response) {//请求出现问题
                     hideLoading(this.$store);//隐藏loading动画
                     showMsg(this.$store, '请求超时！')//显示请求错误提示
+                })
+            },
+            changeModalType:function(type){
+                this.modal_type = type;
+                console.log(this.modal_type);
+                this.showModal();
+            },
+            sureVerifi:function(){
+                if(this.verifi_code.trim()==''){
+                    showMsg(this.$store, '请输入验证码')
+                    return;
+                }
+                this.hideModal();
+                this.modal_type = 'change_pass';
+                this.showModal();
+            },
+            getVerifiCode:function(){
+                let _this = this;
+                if(this.verifi_phone.trim()==''){
+                    showMsg(this.$store, '请填写手机号！');
+                    return;
+                }
+                this.verifi_time = 60;
+                this.time_down = setInterval(function() {
+                    if(_this.verifi_time == 0){
+                        clearInterval(_this.time_down);
+                        return;
+                    }
+                    _this.verifi_time--;
+                }, 1000);
+                this.$http.post(base_url+'/user/sendCode', {
+                    phone : this.verifi_phone.trim()
+                }).then(function(response) {
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();
+                    // console.log(resData);
+                    if (resData.code === 0) {
+                        this.getUserInfo({},this.$router);
+                    } else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
+                })
+            },
+            cancleVerifi:function(){
+                this.verifi_time = 0;
+                this.verifi_code = '';
+                this.hideModal();
+            },
+            cancleChangePass:function(){
+                this.modal_type = 'verifi';
+                this.verifi_code = '';
+                this.hideModal();
+            },
+            sureChangePass:function(){
+                this.$http.post(base_url+'/user/modifyPassword', {
+                    user : this.verifi_phone.trim(),
+                    newPassword : this.verifi_phone.trim(),
+                    code : this.verifi_code.trim(),
+                }).then(function(response) {
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();
+                    // console.log(resData);
+                    if (resData.code === 0) {
+                        this.getUserInfo({},this.$router);
+                    } else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
                 })
             },
             particlesApp:function(){

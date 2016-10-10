@@ -44,46 +44,46 @@ body {
 
 /*弹窗样式*/
 .modal-ne {
-        width: 700px;
-        box-shadow: 0 0 10px #ccc;
-        border-radius: 5px;
-    }
-    .modal-ne .modal-head {
-        font-size: 24px;
-        height: 70px;
-        line-height: 70px;
-        border-radius: 10px;
-        background-color: #fff;
-        font-weight: bold;
-        padding-left: 30px;
-    }
-    .modal-ne .modal-bottom {
-        border-top: 1px solid #d9d9d9;
-        background-color: #f5f9fc;
-        height: 250px;
-        padding: 30px;
-        border-radius: 0 0 5px 5px;
-    }
-    .modal-ne .modal-item {
-        overflow: hidden;
-        padding: 0 20px 20px 0;
-    }
-    .modal-ne .modal-item input {
-        width: 250px;
-    }
-    .modal-ne .name-title {
-        height: 34px;
-        width: 130px;
-        line-height: 34px;
-        margin-right: 50px;
-    }
-    .modal-ne .btn {
-        margin-right: 30px;
-        height: 40px;
-    }
-    .modal-ne .btn-confirm {
-        width: 80px;
-    }
-    .modal-ne .btn-cancle {
-        margin-left: 400px;
-    }
+    width: 700px;
+    box-shadow: 0 0 10px #ccc;
+    border-radius: 5px;
+}
+.modal-ne .modal-head {
+    font-size: 24px;
+    height: 70px;
+    line-height: 70px;
+    border-radius: 10px;
+    background-color: #fff;
+    font-weight: bold;
+    padding-left: 30px;
+}
+.modal-ne .modal-bottom {
+    border-top: 1px solid #d9d9d9;
+    background-color: #f5f9fc;
+    height: 250px;
+    padding: 30px;
+    border-radius: 0 0 5px 5px;
+}
+.modal-ne .modal-item {
+    overflow: hidden;
+    padding: 0 20px 20px 0;
+}
+.modal-ne .modal-item input {
+    width: 250px;
+}
+.modal-ne .name-title {
+    height: 34px;
+    width: 130px;
+    line-height: 34px;
+    margin-right: 50px;
+}
+.modal-ne .btn {
+    margin-right: 10px;
+    height: 40px;
+}
+.modal-ne .btn-confirm {
+    width: 80px;
+}
+.modal-ne .btn-cancle {
+    margin-left: 400px;
+}

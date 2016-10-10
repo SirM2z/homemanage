@@ -151,7 +151,7 @@
             </div>
             <div class="fc-info">
                 <div class="add-info">
-                    <div class="add-fc">
+                    <div class="add-fc" @click="goAddEstate">
                         <img src="../images/addinfo.png">
                         <p>点击添加房产</p>
                     </div>
@@ -166,6 +166,7 @@
     import navList from '../components/comon/navList.vue'
     import foot from '../components/comon/foot.vue'
     import {showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
+    import {base_url} from '../common.js'
     export default {
         vuex: {
             getters: {
@@ -182,7 +183,7 @@
             }
         },
         ready: function() {
-
+            this.getEstateList();
         },
         components: {
             navList,
@@ -192,27 +193,27 @@
         },
         methods: {
             getEstateList: function(){
-                showLoading(this.$store);//展示loading动画
-                this.$http.post(base_url+'/user/login', {
-                    user: this.user_name.trim(),
-                    password: this.user_password.trim()
-                }).then(function(response) {
-                    if (!response.ok) {//请求出现问题
-                        hideLoading(this.$store);//隐藏loading动画
-                        showMsg(this.$store, '请求超时！');//显示请求错误提示
+                showLoading(this.$store);
+                this.$http.post(base_url+'/lock/getEstateList').then(function(response) {
+                    hideLoading(this.$store);
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
                         return
                     }
-                    let resData = response.json();//对接口返回数据json序列化
+                    let resData = response.json();
                     // console.log(resData);
                     if (resData.code === 0) {
-                        this.getUserInfo({},this.$router);//登陆后调用获取用户信息接口
+                        // this.getUserInfo({},this.$router);
                     } else {
-                        showMsg(this.$store, resData.msg)//显示接口无法请求到正确数据的提示
+                        showMsg(this.$store, resData.msg)
                     }
-                }, function(response) {//请求出现问题
-                    hideLoading(this.$store);//隐藏loading动画
-                    showMsg(this.$store, '请求超时！')//显示请求错误提示
+                }, function(response) {
+                    hideLoading(this.$store);
+                    showMsg(this.$store, '请求超时！')
                 })
+            },
+            goAddEstate: function(){
+                this.$router.go({name: 'propertyAdd'})
             }
         }
     }
