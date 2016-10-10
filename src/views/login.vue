@@ -8,7 +8,7 @@
         left: 50%;
         margin: -265px 0 0 -260px;
         background-color: #f5f9fc;
-        border-radius: 10px;
+        border-radius: 5px;
         z-index: 100;
         padding: 20px 80px 40px;
     }
@@ -26,6 +26,76 @@
     .login-box .login-btn {
         margin-top: 40px;
     }
+    .login-box .modal-ne .modal-item .tel-input {
+        width: 300px;
+    }
+    
+    .login-box .modal-ne .modal-item .code-input {
+        width: 200px;
+    }
+    
+    /*.login-box .modal-ne {
+        width: 700px;
+        box-shadow: 0 0 10px #ccc;
+        border-radius: 5px;
+    }
+    
+    .login-box .modal-ne .identify-head,
+    .register-head {
+        font-size: 24px;
+        height: 70px;
+        line-height: 70px;
+        border-radius: 10px;
+        background-color: #fff;
+        font-weight: bold;
+        padding-left: 30px;
+    }
+    
+    .login-box .modal-ne .identify-bottom,
+    .register-bottom {
+        border-top: 1px solid #d9d9d9;
+        background-color: #f5f9fc;
+        height: 270px;
+        padding-left: 30px;
+        padding-top: 10px;
+        border-radius: 0 0 5px 5px;
+    }
+    
+    .login-box .modal-ne .identify-item {
+        overflow: hidden;
+        padding: 20px 20px 20px 0;
+    }
+    
+    .login-box .modal-ne .identify-item .tel-input {
+        width: 300px;
+    }
+    
+    .login-box .modal-ne .identify-item .code-input {
+        width: 200px;
+    }
+    
+    .login-box .modal-ne .name-title {
+        height: 34px;
+        width: 100px;
+        line-height: 34px;
+        margin-right: 50px;
+    }
+    
+    .login-box .modal-ne .btn {
+        margin-right: 30px;
+        height: 40px;
+    }
+    
+    .login-box .modal-ne .btn-cancle {
+        margin-left: 400px;
+    }
+    
+    .login-box .modal-ne .btn-confirm,.btn-register {
+        width: 90px;
+    }
+    .login-box .modal-ne .register-bottom {
+        height: 200px;
+    }*/
 </style>
 <template>
     <div id="particles-js"></div>
@@ -39,26 +109,84 @@
             </div>
             <input type="text" v-model="user_name" class="form-control text-input" placeholder="输入注册手机号">
             <input type="text" v-model="user_password" class="form-control text-input" placeholder="输入密码">
-            <a href="" class="text-left">申请开通</a>
-            <a href="" class="pull-right">忘记密码</a>
+            <a href="#" class="text-left" @click="showModal">申请开通</a>
+            <a href="#" class="pull-right" @click="showModal">忘记密码</a>
             <div class="login-btn">
                 <button class="btn btn-primary btn-lg btn-block" @click="loginSystem">登录</button>
             </div>
         </div>
-    </div>
+        <Modal>
+            <div class="modal-ne">
+                <div class="modal-head">身份验证</div>
+                <div class="modal-bottom">
+                    <p class="text-muted">为了保障安全，请先验证身份。验证成功后可进行下一步操作。</p>
+                    <div class="modal-item">
+                        <div class="fl item-title name-title">注册手机号</div>
+                        <div class="fl"><input type="text" class="form-control tel-input"></div>
+                    </div>
+                    <div class="modal-item">
+                        <div class="fl item-title name-title">输入验证码</div>
+                        <div class="fl"><input type="text" class="form-control code-input"></div>
+                        <button class="btn btn-link">获取验证码</button>
+                    </div>
+                    <button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
+                    <button class="btn btn-primary btn-confirm" @click="hideModal">确认</button>
+                </div>
+            </div>
+        </Modal>
+        <!--<Modal>
+            <div class="modal-ne">
+                <div class="modal-head">修改密码</div>
+                <div class="modal-bottom">
+                    <div class="modal-item">
+                        <div class="fl item-title name-title">输入新密码</div>
+                        <div class="fl"><input type="password" class="form-control tel-input" placeholder="输入4~16位密码"></div>
+                    </div>
+                    <div class="modal-item">
+                        <div class="fl item-title name-title">再次输入密码</div>
+                        <div class="fl"><input type="password" class="form-control code-input" placeholder="输入4~16位密码"></div>
+                    </div>
+                    <button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
+                    <button class="btn btn-primary btn-confirm" @click="hideModal">确认</button>
+                </div>
+            </div>
+        </Modal>-->
+        <!--<Modal>
+            <div class="modal-ne">
+                <div class="modal-head">申请开通</div>
+                <div class="modal-bottom">
+                    <p>目前管理平台开启注册，如需使用请联系客服进行开通：</p>
+                    <p>热线电话：0571-87654321</p>
+                    <p>客服邮箱：service@pstone.cc</p>
+                    <button class="btn btn-primary btn-confirm pull-right" @click="hideModal">确认</button>
+                </div>
+            </div>
+        </Modal>-->
     </div>
 </template>
 <script>
-    import {showMsg,showLoading,hideLoading} from '../vuex/actions/popupActions'
+    import navList from '../components/comon/navList.vue'
+    import Modal from '../components/popup/Modal.vue'
+    import {showModal, hideModal, showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
     import {getUserInfo} from '../vuex/actions/userActions'
     import {base_url} from '../common.js'
     export default {
         vuex: {
             getters: {
             },
-            actions:{
+            actions: {
+                showModal,
+                hideModal,
+                showLoading,
+                showMsg,
                 getUserInfo
             }
+        },
+        ready: function(){
+        },
+        components: {
+            Modal,
+            navList
         },
         filters: {
         },

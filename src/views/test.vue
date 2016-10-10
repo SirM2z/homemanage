@@ -1,52 +1,33 @@
 <style>
-    .modal-ne {
-        background: #fff;
-        height: 300px;
-        width: 300px;
-        padding: 10px;
-        box-shadow: 0 0 10px #ccc;
-        border-radius: 5px;
-    }
-    
-    .personal-box {
-        padding: 50px 250px 20px;
-    }
-    
-    .personal-box button {
-        margin-right: 10px;
-    }
-    
-    .personal-info .infos {
-        margin-bottom: 30px;
-    }
 </style>
 <template>
     <div style="height: 1200px;">
-    <nav-list></nav-list>
-    <p><a href="#" @click="showModal">showModal</a></p>
-    <p><a href="#" @click="showLoadingFun">showLoading</a></p>
-    <p><a href="#" @click="showMsgInfo">showMsgInfo</a></p>
-    <p><a href="#" @click="showMsgSuccess">showMsgSuccess</a></p>
-    <p><a href="#" @click="showError">showError</a></p>
-    <p><a href="#" @click="showWarning">showWarning</a></p>
-    <Modal>
-        <div v-if="1" class="modal-ne">
-            <p>dasdasds</p>
-            <a class="blue" @click="hideModal">关闭</a>
-        </div>     
-        <div v-if="0" class="modal-ne">
-            <p>123456</p>
-            <a class="blue" @click="hideModal">关闭</a>
-        </div>     
-    </Modal>
-    <h2>
-        <img src="../images/logo.png">
-    </h2>
-    <h1>
-        welcome to vue!:
-        {{ 3731700153 |  NumberSeparator }}
-    </h1>
-    <h2 v-time></h2>
+        <nav-list></nav-list>
+        <p><a href="#" @click="showModal">showModal</a></p>
+        <p><a href="#" @click="showLoadingFun">showLoading</a></p>
+        <p><a href="#" @click="showMsgInfo">showMsgInfo</a></p>
+        <p><a href="#" @click="showMsgSuccess">showMsgSuccess</a></p>
+        <p><a href="#" @click="showError">showError</a></p>
+        <p><a href="#" @click="showWarning">showWarning</a></p>
+        <Modal>
+            <div v-if="1" class="modal-ne">
+                <p>dasdasds</p>
+                <a class="blue" @click="hideModal">关闭</a>
+            </div>     
+            <div v-if="0" class="modal-ne">
+                <p>123456</p>
+                <a class="blue" @click="hideModal">关闭</a>
+            </div>     
+        </Modal>
+        <h2>
+            <img src="../images/logo.png">
+        </h2>
+        <h1 class="h1">
+            welcome to vue!:
+            {{ 3731700153 |  NumberSeparator }}
+        </h1>
+        <h2 v-time></h2>
+    </div>
 </template>
 <script>
     import navList from '../components/comon/navList.vue'
