@@ -165,13 +165,15 @@
 <script>
     import navList from '../components/comon/navList.vue'
     import foot from '../components/comon/foot.vue'
+    import {showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
     export default {
         vuex: {
             getters: {
-                user_name:({userInfo})=>userInfo.obj.name,
-                user_image:({userInfo})=>userInfo.obj.image_add
             },
             actions:{
+                showLoading,
+                showMsg,
+                hideLoading
             }
         },
         data: function() {
@@ -187,7 +189,29 @@
             foot
         },
         beforeDestroy: function() {
-
+            getEstateList: function(){
+                showLoading(this.$store);//展示loading动画
+                this.$http.post(base_url+'/user/login', {
+                    user: this.user_name.trim(),
+                    password: this.user_password.trim()
+                }).then(function(response) {
+                    if (!response.ok) {//请求出现问题
+                        hideLoading(this.$store);//隐藏loading动画
+                        showMsg(this.$store, '请求超时！');//显示请求错误提示
+                        return
+                    }
+                    let resData = response.json();//对接口返回数据json序列化
+                    // console.log(resData);
+                    if (resData.code === 0) {
+                        this.getUserInfo({},this.$router);//登陆后调用获取用户信息接口
+                    } else {
+                        showMsg(this.$store, resData.msg)//显示接口无法请求到正确数据的提示
+                    }
+                }, function(response) {//请求出现问题
+                    hideLoading(this.$store);//隐藏loading动画
+                    showMsg(this.$store, '请求超时！')//显示请求错误提示
+                })
+            }
         },
         methods: {
 

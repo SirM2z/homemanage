@@ -179,6 +179,7 @@
                 hideModal,
                 showLoading,
                 showMsg,
+                hideLoading,
                 getUserInfo
             }
         },
@@ -207,7 +208,6 @@
         methods: {
             loginSystem:function(){
                 showLoading(this.$store);//展示loading动画
-                var self = this;
                 this.$http.post(base_url+'/user/login', {
                     user: this.user_name.trim(),
                     password: this.user_password.trim()
