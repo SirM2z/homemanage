@@ -82,7 +82,7 @@
 			<li slot="right" class="nav-input">
 				<input type="text" placeholder="输入要搜索的关键词">
 			</li>
-			<dropdown class="personal-list" slot="right" :text="user_name">
+			<dropdown class="personal-list" slot="right" :text="name">
 				<li><a class="personal-center"  v-link="{name: 'personal'}">个人中心</a></li>
 				<li><a class="sign-out"  v-link="{name: 'index'}">退出登录</a></li>
 			</dropdown>
@@ -94,7 +94,7 @@
 	export default {
 		vuex:{
 			getters:{
-				user_name:({userInfo})=>userInfo.obj.name,
+				user_name:({userInfo})=>userInfo.obj.name
 			},
 			actions: {
 			}
@@ -105,15 +105,16 @@
 		},
         data: function(){
 			return {
-
+				name: window.localStorage.getItem('homemanage_username')
 			}
         },
         ready: function() {
+			// console.log(this.name);
         },
 		methods: {
 		},
 		computed: {
-			// name: function () {
+			// user_name: function () {
 			// 	return this.$store.state.userInfo.obj.name
 			// }
 		}
