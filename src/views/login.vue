@@ -191,7 +191,7 @@
             },
             changeModalType:function(type){
                 this.modal_type = type;
-                console.log(this.modal_type);
+                // console.log(this.modal_type);
                 this.showModal();
             },
             sureVerifi:function(){
