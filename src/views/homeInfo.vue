@@ -109,7 +109,7 @@
     .home-box .modal-ne .another-password,.home-box .modal-ne .change-another-password {
         height: 300px;
     }
-    .home-box .modal-ne .btn-count {
+    .home-box .modal-ne .btn-code-random {
         margin-left: -80px;
         height: 34px;
     }
@@ -119,6 +119,10 @@
    }
    .home-box .modal-ne .info-edit {
        height: 380px;
+   }
+   .home-box .btn-code-random:focus, .home-box .btn-code-random:active:focus {
+       outline: none;
+       outline-offset: -2px;
    }
 </style>
 <template>
@@ -382,7 +386,7 @@
                         <div class="fl item-title name-title">输入租客密码</div>
                         <div class="fl">
                             <input type="password" v-model="add_TC_password" class="form-control fl" placeholder="请输入4~16位数字密码">
-                            <button class="btn btn-link btn-count">随机生成</button>
+                            <button class="btn btn-link btn-code-random">随机生成</button>
                         </div>
                     </div>
                     <div class="modal-item">

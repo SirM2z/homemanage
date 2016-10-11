@@ -108,7 +108,7 @@
                     <p>目前管理平台开启注册，如需使用请联系客服进行开通：</p>
                     <p>热线电话：0571-87654321</p>
                     <p>客服邮箱：service@pstone.cc</p>
-                    <button class="btn btn-primary btn-confirm pull-right" @click="hideModal">确认</button>
+                    <button class="btn btn-primary btn-confirm fr" @click="hideModal">确认</button>
                 </div>
             </div>
         </Modal>
