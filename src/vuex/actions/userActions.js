@@ -28,6 +28,7 @@ export const getUserInfo = (store, options, router) => {
 				name: resData.data.name,
 				image_add: resData.data.image_add
 			};
+			window.localStorage.setItem('homemanage_username',resData.data.name);
 			store.dispatch(types.SUCCESS_USER_INFO, data)
             // window.location.href = window.location.origin+'/index';
             router.go({name: 'index'});
