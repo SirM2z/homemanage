@@ -27,6 +27,10 @@
     .personal-box .personal-info .item-title {
         margin-right: 30px;
     }
+    .personal-box .personal-info .user-img {
+        width: 80px;
+        height: 80px;
+    }
 </style>
 <template>
     <nav-list></nav-list>
@@ -46,7 +50,7 @@
             <div class="info-item">
                 <div class="fl item-title">个人照片：</div>
                 <div v-if="user_img==''" class="fl"><img src="../images/default.png" class="img-circle"></div>
-                <div v-else class="fl"><img :src="user_img" class="img-circle"></div>
+                <div v-else class="fl"><img :src="user_img" class="img-circle user-img"></div>
                 <div class="fl"><input type="file" accept="image/*" /></div>
             </div>
             <div class="info-item">
@@ -66,7 +70,7 @@
                 <div class="modal-head">修改登录密码</div>
                 <div class="modal-bottom">
                     <div class="modal-item">
-                        <div class="fl item-title name-title">输入原有密码密码</div>
+                        <div class="fl item-title name-title">输入原有密码</div>
                         <div class="fl"><input type="password" class="form-control" placeholder="输入4~16位密码"></div>
                     </div>
                     <div class="modal-item">
