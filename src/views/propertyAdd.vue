@@ -91,7 +91,7 @@
             </div>
             <div class="info-item">
                 <div class="fl item-title">房产图片：</div>
-                <div class="fl"><input type="file" accept="image/*" /></div>
+                <div class="fl"><input type="file" accept="image/*" @change="uploadFile"/></div>
             </div>
             <div class="info-item">
                 <div class="fl item-title name-title">房产地址：</div>
@@ -142,6 +142,8 @@
         },
         data: function() {
             return {
+                file: null,
+                imgurl: '18888888881.jpg',
                 gatewayListSelectNum : 1,
                 gatewayList : null,
                 gatewayListSelected : [],
@@ -180,18 +182,39 @@
                     showMsg(this.$store, '请求超时！')
                 })
             },
+            uploadFile: function(e){
+                this.file = e.target.files[0];
+                this.$http.post(base_url+'/lock/upload',{
+                    img: this.file
+                }).then(function(response) {
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();
+                    console.log(resData);
+                    if (resData.code === 0) {
+                        //TO DO
+                        // this.imgurl = resData.data.
+                    } else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
+                })
+            },
             addSelect: function(){
                 this.gatewayListSelectNum++;
             },
             addEstate: function(){
-                console.log(this.gatewayListSelected);
-                return;
+                //console.log(this.gatewayListSelected);
                 showLoading(this.$store);
-                this.$http.post(base_url+'/user/modifyPassword', {
+                this.$http.post(base_url+'/lock/addEstate', {
                     name : this.name.trim(),
                     address : this.address.trim(),
+                    image  : this.imgurl,
                     note : this.note.trim(),
-                    gateways : this.gateways.trim()
+                    gateways : this.gatewayListSelected
                 }).then(function(response) {
                     hideLoading(this.$store);
                     if (!response.ok) {

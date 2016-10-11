@@ -144,7 +144,7 @@
         <div class="info-body">
             <div>
                 <div class="row">
-                    <div class="col-md-4">租客姓名：哈哈哈</div>
+                    <div class="col-md-4">租客姓名：{{tenant_name}}</div>
                     <div class="col-md-4">联系方式：18888888888</div>
                 </div>
                 <div class="row">
@@ -562,6 +562,7 @@
         },
         data: function() {
             return {
+                tenant_name: '111',
                 modal_type: '',
                 set_tenant_select: '',
                 set_tenant_name: '',
