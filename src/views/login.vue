@@ -57,7 +57,7 @@
                 <p class="text-center">用户登录</p>
             </div>
             <input type="text" v-model="user_name" class="form-control text-input" placeholder="输入注册手机号">
-            <input type="text" v-model="user_password" class="form-control text-input" placeholder="输入密码">
+            <input type="password" v-model="user_password" class="form-control text-input" placeholder="输入密码">
             <a href="#" class="text-left" @click="changeModalType('registere')">申请开通</a>
             <a href="#" class="pull-right" @click="changeModalType('verifi')">忘记密码</a>
             <div class="login-btn">
