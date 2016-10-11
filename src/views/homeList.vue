@@ -47,15 +47,15 @@
         <div class="row info-head">
             <div class="col-md-8">
                 <h1 class="head-title fl">
-                    海创基地
+                    {{get_estate_name}}
                 </h1>
             </div>
         </div>
         <div class="info-body">
             <div class="body-left">
-                <div>房产地址：滨江区六合路</div>
-                <div>绑定网关：天策奇瑞智能网关、智能网关、测试网关</div>
-                <div>备注信息：无</div>
+                <div>房产地址：{{get_estate_address}}</div>
+                <div>绑定网关：{{get_estate_bindgw}}</div>
+                <div>备注信息：{{get_estate_note}}</div>
             </div>
             <div class="body-btn">
                 <button type="button" class="btn btn-primary" @click="goPropertyEdit">修改信息</button>
@@ -107,7 +107,7 @@
             </tr>
             <tr>
                 <td><a href="#">2栋2单元101</a></td>
-                <td>在线</td>
+                <td>在线{{item.te==0?'zaixian':'lixian'}}</td>
                 <td>天策奇瑞智能网关</td>
                 <td>正常</td>
                 <td>已入住</td>
@@ -164,7 +164,11 @@
         },
         data: function() {
             return {
-
+                //房产信息
+                get_estate_name: '海创基地',
+                get_estate_address: '海创基地',
+                get_estate_bindgw: 'xxxx、xxx、123、xx 网关',
+                get_estate_note: '房产备注信息'
             }
         },
         ready: function() {
@@ -183,7 +187,7 @@
             getEstate: function(){
                 // this.$route.query.id
                 this.$http.post(base_url+'/lock/getEstate', {
-                    id : '123'
+                    id : this.$route.query.id
                 }).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
@@ -193,6 +197,11 @@
                     console.log(resData);
                     if (resData.code === 0) {
                         // to do
+                        this.get_estate_name = resData.data.name;
+                        this.get_estate_address = resData.data.address;
+                        this.get_estate_bindgw = resData.data.bindgw;
+                        this.get_estate_note = resData.data.note;
+
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -202,7 +211,7 @@
             },
             getLockList:function(){
                 this.$http.post(base_url+'/lock/getLockList', {
-                    id : '123'  
+                    id : this.$route.query.id  
                 }).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
@@ -220,8 +229,9 @@
                 })
             },
             deleteEstate: function(){
+                let _this = this;
                 this.$http.post(base_url+'/lock/delEstate', { 
-                        id : '123'  
+                        id : this.$route.query.id
                     }).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
@@ -230,7 +240,11 @@
                     let resData = response.json();
                     console.log(resData);
                     if (resData.code === 0) {
-                        showMsg(this.$store, "删除成功!")
+                        showMsg(this.$store, "删除成功!");
+                        _this.hideModal(this.$store);
+                        _this.$router.go({
+                            name: 'index'
+                        })
                         // to do
                     } else {
                         showMsg(this.$store, resData.msg)
@@ -243,7 +257,7 @@
                 this.$router.go({
                     name: 'propertyEdit',
                     query: {
-                        id: 0
+                        id: this.$route.query.id
                     }
                 })
             }

@@ -7,9 +7,11 @@
     }
     
     .index-box .fc-items {
-        display: flex;
+        /*display: flex;*/
         padding: 0 50px;
         margin-top: 20px;
+        width: 100%;
+        overflow: hidden;
     }
     
     .index-box .fc-item {
@@ -18,8 +20,10 @@
     }
     
     .index-box .fc-info {
-        flex: 1;
+        /*flex: 1;*/
+        float: left;
         margin-bottom: 20px;
+        width: 33%;
     }
     
     .index-box .fc-info img {
@@ -73,80 +77,11 @@
             </div>
         </div>
         <div class="fc-items">
-            <div class="fc-info">
-                <div class="fc-item">
-                    <img src="../images/tmp.png">
-                    <p class="fc-name">海创基地</p>
-                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
-                </div>
-            </div>
-            <div class="fc-info">
-                <div class="fc-item">
-                    <img src="../images/tmp.png">
-                    <p class="fc-name">海创基地</p>
-                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
-                </div>
-            </div>
-            <div class="fc-info">
-                <div class="fc-item">
-                    <img src="../images/tmp.png">
-                    <p class="fc-name">海创基地</p>
-                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
-                </div>
-            </div>
-        </div>
-        <div class="fc-items">
-            <div class="fc-info">
-                <div class="fc-item">
-                    <img src="../images/tmp.png">
-                    <p class="fc-name">海创基地</p>
-                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
-                </div>
-            </div>
-            <div class="fc-info">
-                <div class="fc-item">
-                    <img src="../images/tmp.png">
-                    <p class="fc-name">海创基地</p>
-                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
-                </div>
-            </div>
-            <div class="fc-info">
-                <div class="fc-item">
-                    <img src="../images/tmp.png">
-                    <p class="fc-name">海创基地</p>
-                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
-                </div>
-            </div>
-        </div>
-        <div class="fc-items">
-            <div class="fc-info">
-                <div class="fc-item">
-                    <img src="../images/tmp.png">
-                    <p class="fc-name">海创基地</p>
-                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
-                </div>
-            </div>
-            <div class="fc-info">
-                <div class="fc-item">
-                    <img src="../images/tmp.png">
-                    <p class="fc-name">海创基地</p>
-                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
-                </div>
-            </div>
-            <div class="fc-info">
-                <div class="fc-item">
-                    <img src="../images/tmp.png">
-                    <p class="fc-name">海创基地</p>
-                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
-                </div>
-            </div>
-        </div>
-        <div class="fc-items">
-            <div class="fc-info">
-                <div class="fc-item">
-                    <img src="../images/tmp.png">
-                    <p class="fc-name">海创基地</p>
-                    <p>共<span>28</span>间房，已入住<span>18</span>间房</p>
+            <div v-for="item in estateList" class="fc-info">
+                <div class="fc-item" @click="goHomeList(item.id)">
+                    <img :src="item.image">
+                    <p class="fc-name">{{item.name}}</p>
+                    <p>共<span>{{item.lockNum}}</span>间房，已入住<span>{{item.tenant}}</span>间房</p>
                 </div>
             </div>
             <div class="fc-info">
@@ -157,7 +92,6 @@
                     </div>
                 </div>
             </div>
-            <div class="fc-info"></div>
         </div>
     </div>
     <foot></foot>
@@ -179,7 +113,7 @@
         },
         data: function() {
             return {
-
+                estateList: null
             }
         },
         ready: function() {
@@ -204,6 +138,7 @@
                     // console.log(resData);
                     if (resData.code === 0) {
                         // this.getUserInfo({},this.$router);
+                        this.estateList = resData.data;
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -214,6 +149,14 @@
             },
             goAddEstate: function(){
                 this.$router.go({name: 'propertyAdd'})
+            },
+            goHomeList: function(id){
+                this.$router.go({
+                    name: 'homeList',
+                    query: {
+                        id: id
+                    }
+                })
             }
         }
     }
