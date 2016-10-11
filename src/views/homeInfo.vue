@@ -109,7 +109,7 @@
     .home-box .modal-ne .another-password,.home-box .modal-ne .change-another-password {
         height: 300px;
     }
-    .home-box .modal-ne .btn-count {
+    .home-box .modal-ne .btn-code-random {
         margin-left: -80px;
         height: 34px;
     }
@@ -119,6 +119,10 @@
    }
    .home-box .modal-ne .info-edit {
        height: 380px;
+   }
+   .home-box .btn-code-random:focus, .home-box .btn-code-random:active:focus {
+       outline: none;
+       outline-offset: -2px;
    }
 </style>
 <template>
@@ -138,21 +142,21 @@
             </div>
         </div>
         <div class="info-body">
-            <div>
+            <div v-if="tenant===2">
                 <div class="row">
                     <div class="col-md-4">租客姓名：{{tenant_name}}</div>
-                    <div class="col-md-4">联系方式：18888888888</div>
+                    <div class="col-md-4">联系方式：{{tenant_phone}}</div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4 btn-row-dev">身份证：420745699852145632</div>
-                    <div class="col-md-4 btn-row-dev">合同到期时间：2016年9月12日到期</div>
+                    <div class="col-md-4 btn-row-dev">身份证：{{tenant_IDcard}}</div>
+                    <div class="col-md-4 btn-row-dev">合同到期时间：{{tenant_time}}</div>
                     <div class="col-md-4"><button type="button" class="btn btn-primary fr" @click="changeModalType('set_tenant')">修改信息</button></div>
                 </div>
                 <div class="row">
                     <div class="col-md-3">入住情况：已入住</div>
                 </div>
             </div>
-            <div>
+            <div v-else>
                 <div class="row">
                     <div class="col-md-6 btn-row-dev">尚未入住</div>
                     <div class="col-md-6"><button type="button" class="btn btn-primary fr" @click="changeModalType('set_tenant')">添加租客</button></div>
@@ -165,31 +169,31 @@
                     <table class="table table-striped">
                         <tr>
                             <td>绑定时间</td>
-                            <td>2016.09.12</td>
+                            <td>{{get_LI_bindtime}}</td>
                         </tr>
                         <tr>
                             <td>更新时间</td>
-                            <td>2016.09.12</td>
+                            <td>{{get_LI_update_time}}</td>
                         </tr>
                         <tr>
                             <td>网关MAC地址</td>
-                            <td>00.01.6C.A6.29</td>
+                            <td>{{get_LI_gw_mac}}</td>
                         </tr>
                         <tr>
                             <td>门锁MAC地址</td>
-                            <td>00.01.6C.A6.29</td>
+                            <td>{{get_LI_lock_mac}}</td>
                         </tr>
                         <tr>
                             <td>当前网关版本号</td>
-                            <td>0.6.0.12</td>
+                            <td>{{get_LI_gw_ver}}</td>
                         </tr>
                         <tr>
                             <td>最新网关版本号</td>
-                            <td>0.6.0.22</td>
+                            <td>{{get_LI_last_ver}}</td>
                         </tr>
                         <tr>
                             <td>Zigbee版本号</td>
-                            <td>0.6.0.22</td>
+                            <td>{{get_LI_zb_ver}}</td>
                         </tr>
                         <tr>
                             <td>供应商</td>
@@ -199,20 +203,20 @@
                 </tab>
                 <tab-group header="密码管理">
                     <tab header="租客密码管理">
-                        <div class="no-password">
+                        <div v-if="no_TC" class="no-password">
                             <div class="no-password-btn" @click="changeModalType('add_tenant_code')">添加租客密码</div>
                         </div>
-                        <table class="table table-striped rent-pass-manage">
-                            <tr>
-                                <td class="blue">明水原101租客密码</td>
-                                <td>2016.09.23 16:00失效</td>
+                        <table v-else class="table table-striped rent-pass-manage">
+                            <tr v-if="get_TC_freeze==true">
+                                <td class="blue">{{get_TC_name}}</td>
+                                <td>{{get_TC_time}}</td>
                                 <td class="blue rent-password-btn ice-password" @click="changeModalType('freeze_tenant_code')">冻结密码</td>
                                 <td class="blue rent-password-btn  change-password" @click="changeModalType('modify_tenant_code')">修改密码</td>
                                 <td class="blue rent-password-btn  delete-password" @click="changeModalType('del_tenant_code')">删除密码</td>
                             </tr>
-                            <tr>
-                                <td class="no-use">明水原101租客密码</td>
-                                <td class="color_999">2016.09.23 16:00失效</td>
+                            <tr v-else>
+                                <td class="no-use">{{get_TC_name}}</td>
+                                <td class="color_999">{{get_TC_time}}</td>
                                 <td class="blue rent-password-btn solve-password" @click="changeModalType('thaw_tenant_code')">解冻密码</td>
                                 <td class="blue rent-password-btn  reset-password" @click="changeModalType('modify_tenant_code')">重置密码</td>
                                 <td></td>
@@ -382,7 +386,7 @@
                         <div class="fl item-title name-title">输入租客密码</div>
                         <div class="fl">
                             <input type="password" v-model="add_TC_password" class="form-control fl" placeholder="请输入4~16位数字密码">
-                            <button class="btn btn-link btn-count">随机生成</button>
+                            <button class="btn btn-link btn-code-random">随机生成</button>
                         </div>
                     </div>
                     <div class="modal-item">
@@ -538,6 +542,17 @@
             </div>
         </Modal>
     </div>
+    <div v-for="item in list">
+        <tr v-if="item.time.split(' ')[0]!=lastTime">
+            <th>{{abc(item)}}</th>
+        </tr>
+        <tr>
+            <td>09:34 租客密码添加成功</td>
+        </tr>
+        <tr>
+            <td>09:50 租客密码已解冻</td>
+        </tr>
+    </div>
     <foot></foot>
 </template>
 <script>
@@ -558,7 +573,25 @@
         },
         data: function() {
             return {
-                tenant_name: '111',
+                //租客信息
+                tenant: 2,
+                tenant_name: '哈哈哈哈',
+                tenant_phone: '18888888888',
+                tenant_IDcard: '420745699852145632',
+                tenant_time: '2016年9月12日到期',
+                //设备信息
+                get_LI_bindtime: '',
+                get_LI_update_time: '',
+                get_LI_gw_mac: '',
+                get_LI_lock_mac: '',
+                get_LI_gw_ver: '',
+                get_LI_last_ver: '',
+                get_LI_zb_ver: '',
+                //租客密码
+                no_TC: false,
+                get_TC_freeze: false,
+                get_TC_name: '茗水苑 101 租客密码',
+                get_TC_time: '"2016-09-19 08:08:08',
                 modal_type: '',
                 set_tenant_select: '',
                 set_tenant_name: '',
@@ -582,7 +615,17 @@
                 add_code_code: '',
                 modify_code_name: '',
                 modify_code_password: '',
-                modify_code_code: ''
+                modify_code_code: '',
+                //上一个时间
+                lastTime: 0
+            }
+        },
+        computed: {
+            // 一个计算属性的 getter
+            abc: function (item) {
+            // `this` 指向 vm 实例
+                this.lastTime = item.time.split(' ')[0];
+                return item.time.split(' ')[0];
             }
         },
         ready: function() {
@@ -622,7 +665,11 @@
                     let resData = response.json();
                     console.log(resData);
                     if (resData.code === 0) {
-                        // to do
+                        this.tenant = resData.data.tenant;
+                        this.tenant_name = resData.data.name;
+                        this.tenant_phone = resData.data.phone;
+                        this.tenant_IDcard = resData.data.IDcard;
+                        this.tenant_time = resData.data.time;
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -643,6 +690,13 @@
                     console.log(resData);
                     if (resData.code === 0) {
                         // to do
+                        this.get_LI_bindtime = resData.data.bindtime;
+                        this.get_LI_update_time = resData.data.update_time;
+                        this.get_LI_gw_mac = resData.data.gw_mac;
+                        this.get_LI_lock_mac = resData.data. lock_mac;
+                        this.get_LI_gw_ver = resData.data.gw_ver;
+                        this.get_LI_last_ver = resData.data.last_ver;
+                        this.get_LI_zb_ver = resData.data.zb_ver;
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -663,6 +717,13 @@
                     console.log(resData);
                     if (resData.code === 0) {
                         // to do
+                        if(!resData.data){
+                            this.no_TC = true;
+                        }else{
+                            this.get_TC_freeze = resData.data.freeze;
+                            this.get_TC_name = resData.data.name;
+                            this.get_TC_time = resData.data.time;
+                        }
                     } else {
                         showMsg(this.$store, resData.msg)
                     }

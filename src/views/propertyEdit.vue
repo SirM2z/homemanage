@@ -86,7 +86,7 @@
         <div class="propertyedit-info">
             <div class="info-item">
                 <div class="fl item-title name-title">房产名称：</div>
-                <div class="fl"><input type="text" v-modal="name" class="form-control" id="name"></div>
+                <div class="fl"><input type="text" v-model="estate_name" class="form-control" id="name"></div>
             </div>
             <div class="info-item">
                 <div class="fl item-title">房产图片：</div>
@@ -94,34 +94,15 @@
             </div>
             <div class="info-item">
                 <div class="fl item-title name-title">房产地址：</div>
-                <div class="fl"><input type="text" v-modal="address" class="form-control item-address" id="name"></div>
+                <div class="fl"><input type="text" v-model="estate_address" class="form-control item-address" id="name"></div>
             </div>
             <div class="info-item wg-item">
                 <div class="fl item-title name-title wg-title">网关绑定：</div>
                 <div class="fl">
                     <div class="wg-options">
-                        <select class="form-control wg-option">
+                        <select class="form-control wg-option" v-for="n in gatewaysNum" v-model="estate_bindgw_selected[n]">
+                            <option value="0">请选择</option>
                             <option v-for="item in gatewayList" :value="item.id">{{item.name}}</option>
-                        </select>
-                        <select class="form-control wg-option">
-                            <option>test1</option>
-                            <option>test2</option>
-                            <option>test3</option>
-                        </select>
-                        <select class="form-control wg-option">
-                            <option>test1</option>
-                            <option>test2</option>
-                            <option>test3</option>
-                        </select>
-                        <select class="form-control wg-option">
-                            <option>test1</option>
-                            <option>test2</option>
-                            <option>test3</option>
-                        </select>
-                        <select class="form-control wg-option">
-                            <option>test1</option>
-                            <option>test2</option>
-                            <option>test3</option>
                         </select>
                         <div class="add-wg wg-option">
                             <div class="add-wg-btn" @click="addSelect">添加网关</div>
@@ -132,7 +113,7 @@
             <div class="info-item">
                 <div class="fl item-title name-title">备　　注：</div>
                 <div class="fl">
-                    <textarea class="form-control" v-modal="note" cols="80" rows="3"></textarea>
+                    <textarea class="form-control" v-model="estate_note" cols="80" rows="3"></textarea>
                 </div>
             </div>
             <div class="info-item pass-btn">
@@ -147,15 +128,25 @@
     import navList from '../components/comon/navList.vue'
     import foot from '../components/comon/foot.vue'
     import {base_url} from '../common.js'
+    import {showModal, hideModal, showLoading, showMsg} from '../vuex/actions/popupActions'
     export default {
+        vuex: {
+            actions: {
+                showModal,
+                hideModal,
+                showLoading,
+                showMsg
+            }
+        },
         data: function() {
             return {
-                name: '',
-                address: '',
-                note: '',
+                estate_name: '',
+                estate_address: '',
+                estate_bindgw: '',
+                estate_note: '',
                 gatewayList: null,
                 gateways: null,
-                gatewaysNum: 0
+                gatewaysNum: 1
             }
         },
         ready: function() {
@@ -174,7 +165,7 @@
                 // this.$route.query.id
                 console.log(this.$route.query.id);
                 this.$http.post(base_url+'/lock/getEstate', {
-                    id : this.$route.params.id
+                    id : this.$route.query.id
                 }).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
@@ -184,6 +175,11 @@
                     console.log(resData);
                     if (resData.code === 0) {
                         // to do
+                        this.estate_name = resData.data.name;
+                        this.estate_address = resData.data.address;
+                        // this.estate_bindgw = resData.data.bindgw.split('、');
+                        this.estate_note = resData.data.note;
+                        this.gatewaysNum = resData.data.bindgw.split('、').length;
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -213,11 +209,14 @@
                 this.gatewaysNum++;
             },
             modifyEstate: function(){
-                this.$http.post(base_url+'/lock/getEstate', {
-                    name : this.$route.params.id,
-                    address : this.$route.params.id,
-                    note : this.$route.params.id,
-                    gateways : this.$route.params.id
+                let _this = this;
+                this.$http.post(base_url+'/lock/modifyEstate', {
+                    id : this.$route.query.id,
+                    name : this.estate_name,
+                    image : '',
+                    address : this.estate_address,
+                    note : this.estate_note,
+                    gateways : this.gatewayList
                 }).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
@@ -227,6 +226,10 @@
                     console.log(resData);
                     if (resData.code === 0) {
                         // to do
+                        showMsg(this.$store, '保存成功！');
+                        _this.$router.go({
+                            name: 'index'
+                        })
                     } else {
                         showMsg(this.$store, resData.msg)
                     }

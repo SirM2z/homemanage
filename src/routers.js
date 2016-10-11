@@ -24,7 +24,7 @@ module.exports = function(routers) {
             }
         },
         'homeList': {
-            name: 'homelist',
+            name: 'homeList',
             title: '房间列表',
             component: function(resolve) {
                 require(['./views/homeList.vue'], resolve);
