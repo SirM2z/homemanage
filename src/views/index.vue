@@ -81,7 +81,7 @@
                 <div class="fc-item" @click="goHomeList(item.id)">
                     <img src="http://lockmgmt.pstone.cc:8080/img/{{item.image}}">
                     <p class="fc-name">{{item.name}}</p>
-                    <p>共<span>{{item.lockNum}}</span>间房，已入住<span>{{item.tenant}}</span>间房</p>
+                    <p>共{{item.lockNum}}间房，已入住{{item.tenant}}间房</p>
                 </div>
             </div>
             <div class="fc-info">
@@ -142,7 +142,7 @@
                         return
                     }
                     let resData = response.json();
-                    // console.log(resData);
+                     //console.log(resData);
                     if (resData.code === 0) {
                         // this.getUserInfo({},this.$router);
                         this.estateList = resData.data;
