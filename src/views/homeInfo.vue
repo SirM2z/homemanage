@@ -43,7 +43,7 @@
     }
     
     .home-box .info-tab {
-        margin-top: 30px;
+        margin: 30px 0;
     }
     
     .home-box .info-tab .no-password {
@@ -124,6 +124,15 @@
        outline: none;
        outline-offset: -2px;
    }
+   .home-box .operation-day {
+       padding: 20px 0;
+       border-bottom: solid 1px rgba(0, 0, 0, 0.1);
+   }
+   .home-box .operation-time {
+       padding: 15px 0;
+       margin-left: 25px;
+       box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.1);
+   }
 </style>
 <template>
     <nav-list></nav-list>
@@ -150,16 +159,16 @@
             </div>
             <div v-else>
                 <div class="row">
-                    <div class="col-md-4">租客姓名：{{tenant_data.name}}</div>
-                    <div class="col-md-4">联系方式：{{tenant_data.phone}}</div>
+                    <div class="col-md-4">租客姓名：{{tenant_name}}</div>
+                    <div class="col-md-4">联系方式：{{tenant_phone}}</div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4 btn-row-dev">身份证：{{tenant_data.IDcard}}</div>
-                    <div class="col-md-4 btn-row-dev">合同到期时间：{{tenant_data.time}}</div>
+                    <div class="col-md-4 btn-row-dev">身份证：{{tenant_IDcard}}</div>
+                    <div class="col-md-4 btn-row-dev">合同到期时间：{{tenant_time}}</div>
                     <div class="col-md-4"><button type="button" class="btn btn-primary fr" @click="changeModalType('set_tenant')">修改信息</button></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">入住情况：{{tenant_data.tenant==1?"未入住":"已入住"}}</div>
+                    <div class="col-md-3">入住情况：{{tenant_status==1?"未入住":"已入住"}}</div>
                 </div>
             </div>
         </div>
@@ -283,36 +292,20 @@
                     </tab>
                 </tab-group>
                 <tab header="开锁记录">
-                    <table class="table table-striped">
-                    </table>
+                    <div v-for="item in operation_data">
+                        <div v-if="$index == 0 || item.time.split(' ')[0]!=operation_data[$index-1].time.split(' ')[0]" class="operation-day color_333">
+                            {{item.time.split(' ')[0]}}
+                        </div>
+                        <div class="operation-time color_666">{{item.time.split(' ')[1]}} {{item.desc}}</div>
+                    </div>
                 </tab>
                 <tab header="操作记录">
-                    <table class="table table-striped">
-                        <tr>
-                            <th>2016-09-24</th>
-                        </tr>
-                        <tr>
-                            <td>09:34 租客密码添加成功</td>
-                        </tr>
-                        <tr>
-                            <td>09:50 租客密码已解冻</td>
-                        </tr>
-                        <tr>
-                            <th>2016-09-23</th>
-                        </tr>
-                        <tr>
-                            <td>09:34 租客密码添加成功</td>
-                        </tr>
-                        <tr>
-                            <th>2016-09-20</th>
-                        </tr>
-                        <tr>
-                            <td>09:34 租客密码添加成功</td>
-                        </tr>
-                        <tr>
-                            <td>09:50 租客密码已解冻</td>
-                        </tr>
-                    </table>
+                    <div v-for="item in operation_data">
+                        <div v-if="$index == 0 || item.time.split(' ')[0]!=operation_data[$index-1].time.split(' ')[0]" class="operation-day color_333">
+                            {{item.time.split(' ')[0]}}
+                        </div>
+                        <div class="operation-time color_666">{{item.time.split(' ')[1]}} {{item.desc}}</div>
+                    </div>
                 </tab>
             </tabs>
         </div>
@@ -324,27 +317,27 @@
                     <div class="modal-item">
                         <div class="fl item-title name-title">入住情况</div>
                         <div class="fl">
-                            <select v-model="set_tenant_select" class="form-control">
-                                <option value="0" selected="selected">未入住</option>
-                                <option value="1">已入住</option>
+                            <select v-model="tenant_data_temp.tenant" class="form-control">
+                                <option value="1">未入住</option>
+                                <option value="2">已入住</option>
                             </select>
                         </div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">租客姓名</div>
-                        <div class="fl"><input type="text" v-model="tenant_data.name" class="form-control"></div>
+                        <div class="fl"><input type="text" v-model="tenant_data_temp.name" class="form-control"></div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">联系方式</div>
-                        <div class="fl"><input type="text" v-model="tenant_data.phone" class="form-control"></div>
+                        <div class="fl"><input type="text" v-model="tenant_data_temp.phone" class="form-control"></div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">身份证号</div>
-                        <div class="fl"><input type="text" v-model="tenant_data.IDcard" class="form-control"></div>
+                        <div class="fl"><input type="text" v-model="tenant_data_temp.IDcard" class="form-control"></div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">合同到期时间</div>
-                        <div class="fl"><input type="text" v-model="tenant_data.time" class="form-control"></div>
+                        <div class="fl"><input type="text" v-model="tenant_data_temp.time" class="form-control"></div>
                     </div>
                     <button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
                     <button class="btn btn-primary btn-confirm" @click="setTenant">确认</button>
@@ -551,6 +544,7 @@
             return {
                 //租客信息
                 tenant_data: null,
+                tenant_data_temp: null,
                /* tenant: 1,
                 tenant_name: '',
                 tenant_phone: '',
@@ -599,16 +593,11 @@
                 modify_code_name: '',
                 modify_code_password: '',
                 modify_code_code: '',
-                //上一个时间
-                lastTime: 0
-            }
-        },
-        computed: {
-            // 一个计算属性的 getter
-            abc: function (item) {
-            // `this` 指向 vm 实例
-                this.lastTime = item.time.split(' ')[0];
-                return item.time.split(' ')[0];
+                //操作记录
+                operation_data: [],
+                operation_page: 0,
+                operation_pageNum: 20,
+                operation_done: false
             }
         },
         ready: function() {
@@ -617,8 +606,8 @@
             this.getLockInfo();
             this.getTenantCode();
             this.getCode();
-            //this.getLockopen();
-            //this.getOperation();
+            this.getLockopen();
+            this.getOperation();
         },
         components: {
             Modal,
@@ -655,12 +644,13 @@
                   //  console.log(resData);
                     if (resData.code === 0) {
                         this.tenant_data = resData.data;
-                        console.log(this.tenant_data);
-                        /*this.tenant = resData.data.tenant;
+                        this.tenant_data_temp = resData.data;
+                       // console.log(this.tenant_data);
+                        this.tenant_status = resData.data.tenant;
                         this.tenant_name = resData.data.name;
                         this.tenant_phone = resData.data.phone;
                         this.tenant_IDcard = resData.data.IDcard;
-                        this.tenant_time = resData.data.time;*/
+                        this.tenant_time = resData.data.time;
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -771,9 +761,9 @@
             getOperation: function(){
                 // this.$route.query.id
                 this.$http.post(base_url+'/lock/getOperation', {
-                    id : this.get_TC_id,
-                    quantity : this.get_TC_name,
-                    index : 0
+                    id : this.$route.query.id,
+                    quantity : this.operation_pageNum,
+                    index : this.operation_page*this.operation_pageNum
                 }).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
@@ -783,6 +773,37 @@
                     console.log(resData);
                     if (resData.code === 0) {
                         // to do
+                        this.operation_page++;
+                        //如果小于20跳 done改成true
+                        //数组累加
+                        //this.operation_data=this.operation_data.concat(resData.data)
+                        this.operation_data = [
+                            {
+                            "id":"123456",
+                            "time":"2016-09-19 08:08:08",
+                            "desc": "租客密码添加成功19"
+                            },
+                            {
+                            "id":"123456",
+                            "time":"2016-09-19 08:08:08",
+                            "desc": "租客密码添加失败19"
+                            },
+                            {
+                            "id":"sdafasfasdfs",
+                            "time":"2016-09-20 08:08:08",
+                            "desc": "租客密码添加成功20"
+                            },
+                            {
+                            "id":"246",
+                            "time":"2016-09-21 08:08:08",
+                            "desc": "租客密码已解冻21"
+                            },
+                            {
+                            "id":"246",
+                            "time":"2016-09-21 08:08:08",
+                            "desc": "租客密码已chengg21"
+                            }
+                        ]
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -792,14 +813,9 @@
             },
             setTenant: function(){
                 // this.$route.query.id
-                this.$http.post(base_url+'/lock/setTenant', {
-                    id : this.$route.query.id,
-                    tenant : this.set_tenant_select,
-                    name : this.tenant_data.name,
-                    phone : this.tenant_data.phone,
-                    IDcard : this.tenant_data.IDcard,
-                    time : this.tenant_data.time
-                }).then(function(response) {
+                let _this = this;
+                this.tenant_data_temp.id =this.$route.query.id;
+                this.$http.post(base_url+'/lock/setTenant', this.tenant_data_temp).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
                         return
@@ -808,6 +824,9 @@
                     console.log(resData);
                     if (resData.code === 0) {
                         // to do
+                        showMsg(this.$store, "修改成功!");
+                        this.tenant_data = this.tenant_data_temp;
+                        _this.hideModal(_this.$store);
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -824,93 +843,6 @@
                     endTime : this.add_TC_endtime,
                     openTime : this.add_TC_opentime,
                     code : this.add_TC_code
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
-                        return
-                    }
-                    let resData = response.json();
-                    console.log(resData);
-                    if (resData.code === 0) {
-                        // to do
-                    } else {
-                        showMsg(this.$store, resData.msg)
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！')
-                })
-            },
-            modifyTenantCode: function(){
-                // this.$route.query.id
-                this.$http.post(base_url+'/lock/modifyTenantCode', {
-                    id : this.get_TC_id,
-                    password : this.mothis.get_TC_namefy_TC_password,
-                    name : this.modify_TC_name,
-                    endTime : this.modify_TC_endtime,
-                    openTime : this.modify_TC_opentime,
-                    code : this.modify_TC_code
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
-                        return
-                    }
-                    let resData = response.json();
-                    console.log(resData);
-                    if (resData.code === 0) {
-                        // to do
-                    } else {
-                        showMsg(this.$store, resData.msg)
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！')
-                })
-            },
-            freezeTenantCode: function(){
-                // this.$route.query.id
-                this.$http.post(base_url+'/lock/freezeTenantCode', {
-                    id : this.get_TC_id,
-                    code : this.freezethis.get_TC_nameC_code
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
-                        return
-                    }
-                    let resData = response.json();
-                    console.log(resData);
-                    if (resData.code === 0) {
-                        // to do
-                    } else {
-                        showMsg(this.$store, resData.msg)
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！')
-                })
-            },
-            thawTenantCode: function(){
-                // this.$route.query.id
-                this.$http.post(base_url+'/lock/thawTenantCode', {
-                    id : this.get_TC_id,
-                    code : this.thaw_Tthis.get_TC_namecode
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
-                        return
-                    }
-                    let resData = response.json();
-                    console.log(resData);
-                    if (resData.code === 0) {
-                        // to do
-                    } else {
-                        showMsg(this.$store, resData.msg)
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！')
-                })
-            },
-            delTenantCode: function(){
-                // this.$route.query.id
-                this.$http.post(base_url+'/lock/delTenantCode', {
-                    id : this.get_TC_id,
                 }).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
@@ -956,49 +888,6 @@
                     name : this.add_code_name,
                     index : '',
                     code : this.add_code_code
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
-                        return
-                    }
-                    let resData = response.json();
-                    console.log(resData);
-                    if (resData.code === 0) {
-                        // to do
-                    } else {
-                        showMsg(this.$store, resData.msg)
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！')
-                })
-            },
-            modifyCode: function(){
-                // this.$route.query.id
-                this.$http.post(base_url+'/lock/modifyCode', {
-                    id : this.get_TC_id,
-                    password : this.mothis.get_TC_namefy_code_password,
-                    name : this.modify_code_password,
-                    code : this.modify_code_password
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
-                        return
-                    }
-                    let resData = response.json();
-                    console.log(resData);
-                    if (resData.code === 0) {
-                        // to do
-                    } else {
-                        showMsg(this.$store, resData.msg)
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！')
-                })
-            },
-            delCode: function(){
-                // this.$route.query.id
-                this.$http.post(base_url+'/lock/delCode', {
-                    id : this.get_TC_id,
                 }).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
