@@ -90,7 +90,7 @@
             </div>
             <div class="info-item">
                 <div class="fl item-title">房产图片：</div>
-                <div class="fl"><input type="file" accept="image/*" /></div>
+                <div class="fl"><input type="file" accept="image/*" @change="uploadFile"/></div>
             </div>
             <div class="info-item">
                 <div class="fl item-title name-title">房产地址：</div>
@@ -144,9 +144,11 @@
                 estate_address: '',
                 estate_bindgw: '',
                 estate_note: '',
+                estate_image: '',
                 gatewayList: null,
                 gateways: null,
-                gatewaysNum: 1
+                gatewaysNum: 1,
+                estate_bindgw_selected: null
             }
         },
         ready: function() {
@@ -163,7 +165,7 @@
         methods: {
             getEstate: function(){
                 // this.$route.query.id
-                console.log(this.$route.query.id);
+                //console.log(this.$route.query.id);
                 this.$http.post(base_url+'/lock/getEstate', {
                     id : this.$route.query.id
                 }).then(function(response) {
@@ -172,14 +174,15 @@
                         return
                     }
                     let resData = response.json();
-                    console.log(resData);
+                    //console.log(resData);
                     if (resData.code === 0) {
                         // to do
                         this.estate_name = resData.data.name;
                         this.estate_address = resData.data.address;
                         // this.estate_bindgw = resData.data.bindgw.split('、');
+                        this.estate_bindgw_selected = resData.data.bindgw;
                         this.estate_note = resData.data.note;
-                        this.gatewaysNum = resData.data.bindgw.split('、').length;
+                        this.gatewaysNum = resData.data.bindgw.length;
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -194,7 +197,7 @@
                         return
                     }
                     let resData = response.json();
-                    console.log(resData);
+                    //console.log(resData);
                     if (resData.code === 0) {
                         //TO DO
                         this.gatewayList = resData.data;
@@ -205,7 +208,35 @@
                     showMsg(this.$store, '请求超时！')
                 })
             },
+            uploadFile: function(e){
+                let formdata = new FormData();  
+                this.file = e.target.files[0];
+                //console.log(this.file);
+                formdata.append("img", this.file);
+                //, {
+                //   headers: {
+                //        'Content-Type': 'multipart/form-data'
+                //    }
+                //}
+                this.$http.post(base_url+'/lock/upload',formdata).then(function(response) {
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();
+                    //console.log(resData);
+                    if (resData.code === 0) {
+                        //TO DO
+                        this.estate_image = resData.data;
+                    } else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
+                })
+            },
             addSelect: function(){
+                this.estate_bindgw_selected[this.gatewaysNum]=0;
                 this.gatewaysNum++;
             },
             modifyEstate: function(){
@@ -213,17 +244,17 @@
                 this.$http.post(base_url+'/lock/modifyEstate', {
                     id : this.$route.query.id,
                     name : this.estate_name,
-                    image : '',
+                    image : this.estate_image,
                     address : this.estate_address,
                     note : this.estate_note,
-                    gateways : this.gatewayList
+                    gateways : this.estate_bindgw_selected
                 }).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
                         return
                     }
                     let resData = response.json();
-                    console.log(resData);
+                    //console.log(resData);
                     if (resData.code === 0) {
                         // to do
                         showMsg(this.$store, '保存成功！');

@@ -54,7 +54,7 @@
         <div class="info-body">
             <div class="body-left">
                 <div>房产地址：{{get_estate_address}}</div>
-                <div>绑定网关：{{get_estate_bindgw}}</div>
+                <div>绑定网关：{{get_estate_gwNames}}</div>
                 <div>备注信息：{{get_estate_note}}</div>
             </div>
             <div class="body-btn">
@@ -165,10 +165,10 @@
         data: function() {
             return {
                 //房产信息
-                get_estate_name: '海创基地',
-                get_estate_address: '海创基地',
-                get_estate_bindgw: 'xxxx、xxx、123、xx 网关',
-                get_estate_note: '房产备注信息'
+                get_estate_name: '',
+                get_estate_address: '',
+                get_estate_gwNames: '',
+                get_estate_note: ''
             }
         },
         ready: function() {
@@ -199,7 +199,7 @@
                         // to do
                         this.get_estate_name = resData.data.name;
                         this.get_estate_address = resData.data.address;
-                        this.get_estate_bindgw = resData.data.bindgw;
+                        this.get_estate_gwNames = resData.data.gwNames;
                         this.get_estate_note = resData.data.note;
 
                     } else {
@@ -241,7 +241,7 @@
                     console.log(resData);
                     if (resData.code === 0) {
                         showMsg(this.$store, "删除成功!");
-                        _this.hideModal(this.$store);
+                        _this.hideModal(_this.$store);
                         _this.$router.go({
                             name: 'index'
                         })
