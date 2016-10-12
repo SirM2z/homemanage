@@ -70,68 +70,12 @@
                 <th>电量状态</th>
                 <th>入住状态</th>
             </tr>
-            <tr>
-                <td><a href="#">2栋2单元101</a></td>
-                <td>在线</td>
-                <td>天策奇瑞智能网关</td>
-                <td>正常</td>
-                <td>已入住</td>
-            </tr>
-            <tr>
-                <td><a href="#">2栋2单元101</a></td>
-                <td class="home_red">在线</td>
-                <td>天策奇瑞智能网关</td>
-                <td>正常</td>
-                <td>已入住</td>
-            </tr>
-            <tr>
-                <td><a href="#">2栋2单元101</a></td>
-                <td>在线</td>
-                <td class="home_red">天策奇瑞智能网关</td>
-                <td>正常</td>
-                <td>已入住</td>
-            </tr>
-            <tr>
-                <td><a href="#">2栋2单元101</a></td>
-                <td>在线</td>
-                <td>天策奇瑞智能网关</td>
-                <td>正常</td>
-                <td>已入住</td>
-            </tr>
-            <tr>
-                <td><a href="#">2栋2单元101</a></td>
-                <td class="home_red">在线</td>
-                <td>天策奇瑞智能网关</td>
-                <td>正常</td>
-                <td>已入住</td>
-            </tr>
-            <tr>
-                <td><a href="#">2栋2单元101</a></td>
-                <td>在线{{item.te==0?'zaixian':'lixian'}}</td>
-                <td>天策奇瑞智能网关</td>
-                <td>正常</td>
-                <td>已入住</td>
-            </tr>
-            <tr>
-                <td><a href="#">2栋2单元101</a></td>
-                <td>在线</td>
-                <td>天策奇瑞智能网关</td>
-                <td>正常</td>
-                <td>已入住</td>
-            </tr>
-            <tr>
-                <td><a href="#">2栋2单元101</a></td>
-                <td>在线</td>
-                <td>天策奇瑞智能网关</td>
-                <td>正常</td>
-                <td>已入住</td>
-            </tr>
-            <tr>
-                <td><a href="#">2栋2单元101</a></td>
-                <td>在线</td>
-                <td>天策奇瑞智能网关</td>
-                <td>正常</td>
-                <td>已入住</td>
+            <tr v-for="item in lock_list">
+                <td><a @click="goHomeInfo(get_estate_name,item.id,item.status,item.power)">{{item.name}}</a></td>
+                <td>{{item.status = true?"在线":"离线"}}</td>
+                <td>{{item.gw_name}}</td>
+                <td>{{item.power}}</td>
+                <td>{{item.tenant == 1?"未住":"已住"}}</td>
             </tr>
         </table>
         <Modal>
@@ -165,10 +109,12 @@
         data: function() {
             return {
                 //房产信息
-                get_estate_name: '海创基地',
-                get_estate_address: '海创基地',
-                get_estate_bindgw: 'xxxx、xxx、123、xx 网关',
-                get_estate_note: '房产备注信息'
+                get_estate_name: '',
+                get_estate_address: '',
+                get_estate_bindgw: '',
+                get_estate_note: '',
+                //锁列表'
+                lock_list: null
             }
         },
         ready: function() {
@@ -194,7 +140,7 @@
                         return
                     }
                     let resData = response.json();
-                    console.log(resData);
+                  //  console.log(resData);
                     if (resData.code === 0) {
                         // to do
                         this.get_estate_name = resData.data.name;
@@ -218,9 +164,10 @@
                         return
                     }
                     let resData = response.json();
-                    console.log(resData);
+                    console.log(resData.data);
                     if (resData.code === 0) {
                         // to do
+                        this.lock_list = resData.data;
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -238,7 +185,7 @@
                         return
                     }
                     let resData = response.json();
-                    console.log(resData);
+                  //  console.log(resData);
                     if (resData.code === 0) {
                         showMsg(this.$store, "删除成功!");
                         _this.hideModal(this.$store);
@@ -258,6 +205,17 @@
                     name: 'propertyEdit',
                     query: {
                         id: this.$route.query.id
+                    }
+                })
+            },
+            goHomeInfo: function(name,id,status,power){
+                this.$router.go({
+                    name: 'homeInfo',
+                    query: {
+                        estate_name: name,
+                        id: id,
+                        status: status,
+                        power: power
                     }
                 })
             }
