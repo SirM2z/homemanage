@@ -143,7 +143,7 @@
         data: function() {
             return {
                 file: null,
-                imgurl: '18888888881.jpg',
+                imgurl: '',
                 gatewayListSelectNum : 1,
                 gatewayList : null,
                 gatewayListSelected : [],
@@ -183,10 +183,15 @@
                 })
             },
             uploadFile: function(e){
+                let formdata = new FormData();  
                 this.file = e.target.files[0];
-                this.$http.post(base_url+'/lock/upload',{
-                    img: this.file
-                }).then(function(response) {
+                formdata.append("img", this.file);
+                //, {
+                //   headers: {
+                //        'Content-Type': 'multipart/form-data'
+                //    }
+                //}
+                this.$http.post(base_url+'/lock/upload',formdata).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
                         return
@@ -195,7 +200,7 @@
                     console.log(resData);
                     if (resData.code === 0) {
                         //TO DO
-                        // this.imgurl = resData.data.
+                        this.imgurl = resData.data;
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -207,6 +212,7 @@
                 this.gatewayListSelectNum++;
             },
             addEstate: function(){
+                let _this = this;
                 //console.log(this.gatewayListSelected);
                 showLoading(this.$store);
                 this.$http.post(base_url+'/lock/addEstate', {
@@ -226,6 +232,9 @@
                     if (resData.code === 0) {
                         //TO DO
                         showMsg(this.$store, '添加成功');
+                        _this.$router.go({
+                            name: 'index'
+                        })
                     } else {
                         showMsg(this.$store, resData.msg)
                     }

@@ -84,7 +84,7 @@
 			</li>
 			<dropdown class="personal-list" slot="right" :text="name">
 				<li><a class="personal-center"  v-link="{name: 'personal'}">个人中心</a></li>
-				<li><a class="sign-out"  v-link="{name: 'index'}">退出登录</a></li>
+				<li><a class="sign-out"  v-link="{name: 'login'}">退出登录</a></li>
 			</dropdown>
 		</navbar>
 	</div>

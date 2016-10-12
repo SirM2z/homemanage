@@ -18,13 +18,18 @@ Vue.config.debug = true;
 // Vue.http.options.emulateHTTP = true
 // Vue.http.options.crossOrigin = true
 // Vue.http.options.emulateJSON = true
-Vue.http.headers.common['Content-type'] = 'application/x-www-form-urlencoded';
+// Vue.http.headers.common['Content-type'] = 'application/x-www-form-urlencoded';
 Vue.http.options.xhr = {
 	withCredentials: true
 }
 
 Vue.http.interceptors.push((request, next) => {
 	request.timeout = 20000; //请求超时20秒
+	// console.log(request)
+	// if(request.url.indexOf('/lock/upload')>0){
+		// request.headers['Content-type'] = 'multipart/form-data';
+		// console.log('1111');
+	// }
 	request.credentials = true;
 	next();
 })

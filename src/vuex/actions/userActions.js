@@ -14,7 +14,11 @@ let msg = '请求超时！';
 
 export const getUserInfo = (store, options, router) => {
     // console.log(router);
-	$http.post(base_url+'/user/info', options).then(function(response) {
+	$http.post(base_url+'/user/info', options,{
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded'
+		}
+	}).then(function(response) {
 		hideLoading(store);
 		if (!response.ok) {
 			store.dispatch(types.FAILURE_USER_INFO)

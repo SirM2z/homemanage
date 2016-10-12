@@ -79,7 +79,7 @@
         <div class="fc-items">
             <div v-for="item in estateList" class="fc-info">
                 <div class="fc-item" @click="goHomeList(item.id)">
-                    <img :src="item.image">
+                    <img src="http://lockmgmt.pstone.cc:8080/img/{{item.image}}">
                     <p class="fc-name">{{item.name}}</p>
                     <p>共{{item.lockNum}}间房，已入住{{item.tenant}}间房</p>
                 </div>
@@ -100,7 +100,7 @@
     import navList from '../components/comon/navList.vue'
     import foot from '../components/comon/foot.vue'
     import {showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
-    import {base_url} from '../common.js'
+    import {base_url,img_url} from '../common.js'
     export default {
         vuex: {
             getters: {
@@ -124,6 +124,13 @@
             foot
         },
         beforeDestroy: function() {
+        },
+        computed: {
+            getImgurl: function (img) {
+                console.log(img);
+                console.log(img_url);
+                return img_url + img
+            }
         },
         methods: {
             getEstateList: function(){
