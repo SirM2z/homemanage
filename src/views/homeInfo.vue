@@ -133,6 +133,25 @@
        margin-left: 25px;
        box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.1);
    }
+   .home-box .btn-more {
+       margin: 15px;
+   }
+   .home-box .bycode-btn {
+       position: relative;
+   }
+   .home-box .bycode-btn>div {
+       position: absolute;
+       width: 70px;
+   }
+   .home-box .bycode-btn>div.bycode-change {
+       right: -30px;
+   }
+   .home-box .bycode-btn>div.bycode-del {
+       right: 200px;
+   }
+   .home-box .bycode-btn>div.bycode-add {
+       right: 100px;
+   }
 </style>
 <template>
     <nav-list></nav-list>
@@ -234,70 +253,29 @@
                     </tab>
                     <tab header="备用密码管理">
                         <table class="table table-striped ready-pass">
-                            <tr>
-                                <td>001</td>
-                                <td>备用密码001</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>002</td>
-                                <td>备用密码001</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>003</td>
-                                <td>备用密码001</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr class="no-set">
-                                <td>004</td>
-                                <td>无</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr class="no-set">
-                                <td>005</td>
-                                <td>无</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>006</td>
-                                <td>备用密码001</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>007</td>
-                                <td>备用密码001</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>008</td>
-                                <td>备用密码001</td>
-                                <td></td>
-                                <td></td>
+                            <tr v-for="item in bycode[page_count]" @click="editCode($index)" :class="{ 'no-set': !item}">
+                                <td>{{$index}}</td>
+                                <td>{{item?item.name:'无'}}</td>
+                                <td><div class="bycode-btn"><div v-show="bycode_btn_isshow[page_count][$index].showY" class="bycode-change">修改密码</div></div></td>
+                                <td><div class="bycode-btn"><div v-show="bycode_btn_isshow[page_count][$index].showN" class="bycode-add">添加密码</div><div v-show="bycode_btn_isshow[page_count][$index].showY" class="bycode-del">删除密码</div></div></td>
                             </tr>
                         </table>
                         <div class="page">
                             <div class="fr">
-                                <button type="button" class="btn btn-primary">1</button>
-                                <button type="button" class="btn btn-primary">2</button>
+                                <button @click="changePage(1)" type="button" class="btn btn-primary">1</button>
+                                <button @click="changePage(2)" type="button" class="btn btn-primary">2</button>
                             </div>
                         </div>
                     </tab>
                 </tab-group>
                 <tab header="开锁记录">
-                    <div v-for="item in operation_data">
-                        <div v-if="$index == 0 || item.time.split(' ')[0]!=operation_data[$index-1].time.split(' ')[0]" class="operation-day color_333">
+                    <div v-for="item in lock_open_list">
+                        <div v-if="$index == 0 || item.time.split(' ')[0]!=lock_open_list[$index-1].time.split(' ')[0]" class="operation-day color_333">
                             {{item.time.split(' ')[0]}}
                         </div>
                         <div class="operation-time color_666">{{item.time.split(' ')[1]}} {{item.desc}}</div>
                     </div>
+                    <button @click="getLockopen" v-show="!lockopen_done" class="btn btn-primary btn-more pull-right">更多记录</button>
                 </tab>
                 <tab header="操作记录">
                     <div v-for="item in operation_data">
@@ -306,6 +284,7 @@
                         </div>
                         <div class="operation-time color_666">{{item.time.split(' ')[1]}} {{item.desc}}</div>
                     </div>
+                    <button @click="getOperation" v-show="!operation_done" class="btn btn-primary btn-more pull-right">更多记录</button>
                 </tab>
             </tabs>
         </div>
@@ -593,11 +572,100 @@
                 modify_code_name: '',
                 modify_code_password: '',
                 modify_code_code: '',
+                //开锁记录
+                lock_open_list: [],
+                lockopen_page: 0,
+                lockopen_done: false,
                 //操作记录
                 operation_data: [],
                 operation_page: 0,
                 operation_pageNum: 20,
-                operation_done: false
+                operation_done: false,
+                //备用密码
+                bycode: {
+                    first: [
+                            {
+                                "id" : "123",
+                                "index" : 1,
+                                "name" : "备用密码001"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 2,
+                                "name" : "备用密码002"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 3,
+                                "name" : "备用密码003"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 4,
+                                "name" : "备用密码004"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 5,
+                                "name" : "备用密码005",
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 6,
+                                "name" : "备用密码006",
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 7,
+                                "name" : "备用密码007",
+                            },
+                            undefined
+                        ],
+                    second: [
+                            {
+                                "id" : "123",
+                                "index" : 9,
+                                "name" : "备用密码009"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 10,
+                                "name" : "备用密码0010"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 11,
+                                "name" : "备用密码0011"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 12,
+                                "name" : "备用密码0012"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 13,
+                                "name" : "备用密码013"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 14,
+                                "name" : "备用密码014"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 15,
+                                "name" : "备用密码015"
+                            },
+                            null]
+                },
+                bycode_btn_isshow: {
+                    first: new Array(8),
+                    second: new Array(8)
+                },
+                page_count: 'first',
+                last_page_count: '',
+                last_index: -1
             }
         },
         ready: function() {
@@ -727,6 +795,96 @@
                     console.log(resData);
                     if (resData.code === 0) {
                         // to do
+                        //遍历bycode，分为first和second
+                     //   this.bycode = resData.data;
+                     this.bycode.first = [
+                            {
+                                "id" : "123",
+                                "index" : 1,
+                                "name" : "备用密码001"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 2,
+                                "name" : "备用密码002"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 3,
+                                "name" : "备用密码003"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 4,
+                                "name" : "备用密码004"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 5,
+                                "name" : "备用密码005",
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 6,
+                                "name" : "备用密码006",
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 7,
+                                "name" : "备用密码007",
+                            },
+                            undefined
+                        ];
+                    this.bycode.second = [
+                            {
+                                "id" : "123",
+                                "index" : 9,
+                                "name" : "备用密码009"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 10,
+                                "name" : "备用密码0010"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 11,
+                                "name" : "备用密码0011"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 12,
+                                "name" : "备用密码0012"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 13,
+                                "name" : "备用密码013"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 14,
+                                "name" : "备用密码014"
+                            },
+                            {
+                                "id" : "123",
+                                "index" : 15,
+                                "name" : "备用密码015"
+                            },
+                            null              
+                        ];
+                   /* for (info in this.bycode){
+                        if(info.index < 8) {
+                            this.bycode.first[index-1] = info;
+                        }else {
+                            this.bycode.second[index-9] = info;
+                            }
+                        } */
+                        if(!resData.data)return;
+                        for(let i=0;i<resData.data.length;i++){
+                            //
+                            this.bycode.first[i] = resData.data[i]
+                        }
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -738,8 +896,8 @@
                 // this.$route.query.id
                 this.$http.post(base_url+'/lock/getLockopen', {
                     id : this.$route.query.id,
-                    quantity : 20,
-                    index : 0
+                    quantity : this.operation_pageNum,
+                    index : this.lockopen_page*this.operation_pageNum
                 }).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
@@ -749,8 +907,12 @@
                     console.log(resData);
                     if (resData.code === 0) {
                         // to do
+                        this.lockopen_page++;                        
+                        //如果小于20条 done改成true
+                        if(resData.data.length <= 20) {
+                            this.lockopen_done = true;
+                        }
                         this.lock_open_list = resData.data;
-
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -763,7 +925,9 @@
                 this.$http.post(base_url+'/lock/getOperation', {
                     id : this.$route.query.id,
                     quantity : this.operation_pageNum,
+                    //this.operation_pageNum,
                     index : this.operation_page*this.operation_pageNum
+                    //this.operation_page*this.operation_pageNum
                 }).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
@@ -773,9 +937,12 @@
                     console.log(resData);
                     if (resData.code === 0) {
                         // to do
-                        this.operation_page++;
-                        //如果小于20跳 done改成true
+                      //  this.operation_page++;
+                        //如果小于20条 done改成true
+                          //  this.operation_done = true;
+                      //  }
                         //数组累加
+                        this.operation_data=this.operation_data.concat(resData.data)
                         //this.operation_data=this.operation_data.concat(resData.data)
                         this.operation_data = [
                             {
@@ -803,7 +970,7 @@
                             "time":"2016-09-21 08:08:08",
                             "desc": "租客密码已chengg21"
                             }
-                        ]
+                        ];
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -827,31 +994,6 @@
                         showMsg(this.$store, "修改成功!");
                         this.tenant_data = this.tenant_data_temp;
                         _this.hideModal(_this.$store);
-                    } else {
-                        showMsg(this.$store, resData.msg)
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！')
-                })
-            },
-            addTenantCode: function(){
-                // this.$route.query.id
-                this.$http.post(base_url+'/lock/addTenantCode', {
-                    id : this.get_TC_id,
-                    password : this.adthis.get_TC_nameTC_password,
-                    name : this.add_TC_name,
-                    endTime : this.add_TC_endtime,
-                    openTime : this.add_TC_opentime,
-                    code : this.add_TC_code
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
-                        return
-                    }
-                    let resData = response.json();
-                    console.log(resData);
-                    if (resData.code === 0) {
-                        // to do
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -924,6 +1066,28 @@
                 }, function(response) {
                     showMsg(this.$store, '请求超时！')
                 })
+            },
+            changePage: function(num) {
+                //切换first和second
+                if(num == 1) {
+                    this.page_count = "first";
+                }else {
+                    this.page_count = "second";
+                }
+            },
+            editCode: function(index) {
+                if(index==this.last_index)return;
+                if(this.last_index!=-1){
+                    this.bycode_btn_isshow[this.last_page_count].$set(this.last_index, { showY: 0});
+                    this.bycode_btn_isshow[this.last_page_count].$set(this.last_index, { showN: 0});
+                }
+                if(!this.bycode[this.page_count][index]){
+                    this.bycode_btn_isshow[this.page_count].$set(index, { showN: 1});
+                }else{
+                    this.bycode_btn_isshow[this.page_count].$set(index, { showY: 1});
+                }
+                this.last_page_count=this.page_count;
+                this.last_index=index;
             }
         }
     }
