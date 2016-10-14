@@ -958,7 +958,7 @@
                 }, function(response) {
                     showMsg(this.$store, '请求超时！')
                 })
-            }
+            },
             modifyTenantCodeName: function(){
                 // this.$route.query.id
                 this.$http.post(base_url+'/lock/modifyTenantCodeName', {
