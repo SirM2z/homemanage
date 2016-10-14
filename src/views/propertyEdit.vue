@@ -100,9 +100,9 @@
                 <div class="fl item-title name-title wg-title">网关绑定：</div>
                 <div class="fl">
                     <div class="wg-options">
-                        <select class="form-control wg-option" v-for="n in gatewaysNum" v-model="estate_bindgw_selected[n]">
+                        <select class="form-control wg-option" v-for="n in gatewaysNum" track-by="$index" v-model="estate_bindgw_selected[n]">
                             <option value="0">请选择</option>
-                            <option v-for="item in gatewayList" :value="item.id">{{item.name}}</option>
+                            <option v-for="item in gatewayList" track-by="$index" :value="item.id">{{item.name}}</option>
                         </select>
                         <div class="add-wg wg-option">
                             <div class="add-wg-btn" @click="addSelect">添加网关</div>

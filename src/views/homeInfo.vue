@@ -277,7 +277,7 @@
 					</tab>
 					<tab header="备用密码管理">
 						<table class="table table-striped ready-pass">
-							<tr v-for="item in bycode[page_count]" @click="changeCodeBtnShow($index)" :class="{ 'no-set': !item}">
+							<tr v-for="item in bycode[page_count]" track-by="$index" @click="changeCodeBtnShow($index)" :class="{ 'no-set': !item}">
 								<td>{{$index}}</td>
 								<td>{{item?item.name:'无'}}</td>
 								<td>
@@ -302,7 +302,7 @@
 					</tab>
 				</tab-group>
 				<tab header="开锁记录">
-					<div v-for="item in lockopen_list">
+					<div v-for="item in lockopen_list" track-by="$index">
 						<div v-if="$index == 0 || item.time.split(' ')[0]!=lockopen_list[$index-1].time.split(' ')[0]" class="operation-day color_333">
 							{{item.time.split(' ')[0]}}
 						</div>
@@ -311,7 +311,7 @@
 					<button @click="getLockopen" v-show="!lockopen_done" class="btn btn-primary btn-more pull-right">更多记录</button>
 				</tab>
 				<tab header="操作记录">
-					<div v-for="item in operation_data">
+					<div v-for="item in operation_data" track-by="$index">
 						<div v-if="$index == 0 || item.time.split(' ')[0]!=operation_data[$index-1].time.split(' ')[0]" class="operation-day color_333">
 							{{item.time.split(' ')[0]}}
 						</div>

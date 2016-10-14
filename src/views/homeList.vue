@@ -70,7 +70,7 @@
                 <th>电量状态</th>
                 <th>入住状态</th>
             </tr>
-            <tr v-for="item in lock_list">
+            <tr v-for="item in lock_list" track-by="$index">
                 <td><a @click="goHomeInfo(get_estate_name,item.id,item.status,item.power)">{{item.name}}</a></td>
                 <td>{{item.status = true?"在线":"离线"}}</td>
                 <td>{{item.gw_name}}</td>

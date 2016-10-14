@@ -77,7 +77,7 @@
             </div>
         </div>
         <div class="fc-items">
-            <div v-for="item in estateList" class="fc-info">
+            <div v-for="item in estateList" track-by="$index" class="fc-info">
                 <div class="fc-item" @click="goHomeList(item.id)">
                     <img src="http://lockmgmt.pstone.cc:8080/img/{{item.image}}">
                     <p class="fc-name">{{item.name}}</p>
