@@ -91,6 +91,10 @@
         color: #b3d5f3;
     }
     
+    .home-box .info-tab .ready-pass {
+        cursor: pointer;
+    }
+    
     .home-box .info-tab .ready-pass .no-set {
         color: #9f9f9f;
     }
@@ -114,43 +118,48 @@
         height: 34px;
     }
    .home-box .modal-ne .admin-password {
-       padding-top: 20px;
-       border-top: 1px dashed rgba(0, 0, 0, 0.15);
+        padding-top: 20px;
+        border-top: 1px dashed rgba(0, 0, 0, 0.15);
    }
    .home-box .modal-ne .info-edit {
-       height: 380px;
+        height: 380px;
    }
    .home-box .btn-code-random:focus, .home-box .btn-code-random:active:focus {
-       outline: none;
-       outline-offset: -2px;
+        outline: none;
+        outline-offset: -2px;
    }
    .home-box .operation-day {
-       padding: 20px 0;
-       border-bottom: solid 1px rgba(0, 0, 0, 0.1);
+        padding: 20px 0;
+        border-bottom: solid 1px rgba(0, 0, 0, 0.1);
    }
    .home-box .operation-time {
-       padding: 15px 0;
-       margin-left: 25px;
-       box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.1);
+        padding: 15px 0;
+        margin-left: 25px;
+        box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.1);
    }
    .home-box .btn-more {
-       margin: 15px;
+        margin: 15px;
    }
    .home-box .bycode-btn {
-       position: relative;
+        position: relative;
    }
    .home-box .bycode-btn>div {
-       position: absolute;
-       width: 70px;
+        position: absolute;
+        width: 100px;
+        color: #0275d8;      
+        padding-left: 28px; 
    }
    .home-box .bycode-btn>div.bycode-change {
-       right: -30px;
+        right: 80%;
+        background: url("../images/changePass.png") center left no-repeat;
    }
    .home-box .bycode-btn>div.bycode-del {
-       right: 200px;
+        right: 50%;
+        background: url("../images/deletePass.png") center left no-repeat;
    }
    .home-box .bycode-btn>div.bycode-add {
-       right: 100px;
+        right: 100%;
+        background: url("../images/addPWD.png") center left no-repeat;
    }
 </style>
 <template>
@@ -163,10 +172,10 @@
                 </h1>
             </div>
             <div class="col-md-2">
-                <div class="status-btn">门锁状态：<span class="lock-status">{{lock_status}}</span></div>
+                <div class="status-btn">门锁状态：<span class="lock-status">{{lock_status==1?"在线":"离线"}}</span></div>
             </div>
             <div class="col-md-2">
-                <div class="status-btn">剩余电量：<span class="last-num">{{lock_power}}</span></div>
+                <div class="status-btn">剩余电量：<span class="last-num">{{lock_power==1?"正常":"低电量"}}</span></div>
             </div>
         </div>
         <div class="info-body">
@@ -256,8 +265,8 @@
                             <tr v-for="item in bycode[page_count]" @click="editCode($index)" :class="{ 'no-set': !item}">
                                 <td>{{$index}}</td>
                                 <td>{{item?item.name:'无'}}</td>
-                                <td><div class="bycode-btn"><div v-show="bycode_btn_isshow[page_count][$index].showY" class="bycode-change">修改密码</div></div></td>
-                                <td><div class="bycode-btn"><div v-show="bycode_btn_isshow[page_count][$index].showN" class="bycode-add">添加密码</div><div v-show="bycode_btn_isshow[page_count][$index].showY" class="bycode-del">删除密码</div></div></td>
+                                <td><div class="bycode-btn"><div @click.stop="lockOperation('SetPermaLockPWD')" v-show="bycode_btn_isshow[page_count][$index].showY" class="bycode-change">修改密码</div></div></td>
+                                <td><div class="bycode-btn"><div @click.stop="lockOperation('SetTempLockPWD')" v-show="bycode_btn_isshow[page_count][$index].showN" class="bycode-add">添加密码</div><div @click.stop="lockOperation('DelLockPWD')" v-show="bycode_btn_isshow[page_count][$index].showY" class="bycode-del">删除密码</div></div></td>
                             </tr>
                         </table>
                         <div class="page">
@@ -345,7 +354,7 @@
                         <div class="fl item-title name-title">失效次数</div>
                         <div class="fl">
                             <select type="text" v-model="add_TC_opentime" class="form-control">
-                                <option value="one">单次失效</option>
+                                <option value="one">一次有效</option>
                                 <option value="long">永久有效</option>
                             </select>
                         </div>
@@ -506,7 +515,7 @@
 <script>
     import navList from '../components/comon/navList.vue'
     import Modal from '../components/popup/Modal.vue'
-    import {showModal, hideModal, showLoading, showMsg} from '../vuex/actions/popupActions'
+    import {showModal, hideModal, showLoading, showMsg, hideLoading} from '../vuex/actions/popupActions'
     import foot from '../components/comon/foot.vue'
 	import { tabset,tab,tabGroup } from 'vue-strap'
     import {base_url} from '../common.js'
@@ -583,81 +592,8 @@
                 operation_done: false,
                 //备用密码
                 bycode: {
-                    first: [
-                            {
-                                "id" : "123",
-                                "index" : 1,
-                                "name" : "备用密码001"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 2,
-                                "name" : "备用密码002"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 3,
-                                "name" : "备用密码003"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 4,
-                                "name" : "备用密码004"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 5,
-                                "name" : "备用密码005",
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 6,
-                                "name" : "备用密码006",
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 7,
-                                "name" : "备用密码007",
-                            },
-                            undefined
-                        ],
-                    second: [
-                            {
-                                "id" : "123",
-                                "index" : 9,
-                                "name" : "备用密码009"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 10,
-                                "name" : "备用密码0010"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 11,
-                                "name" : "备用密码0011"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 12,
-                                "name" : "备用密码0012"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 13,
-                                "name" : "备用密码013"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 14,
-                                "name" : "备用密码014"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 15,
-                                "name" : "备用密码015"
-                            },
-                            null]
+                    first: new Array(8),
+                    second: new Array(8)
                 },
                 bycode_btn_isshow: {
                     first: new Array(8),
@@ -665,7 +601,8 @@
                 },
                 page_count: 'first',
                 last_page_count: '',
-                last_index: -1
+                last_index: -1,
+                time_wait: null
             }
         },
         ready: function() {
@@ -676,6 +613,7 @@
             this.getCode();
             this.getLockopen();
             this.getOperation();
+            this.getResult();
         },
         components: {
             Modal,
@@ -686,9 +624,36 @@
             tabGroup
         },
         beforeDestroy: function() {
-
+            if(this.time_wait){
+                clearInterval(this.time_wait);
+            }
         },
         methods: {
+            getResult: function() {
+                let _this = this;                
+                this.$http.post(base_url+'/lock/getResult').then(function(response) {
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();;
+                  //  console.log(resData);
+                    if (resData.code === 5) {
+                       // showLoading(this.$store);
+                        return;
+                    } else if(resData.code !== 0) {
+                        _this.time_wait = setInterval(function() {
+                            if(resData.code === 0) {
+                                clearInterval(_this.time_wait);
+                                //to do
+                                hideLoading(this.$store);
+                            }
+                        },5000);
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
+                })
+            },
             changeModalType:function(type){
                 this.modal_type = type;
                 console.log(this.modal_type);
@@ -794,96 +759,14 @@
                     let resData = response.json();
                     console.log(resData);
                     if (resData.code === 0) {
-                        // to do
-                        //遍历bycode，分为first和second
-                     //   this.bycode = resData.data;
-                     this.bycode.first = [
-                            {
-                                "id" : "123",
-                                "index" : 1,
-                                "name" : "备用密码001"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 2,
-                                "name" : "备用密码002"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 3,
-                                "name" : "备用密码003"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 4,
-                                "name" : "备用密码004"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 5,
-                                "name" : "备用密码005",
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 6,
-                                "name" : "备用密码006",
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 7,
-                                "name" : "备用密码007",
-                            },
-                            undefined
-                        ];
-                    this.bycode.second = [
-                            {
-                                "id" : "123",
-                                "index" : 9,
-                                "name" : "备用密码009"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 10,
-                                "name" : "备用密码0010"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 11,
-                                "name" : "备用密码0011"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 12,
-                                "name" : "备用密码0012"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 13,
-                                "name" : "备用密码013"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 14,
-                                "name" : "备用密码014"
-                            },
-                            {
-                                "id" : "123",
-                                "index" : 15,
-                                "name" : "备用密码015"
-                            },
-                            null              
-                        ];
-                   /* for (info in this.bycode){
-                        if(info.index < 8) {
-                            this.bycode.first[index-1] = info;
-                        }else {
-                            this.bycode.second[index-9] = info;
-                            }
-                        } */
                         if(!resData.data)return;
                         for(let i=0;i<resData.data.length;i++){
-                            //
-                            this.bycode.first[i] = resData.data[i]
+                            //归入两个数组
+                            if(resData.data[i].index < 9) {
+                                this.bycode.first[index-1] = resData.data[i]
+                            }else {
+                                this.bycode.second[index-9] = resData.data[i]
+                            }
                         }
                     } else {
                         showMsg(this.$store, resData.msg)
@@ -893,7 +776,8 @@
                 })
             },
             getLockopen: function(){
-                // this.$route.query.id
+               // this.$route.query.id
+              // this.$http.post(base_url+'/log/getLockopen', 
                 this.$http.post(base_url+'/lock/getLockopen', {
                     id : this.$route.query.id,
                     quantity : this.operation_pageNum,
@@ -907,12 +791,13 @@
                     console.log(resData);
                     if (resData.code === 0) {
                         // to do
-                        this.lockopen_page++;                        
+                        this.lockopen_page++;      
+                        this.lock_open_list = this.lock_open_list.concat(resData.data);                  
                         //如果小于20条 done改成true
-                        if(resData.data.length <= 20) {
+                        if(!resData.data || resData.data.length <= 20) {
                             this.lockopen_done = true;
                         }
-                        this.lock_open_list = resData.data;
+                        //this.lock_open_list = resData.data;
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -921,7 +806,7 @@
                 })
             },
             getOperation: function(){
-                // this.$route.query.id
+               // this.$http.post(base_url+'/log/getOperation',
                 this.$http.post(base_url+'/lock/getOperation', {
                     id : this.$route.query.id,
                     quantity : this.operation_pageNum,
@@ -937,40 +822,13 @@
                     console.log(resData);
                     if (resData.code === 0) {
                         // to do
-                      //  this.operation_page++;
-                        //如果小于20条 done改成true
-                          //  this.operation_done = true;
-                      //  }
+                        this.operation_page++;
                         //数组累加
-                        this.operation_data=this.operation_data.concat(resData.data)
-                        //this.operation_data=this.operation_data.concat(resData.data)
-                        this.operation_data = [
-                            {
-                            "id":"123456",
-                            "time":"2016-09-19 08:08:08",
-                            "desc": "租客密码添加成功19"
-                            },
-                            {
-                            "id":"123456",
-                            "time":"2016-09-19 08:08:08",
-                            "desc": "租客密码添加失败19"
-                            },
-                            {
-                            "id":"sdafasfasdfs",
-                            "time":"2016-09-20 08:08:08",
-                            "desc": "租客密码添加成功20"
-                            },
-                            {
-                            "id":"246",
-                            "time":"2016-09-21 08:08:08",
-                            "desc": "租客密码已解冻21"
-                            },
-                            {
-                            "id":"246",
-                            "time":"2016-09-21 08:08:08",
-                            "desc": "租客密码已chengg21"
-                            }
-                        ];
+                        this.operation_data=this.operation_data.concat(resData.data);
+                        //如果小于20条 done改成true
+                          if(!resData.data || resData.data.length <= 20) {
+                              this.operation_done = true;
+                          }
                     } else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -1088,6 +946,190 @@
                 }
                 this.last_page_count=this.page_count;
                 this.last_index=index;
+            },
+            modifyTenantCode: function(){
+                 // this.$route.query.id
+                 this.$http.post(base_url+'/lock/modifyTenantCode', {
+                     id : this.get_TC_id,
+                     password : this.get_TC_password,
+                     name : this.modify_TC_name,
+                     endTime : this.modify_TC_endtime,
+                     openTime : this.modify_TC_opentime,
+                     code : this.modify_TC_code
+                 }).then(function(response) {
+                     if (!response.ok) {
+                         showMsg(this.$store, '请求超时！');
+                         return
+                     }
+                     let resData = response.json();
+                     console.log(resData);
+                     if (resData.code === 0) {
+                         // to do
+                     } else {
+                         showMsg(this.$store, resData.msg)
+                     }
+                 }, function(response) {
+                     showMsg(this.$store, '请求超时！')
+                 })
+             },
+             freezeTenantCode: function(){
+                 // this.$route.query.id
+                 this.$http.post(base_url+'/lock/freezeTenantCode', {
+                     id : this.get_TC_id,
+                     code : this.freezethis.get_TC_nameC_code
+                 }).then(function(response) {
+                     if (!response.ok) {
+                         showMsg(this.$store, '请求超时！');
+                         return
+                     }
+                     let resData = response.json();
+                     console.log(resData);
+                     if (resData.code === 0) {
+                         // to do
+                     } else {
+                         showMsg(this.$store, resData.msg)
+                     }
+                 }, function(response) {
+                     showMsg(this.$store, '请求超时！')
+                 })
+             },
+             thawTenantCode: function(){
+                 // this.$route.query.id
+                 this.$http.post(base_url+'/lock/thawTenantCode', {
+                     id : this.get_TC_id,
+                     code : this.thaw_Tthis.get_TC_namecode
+                 }).then(function(response) {
+                     if (!response.ok) {
+                         showMsg(this.$store, '请求超时！');
+                         return
+                     }
+                     let resData = response.json();
+                     console.log(resData);
+                     if (resData.code === 0) {
+                         // to do
+                     } else {
+                         showMsg(this.$store, resData.msg)
+                     }
+                 }, function(response) {
+                     showMsg(this.$store, '请求超时！')
+                 })
+             },
+             delTenantCode: function(){
+                 // this.$route.query.id
+                 this.$http.post(base_url+'/lock/delTenantCode', {
+                     id : this.get_TC_id,
+                 }).then(function(response) {
+                     if (!response.ok) {
+                         showMsg(this.$store, '请求超时！');
+                         return
+                     }
+                     let resData = response.json();
+                     console.log(resData);
+                     if (resData.code === 0) {
+                         // to do
+                     } else {
+                         showMsg(this.$store, resData.msg)
+                     }
+                 }, function(response) {
+                     showMsg(this.$store, '请求超时！')
+                 })
+             },
+             modifyCode: function(){
+                 // this.$route.query.id
+                 this.$http.post(base_url+'/lock/modifyCode', {
+                     id : this.get_TC_id,
+                     password : this.mothis.get_TC_namefy_code_password,
+                     name : this.modify_code_password,
+                     code : this.modify_code_password
+                 }).then(function(response) {
+                     if (!response.ok) {
+                         showMsg(this.$store, '请求超时！');
+                         return
+                     }
+                     let resData = response.json();
+                     console.log(resData);
+                     if (resData.code === 0) {
+                         // to do
+                     } else {
+                         showMsg(this.$store, resData.msg)
+                     }
+                 }, function(response) {
+                     showMsg(this.$store, '请求超时！')
+                 })
+             },
+             delCode: function(){
+                 // this.$route.query.id
+                 this.$http.post(base_url+'/lock/delCode', {
+                     id : this.get_TC_id,
+                 }).then(function(response) {
+                     if (!response.ok) {
+                         showMsg(this.$store, '请求超时！');
+                         return
+                     }
+                     let resData = response.json();
+                     console.log(resData);
+                     if (resData.code === 0) {
+                         // to do
+                     } else {
+                         showMsg(this.$store, resData.msg)
+                     }
+                 }, function(response) {
+                     showMsg(this.$store, '请求超时！')
+                 })
+             },
+             addTenantCode: function(){
+                // this.$route.query.id
+                this.$http.post(base_url+'/lock/addTenantCode', {
+                    id : this.get_TC_id,
+                    password : this.adthis.get_TC_nameTC_password,
+                    name : this.add_TC_name,
+                    endTime : this.add_TC_endtime,
+                    openTime : this.add_TC_opentime,
+                    code : this.add_TC_code
+                }).then(function(response) {
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();
+                    console.log(resData);
+                    if (resData.code === 0) {
+                        // to do
+                    } else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
+                })
+            },
+            lockOperation: function(operation){
+                // this.$route.query.id
+                let data = {
+                    id : this.$route.query.id,
+                    operation : operation,
+                    password : '',
+                    name : ''
+                };
+                if(operation == "SetTempLockPW D"){
+                  //  data.start = 
+                }
+                this.$http.post(base_url+'/lock/operation', data).then(function(response) {
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();
+                    console.log(resData);
+                    if (resData.code === 0) {
+                        // to do
+                    showLoading(this.$store);
+                    this.getResult();
+                    } else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
+                })
             }
         }
     }

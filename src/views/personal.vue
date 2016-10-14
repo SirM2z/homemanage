@@ -45,23 +45,23 @@
         <div class="personal-info">
             <div class="info-item">
                 <div class="fl item-title name-title">姓　　名：</div>
-                <div class="fl"><input type="text" class="form-control" id="name" :value="user_name"></div>
+                <div class="fl"><input type="text" class="form-control" id="name" v-model="user_name"></div>
             </div>
-            <div class="info-item">
+            <!--<div class="info-item">
                 <div class="fl item-title">个人照片：</div>
                 <div v-if="user_img==''" class="fl"><img src="../images/default.png" class="img-circle"></div>
                 <div v-else class="fl"><img :src="user_img" class="img-circle user-img"></div>
                 <div class="fl"><input type="file" accept="image/*" /></div>
-            </div>
-            <div class="info-item">
+            </div>-->
+            <!--<div class="info-item">
                 <div class="fl item-title">登录密码：</div>
                 <div class="fl pass-link">
                     <div class=""><a href="#" @click="showModal">修改密码</a></div>
                     <div class=""><a href="#" @click="showModal">忘记密码？</a></div>
                 </div>
-            </div>
+            </div>-->
             <div class="info-item pass-btn">
-                <button class="btn btn-primary btn-lg btn-s">保存</button>
+                <button @click="modifyName" class="btn btn-primary btn-lg btn-s">保存</button>
                 <button class="btn btn-default btn-lg btn-c">取消</button>
             </div>
         </div>
@@ -90,11 +90,10 @@
     import Modal from '../components/popup/Modal.vue'
     import {showModal, hideModal, showLoading, showMsg} from '../vuex/actions/popupActions'
     import foot from '../components/comon/foot.vue'
+    import {base_url} from '../common.js'
     export default {
         vuex: {
             getters: {
-                user_name:({userInfo}) => userInfo.obj.name,
-                user_img:({userInfo}) => userInfo.obj.image_add
             },
             actions:{
                 showModal,
@@ -103,11 +102,11 @@
         },
         data: function() {
             return {
-
+                user_name: ''
             }
         },
         ready: function() {
-            
+                this.getUserInfo();
         },
         components: {
             Modal,
@@ -118,7 +117,52 @@
 
         },
         methods: {
-            
+            getUserInfo: function(){
+                // this.$route.query.id
+                this.$http.post(base_url+'/user/info').then(function(response) {
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();
+                  //  console.log(resData);
+                    if (resData.code === 0) {
+                        // to do
+                        this.user_name = resData.data.name;
+                    } else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
+                })
+            },
+            modifyName: function(){
+                let _this = this;
+                if(!this.user_name.trim()){
+                    showMsg(this.$store,"请填写用户名！")
+                }else{
+                    this.$http.post(base_url+'/user/modifyName', {
+                        name : this.user_name
+                    }).then(function(response) {
+                        if (!response.ok) {
+                            showMsg(this.$store, '请求超时！');
+                            return
+                        }
+                        let resData = response.json();
+                    //  console.log(resData);
+                        if (resData.code === 0) {
+                            // to do
+                            window.localStorage.setItem('homemanage_username',_this.user_name);
+                            showMsg(this.$store, "保存成功!");
+                            //window.location.reload();
+                        } else {
+                            showMsg(this.$store, resData.msg)
+                        }
+                    }, function(response) {
+                        showMsg(this.$store, '请求超时！')
+                    })
+                }
+            }
         }
     }
 </script>

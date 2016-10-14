@@ -209,6 +209,16 @@
                 })
             },
             goHomeInfo: function(name,id,status,power){
+                if(power == "正常") {
+                    power = 1;
+                }else {
+                    power = 0;
+                }
+                if(status == "在线") {
+                    status = 1;
+                }else {
+                    status = 0;
+                }
                 this.$router.go({
                     name: 'homeInfo',
                     query: {
