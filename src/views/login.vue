@@ -161,7 +161,7 @@
         },
         beforeDestroy: function() {
             if(this.time_down){
-                clearInterval(this.time_down);
+                window.clearInterval(this.time_down);
             }
         },
         methods: {

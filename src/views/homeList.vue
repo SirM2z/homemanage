@@ -131,7 +131,6 @@
         },
         methods: {
             getEstate: function(){
-                // this.$route.query.id
                 this.$http.post(base_url+'/lock/getEstate', {
                     id : this.$route.query.id
                 }).then(function(response) {
@@ -140,9 +139,8 @@
                         return
                     }
                     let resData = response.json();
-                  //  console.log(resData);
+                    //console.log(resData);
                     if (resData.code === 0) {
-                        // to do
                         this.get_estate_name = resData.data.name;
                         this.get_estate_address = resData.data.address;
                         this.get_estate_gwNames = resData.data.gwNames;
@@ -164,9 +162,8 @@
                         return
                     }
                     let resData = response.json();
-                    console.log(resData.data);
+                    //console.log(resData.data);
                     if (resData.code === 0) {
-                        // to do
                         this.lock_list = resData.data;
                     } else {
                         showMsg(this.$store, resData.msg)
@@ -185,14 +182,13 @@
                         return
                     }
                     let resData = response.json();
-                  //  console.log(resData);
+                    //console.log(resData);
                     if (resData.code === 0) {
                         showMsg(this.$store, "删除成功!");
                         _this.hideModal(_this.$store);
                         _this.$router.go({
                             name: 'index'
                         })
-                        // to do
                     } else {
                         showMsg(this.$store, resData.msg)
                     }

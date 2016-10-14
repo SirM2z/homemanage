@@ -176,6 +176,10 @@
 		right: 100%;
 		background: url("../images/addPWD.png") center left no-repeat;
 	}
+    .home-box .modal-ne .modal-item input.TC-input{
+        background-color: #fff;
+        width: 219px;
+    }
 </style>
 <template>
 	<nav-list></nav-list>
@@ -278,17 +282,17 @@
 					<tab header="备用密码管理">
 						<table class="table table-striped ready-pass">
 							<tr v-for="item in bycode[page_count]" track-by="$index" @click="changeCodeBtnShow($index)" :class="{ 'no-set': !item}">
-								<td>{{$index}}</td>
+								<td>{{page_count=='first'?$index+1:$index+9}}</td>
 								<td>{{item?item.name:'无'}}</td>
 								<td>
 									<div class="bycode-btn">
-										<div @click.stop="lockOperation('SetPermaLockPWD')" v-show="bycode_btn_isshow[page_count][$index].showY" class="bycode-change">修改密码</div>
+										<div @click.stop="changeModalType('modify_Code')" v-show="bycode_btn_isshow[page_count][$index].showY" class="bycode-change">修改密码</div>
 									</div>
 								</td>
 								<td>
 									<div class="bycode-btn">
-										<div @click.stop="lockOperation('SetTempLockPWD')" v-show="bycode_btn_isshow[page_count][$index].showN" class="bycode-add">添加密码</div>
-										<div @click.stop="lockOperation('DelLockPWD')" v-show="bycode_btn_isshow[page_count][$index].showY" class="bycode-del">删除密码</div>
+										<div @click.stop="changeModalType('add_Code')" v-show="bycode_btn_isshow[page_count][$index].showN" class="bycode-add">添加密码</div>
+										<div @click.stop="changeModalType('del_Code')" v-show="bycode_btn_isshow[page_count][$index].showY" class="bycode-del">删除密码</div>
 									</div>
 								</td>
 							</tr>
@@ -309,6 +313,11 @@
 						<div class="operation-time color_666">{{item.time.split(' ')[1]}} {{item.desc}}</div>
 					</div>
 					<button @click="getLockopen" v-show="!lockopen_done" class="btn btn-primary btn-more pull-right">更多记录</button>
+                    <table v-if="!lockopen_list || lockopen_list.length==0" class="table table-striped">
+                        <tr>
+                            <td>暂无开锁记录</td>
+                        </tr>
+                    </table>
 				</tab>
 				<tab header="操作记录">
 					<div v-for="item in operation_data" track-by="$index">
@@ -318,6 +327,11 @@
 						<div class="operation-time color_666">{{item.time.split(' ')[1]}} {{item.desc}}</div>
 					</div>
 					<button @click="getOperation" v-show="!operation_done" class="btn btn-primary btn-more pull-right">更多记录</button>
+                    <table v-if="!operation_data || operation_data.length==0" class="table table-striped">
+                        <tr>
+                            <td>暂无开锁记录</td>
+                        </tr>
+                    </table>
 				</tab>
 			</tabs>
 		</div>
@@ -366,20 +380,24 @@
 					<div class="modal-item">
 						<div class="fl item-title name-title">输入租客密码</div>
 						<div class="fl">
-							<input type="password" v-model="add_TC.password" class="form-control fl" placeholder="请输入4~16位数字密码">
-							<button class="btn btn-link btn-code-random">随机生成</button>
+							<input type="number" v-model="add_TC.password" class="form-control fl" placeholder="请输入4~16位数字密码">
+							<button @click="generatePass('add')" class="btn btn-link btn-code-random">随机生成</button>
 						</div>
 					</div>
 					<div class="modal-item">
 						<div class="fl item-title name-title">失效时间</div>
-						<div class="fl"><input type="text" v-model="add_TC.endtime" class="form-control"></div>
+						<div class="input-group date form_datetime col-md-5" data-date-format="dd MM yyyy - HH:ii" data-link-field="TCa-data">
+                            <input class="form-control TC-input" size="16" type="text" value="" readonly>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        </div>
+                        <input type="hidden" id="TCa-data" v-model="add_TC.endtime" />
 					</div>
 					<div class="modal-item">
 						<div class="fl item-title name-title">失效次数</div>
 						<div class="fl">
 							<select type="text" v-model="add_TC.opentime" class="form-control">
-                                <option value="one">一次有效</option>
-                                <option value="long">永久有效</option>
+                                <option value="1">一次有效</option>
+                                <option value="-1">永久有效</option>
                             </select>
 						</div>
 					</div>
@@ -388,7 +406,7 @@
 						<div class="fl"><input type="password" v-model="add_TC.code" class="form-control"></div>
 					</div>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="addTenantCode">确认</button>
+					<button class="btn btn-primary btn-confirm" @click="lockOperation('SetTempLockPWD','add')">确认</button>
 				</div>
 			</div>
 			<!--修改租客密码-->
@@ -403,19 +421,23 @@
 						<div class="fl item-title name-title">输入租客密码</div>
 						<div class="fl">
 							<input type="password" v-model="modify_TC.password" class="form-control fl" placeholder="请输入4~16位数字密码">
-							<button class="btn btn-link btn-count">随机生成</button>
+							<button @click="generatePass('change')" class="btn btn-link btn-count">随机生成</button>
 						</div>
 					</div>
 					<div class="modal-item">
 						<div class="fl item-title name-title">失效时间</div>
-						<div class="fl"><input type="text" v-model="modify_TC.endtime" class="form-control"></div>
+						<div class="input-group date form_datetime col-md-5" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="TCc-data">
+                            <input class="form-control TC-input" size="16" type="text" value="" readonly>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        </div>
+                        <input type="hidden" id="TCc-data" v-model="modify_TC.endtime" />
 					</div>
 					<div class="modal-item">
 						<div class="fl item-title name-title">失效次数</div>
 						<div class="fl">
 							<select type="text" v-model="modify_TC.opentime" class="form-control">
-                                <option value="one">单次失效</option>
-                                <option value="long">永久有效</option>
+                                <option value="1">一次有效</option>
+                                <option value="-1">永久有效</option>
                             </select>
 						</div>
 					</div>
@@ -424,10 +446,10 @@
 						<div class="fl"><input type="password" v-model="modify_TC.code" class="form-control"></div>
 					</div>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="modifyTenantCode">确认</button>
+					<button class="btn btn-primary btn-confirm" @click="lockOperation('SetTempLockPWD','change')">确认</button>
 				</div>
 			</div>
-			<!--冻结密码-->
+			<!--冻结租客密码-->
 			<div class="modal-ne" v-show="modal_type==='freeze_tenant_code'">
 				<div class="modal-head">冻结密码</div>
 				<div class="modal-bottom">
@@ -441,7 +463,7 @@
 					<button class="btn btn-primary btn-confirm" @click="freezeTenantCode">确认</button>
 				</div>
 			</div>
-			<!--解冻密码-->
+			<!--解冻租客密码-->
 			<div class="modal-ne" v-show="modal_type==='thaw_tenant_code'">
 				<div class="modal-head">解冻密码</div>
 				<div class="modal-bottom">
@@ -455,14 +477,18 @@
 					<button class="btn btn-primary btn-confirm" @click="thawTenantCode">确认</button>
 				</div>
 			</div>
-			<!--删除密码-->
+			<!--删除租客密码-->
 			<div class="modal-ne" v-show="modal_type==='del_tenant_code'">
 				<div class="modal-head">删除密码</div>
 				<div class="modal-bottom">
+					<div class="modal-item">
+						<div class="fl item-title name-title">输入管理员密码</div>
+						<div class="fl"><input type="password" v-model="del_TC_code" class="form-control" placeholder="输入4~16位密码"></div>
+					</div>
 					<p>删除密码后，租客将无法使用该密码进行开锁。</p>
 					<p>是否继续删除密码？</p>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="delTenantCode">确认</button>
+					<button class="btn btn-primary btn-confirm" @click="lockOperation('DelLockPWD','tenant')">确认</button>
 				</div>
 			</div>
 			<!--身份验证-->
@@ -496,7 +522,21 @@
 						<div class="fl"><input type="password" v-model="add_code.code" class="form-control"></div>
 					</div>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="addCode">确认</button>
+					<button class="btn btn-primary btn-confirm" @click="lockOperation('SetPermaLockPWD','add')">确认</button>
+				</div>
+			</div>
+			<!--删除备用密码-->
+			<div class="modal-ne" v-show="modal_type==='del_Code'">
+				<div class="modal-head">删除密码</div>
+				<div class="modal-bottom">
+					<div class="modal-item">
+						<div class="fl item-title name-title">输入管理员密码</div>
+						<div class="fl"><input type="password" v-model="del_C_code" class="form-control" placeholder="输入4~16位密码"></div>
+					</div>
+					<p>删除密码后，租客将无法使用该密码进行开锁。</p>
+					<p>是否继续删除密码？</p>
+					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
+					<button class="btn btn-primary btn-confirm" @click="lockOperation('DelLockPWD','code')">确认</button>
 				</div>
 			</div>
 			<!--修改备用密码-->
@@ -518,7 +558,16 @@
 						<div class="fl"><input type="password" v-model="modify_code.code" class="form-control"></div>
 					</div>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="modifyCode">确认</button>
+					<button class="btn btn-primary btn-confirm" @click="lockOperation('SetPermaLockPWD','change')">确认</button>
+				</div>
+			</div>
+			<!--提示指令操作结果-->
+			<div class="modal-ne" v-show="modal_type==='get_result'">
+				<div class="modal-head">提示</div>
+				<div class="modal-bottom">
+					<p>由于对锁的修改较慢，现在提醒您上次操作成功！</p>
+					<!--<p>请点击确认按钮！</p>-->
+					<button class="btn btn-primary btn-confirm fr" @click="hideModal">确认</button>
 				</div>
 			</div>
 		</Modal>
@@ -530,7 +579,7 @@
     import Modal from '../components/popup/Modal.vue'
     import {showModal, hideModal, showLoading, showMsg, hideLoading} from '../vuex/actions/popupActions'
     import foot from '../components/comon/foot.vue'
-	import { tabset,tab,tabGroup } from 'vue-strap'
+	import { tabset,tab,tabGroup,datepicker } from 'vue-strap'
     import {base_url} from '../common.js'
     export default {
         vuex: {
@@ -540,6 +589,15 @@
                 showLoading,
                 showMsg
             }
+        },
+        components: {
+            Modal,
+            navList,
+            foot,
+            tabs:tabset,
+            tab,
+            tabGroup,
+            datepicker
         },
         data: function() {
             return {
@@ -592,23 +650,29 @@
                     password: '',
                     endtime: '',
                     opentime: '',
-                    code: '',
+                    code: ''
                 },
-                //冻结管理员密码
+                //冻结租客密码管理员密码
                 freeze_TC_code: '',
-                //解冻管理员密码
+                //解冻租客密码管理员密码
                 thaw_TC_code: '',
+                //删除租客密码管理员密码
+                del_TC_code: '',
+                //删除备用密码管理员密码
+                del_C_code: '',
+                //当前操作备用密码位置
+                code_current_index: -1,
                 //添加备用密码
                 add_code:{
                     name: '',
                     password: '',
-                    code: '',
+                    code: ''
                 },
                 //修改备用密码
                 modify_code: {
                     name: '',
                     password: '',
-                    code: '',
+                    code: ''
                 },
                 //每页记录条数
                 record_pageNum: 20,
@@ -650,18 +714,19 @@
             this.getOperation();
             //查询指令结果
             this.getResult();
-        },
-        components: {
-            Modal,
-            navList,
-            foot,
-            tabs:tabset,
-            tab,
-            tabGroup
+            //时间插件初始化
+            $('.form_datetime').datetimepicker({
+                language:  'zh-CN',
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                showMeridian: 1,
+                format: 'yyyy-mm-dd hh:ii'
+            });
         },
         beforeDestroy: function() {
             if(this.time_wait){
-                clearInterval(this.time_wait);
+                window.clearInterval(this.time_wait);
             }
         },
         methods: {
@@ -675,26 +740,93 @@
                     }
                     let resData = response.json();;
                     //console.log(resData);
-                    if (resData.code === 5) {
-                        //showLoading(this.$store);
-                        return;
-                    } else if(resData.code !== 0) {
-                        _this.time_wait = setInterval(function() {
-                            if(resData.code === 0) {
-                                clearInterval(_this.time_wait);
-                                //to do
-                                _this.hideLoading(_this.$store);
+                    if(resData.code == 0) {
+                        if (resData.data == 5) {
+                            hideLoading(this.$store);
+                            if(_this.time_wait){
+                                window.clearInterval(_this.time_wait);
                             }
-                        },5000);
+                        }
+                        else if(resData.data == 6) {
+                            _this.time_wait = setInterval(function() {
+                                _this.longLoop();
+                            },5000);
+                        }
+                        else {
+                            if(_this.time_wait){
+                                window.clearInterval(_this.time_wait);
+                            }
+                            hideLoading(this.$store);
+                            _this.changeModalType('get_result');
+                        }
+                    }
+                    else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
+                })
+            },
+            //轮询方法
+            longLoop: function(){
+                let _this = this;                
+                this.$http.post(base_url+'/lock/getResult').then(function(response) {
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();;
+                    //console.log(resData);
+                    if(resData.code == 0) {
+                        if (resData.data == 5) {
+                            hideLoading(this.$store);
+                            if(_this.time_wait){
+                                window.clearInterval(_this.time_wait);
+                            }
+                            return;
+                        }
+                        else if(resData.data == 6) {
+                            return;
+                        }
+                        if(_this.time_wait){
+                            window.clearInterval(_this.time_wait);
+                        }
+                        hideLoading(this.$store);
+                        _this.changeModalType('get_result');
+                    } 
+                    else {
+                        showMsg(this.$store, resData.msg)
                     }
                 }, function(response) {
                     showMsg(this.$store, '请求超时！')
                 })
             },
             //改变弹出框
-            changeModalType:function(type){
+            changeModalType: function(type){
                 this.modal_type = type;
                 this.showModal();
+            },
+            //随机生成4-16位数字
+            generatePass: function(type){
+                let pass = '';
+                //parseInt(Math.random()*(上限-下限+1)+下限);
+                let num = parseInt(Math.random()*13 + 4);
+                for(let i=0;i<num;i++){
+                    let tmp = parseInt(Math.random()*10);
+                    if(tmp == 10){
+                        tmp = '9';
+                    }
+                    else{
+                        tmp = tmp + '';
+                    }
+                    pass += tmp;
+                }
+                if(type=='add'){
+                    this.add_TC.password = pass;
+                }
+                else {
+                    this.modify_TC.password = pass;
+                }
             },
             //获取租户信息
             getLockTenant: function(){
@@ -903,7 +1035,7 @@
                     this.page_count = "second";
                 }
             },
-            //控制备用密码按钮显示隐藏
+            //控制备用密码按钮显示隐藏、记录当前被点击的备用密码位置
             changeCodeBtnShow: function(index) {
                 if(index==this.last_index)return;
                 if(this.last_index!=-1){
@@ -917,9 +1049,11 @@
                 }
                 this.last_page_count=this.page_count;
                 this.last_index=index;
+                //记录当前被点击的备用密码位置
+                this.code_current_index = this.page_count=='first'?index+1:index+9;
             },
             //密码相关指令下发
-            lockOperation: function(operation){
+            lockOperation: function(operation,type){
                 // this.$route.query.id
                 let _this = this;
                 let data = {
@@ -931,17 +1065,60 @@
                     //code "1234" 管理员密码 
                 };
                 if(operation == "SetPermaLockPWD"){//设置/重制备用密码
+                    if(type == "add"){//设置备用密码
+                        data.password = this.add_code.password;
+                        data.name = this.add_code.name;
+                        data.index = this.code_current_index;
+                        data.code = this.add_code.code;
+                    }
+                    else if(type == "change"){//重制备用密码
+                        data.password = this.modify_code.password;
+                        data.name = this.modify_code.name;
+                        data.index = this.code_current_index;
+                        data.code = this.modify_code.code;
+                    }
                     
                 }
                 else if(operation == "SetTempLockPWD"){//设置/重制租客密码 ==index=255
                     //start  "2016-09-19 08:08:08"
                     //end  "2016-09-19 08:08:08"
                     //mode  1/-1
+                    if(type == "add"){//设置租客密码
+                        data.password = this.add_TC.password;
+                        data.name = this.add_TC.name;
+                        data.index = 255;
+                        data.code = this.add_TC.code;
+                        data.start = _this.fmtDate(new Date());
+                        this.add_TC.endtime = $('#TCa-data')[0].value;
+                        data.end = this.add_TC.endtime;
+                        //console.log(data.start);
+                        //console.log($('#TC-data')[0].value);
+                        data.mode = this.add_TC.opentime;
+                    }
+                    else if(type == "change"){//重制租客密码
+                        data.password = this.modify_TC.password;
+                        data.name = this.modify_TC.name;
+                        data.index = 255;
+                        data.code = this.modify_TC.code;
+                        data.start = _this.fmtDate(new Date());
+                        this.modify_TC.endtime = $('#TCc-data')[0].value;
+                        data.end = this.modify_TC.endtime;
+                        data.mode = this.modify_TC.opentime;
+                    }
 
                 }
                 else if(operation == "DelLockPWD"){//删除密码任意，租客密码index=255 
+                    if(type == 'tenant'){//删除租客密码
+                        data.index = 255 ;
+                        data.code = this.del_TC_code;
+                    }
+                    else if(type == 'code'){//删除备用密码
+                        data.index = this.code_current_index;
+                        data.code = this.del_C_code;
+                    }
 
                 }
+                showLoading(this.$store,"正在重新配置锁数据，大约需要15秒，请耐心等待！");
                 this.$http.post(base_url+'/lock/operation', data).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
@@ -950,235 +1127,45 @@
                     let resData = response.json();
                     console.log(resData);
                     if (resData.code === 0) {
-                        showLoading(this.$store);
                         _this.getResult();
                     } else {
+                        hideLoading(this.$store);
                         showMsg(this.$store, resData.msg)
                     }
                 }, function(response) {
                     showMsg(this.$store, '请求超时！')
                 })
             },
-            modifyTenantCodeName: function(){
-                // this.$route.query.id
-                this.$http.post(base_url+'/lock/modifyTenantCodeName', {
-                    id : this.get_TC.id,
-                    name : this.get_TC.name
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
-                        return
-                    }
-                    let resData = response.json();
-                    console.log(resData);
-                    if (resData.code === 0) {
-                        // to do
-                    } else {
-                        showMsg(this.$store, resData.msg)
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！')
-                })
-            },
-            addCode: function(){
-                // this.$route.query.id
-                this.$http.post(base_url+'/lock/addCode', {
-                    id : this.get_TC.id,
-                    password : this.add_code.password,
-                    name : this.add_code.name,
-                    index : '',
-                    code : this.add_code.code
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
-                        return
-                    }
-                    let resData = response.json();
-                    console.log(resData);
-                    if (resData.code === 0) {
-                        // to do
-                    } else {
-                        showMsg(this.$store, resData.msg)
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！')
-                })
-            },
-            modifyCodeName: function(){
-                // this.$route.query.id
-                this.$http.post(base_url+'/lock/modifyCodeName', {
-                    id : this.get_TC.id,
-                    name : this.get_TC.name
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
-                        return
-                    }
-                    let resData = response.json();
-                    console.log(resData);
-                    if (resData.code === 0) {
-                        // to do
-                    } else {
-                        showMsg(this.$store, resData.msg)
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！')
-                })
-            },
-            modifyTenantCode: function(){
-                 // this.$route.query.id
-                 this.$http.post(base_url+'/lock/modifyTenantCode', {
-                     id : this.get_TC.id,
-                     password : this.modify_TC.password,
-                     name : this.modify_TC.name,
-                     endTime : this.modify_TC.endtime,
-                     openTime : this.modify_TC.opentime,
-                     code : this.modify_TC.code
-                 }).then(function(response) {
-                     if (!response.ok) {
-                         showMsg(this.$store, '请求超时！');
-                         return
-                     }
-                     let resData = response.json();
-                     console.log(resData);
-                     if (resData.code === 0) {
-                         // to do
-                     } else {
-                         showMsg(this.$store, resData.msg)
-                     }
-                 }, function(response) {
-                     showMsg(this.$store, '请求超时！')
-                 })
-             },
-             freezeTenantCode: function(){
-                 // this.$route.query.id
-                 this.$http.post(base_url+'/lock/freezeTenantCode', {
-                     id : this.get_TC.id,
-                     code : this.freezethis.get_TC_nameC_code
-                 }).then(function(response) {
-                     if (!response.ok) {
-                         showMsg(this.$store, '请求超时！');
-                         return
-                     }
-                     let resData = response.json();
-                     console.log(resData);
-                     if (resData.code === 0) {
-                         // to do
-                     } else {
-                         showMsg(this.$store, resData.msg)
-                     }
-                 }, function(response) {
-                     showMsg(this.$store, '请求超时！')
-                 })
-             },
-             thawTenantCode: function(){
-                 // this.$route.query.id
-                 this.$http.post(base_url+'/lock/thawTenantCode', {
-                     id : this.get_TC.id,
-                     code : this.thaw_Tthis.get_TC_namecode
-                 }).then(function(response) {
-                     if (!response.ok) {
-                         showMsg(this.$store, '请求超时！');
-                         return
-                     }
-                     let resData = response.json();
-                     console.log(resData);
-                     if (resData.code === 0) {
-                         // to do
-                     } else {
-                         showMsg(this.$store, resData.msg)
-                     }
-                 }, function(response) {
-                     showMsg(this.$store, '请求超时！')
-                 })
-             },
-             delTenantCode: function(){
-                 // this.$route.query.id
-                 this.$http.post(base_url+'/lock/delTenantCode', {
-                     id : this.get_TC.id,
-                 }).then(function(response) {
-                     if (!response.ok) {
-                         showMsg(this.$store, '请求超时！');
-                         return
-                     }
-                     let resData = response.json();
-                     console.log(resData);
-                     if (resData.code === 0) {
-                         // to do
-                     } else {
-                         showMsg(this.$store, resData.msg)
-                     }
-                 }, function(response) {
-                     showMsg(this.$store, '请求超时！')
-                 })
-             },
-             modifyCode: function(){
-                 // this.$route.query.id
-                 this.$http.post(base_url+'/lock/modifyCode', {
-                     id : this.get_TC.id,
-                     password : this.modify_code.password,
-                     name : this.modify_code.password,
-                     code : this.modify_code.password
-                 }).then(function(response) {
-                     if (!response.ok) {
-                         showMsg(this.$store, '请求超时！');
-                         return
-                     }
-                     let resData = response.json();
-                     console.log(resData);
-                     if (resData.code === 0) {
-                         // to do
-                     } else {
-                         showMsg(this.$store, resData.msg)
-                     }
-                 }, function(response) {
-                     showMsg(this.$store, '请求超时！')
-                 })
-             },
-             delCode: function(){
-                 // this.$route.query.id
-                 this.$http.post(base_url+'/lock/delCode', {
-                     id : this.get_TC.id,
-                 }).then(function(response) {
-                     if (!response.ok) {
-                         showMsg(this.$store, '请求超时！');
-                         return
-                     }
-                     let resData = response.json();
-                     console.log(resData);
-                     if (resData.code === 0) {
-                         // to do
-                     } else {
-                         showMsg(this.$store, resData.msg)
-                     }
-                 }, function(response) {
-                     showMsg(this.$store, '请求超时！')
-                 })
-             },
-             addTenantCode: function(){
-                // this.$route.query.id
-                this.$http.post(base_url+'/lock/addTenantCode', {
-                    id : this.get_TC.id,
-                    password : this.add_TC.password,
-                    name : this.add_TC.name,
-                    endTime : this.add_TC.endtime,
-                    openTime : this.add_TC.opentime,
-                    code : this.add_TC.code
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
-                        return
-                    }
-                    let resData = response.json();
-                    console.log(resData);
-                    if (resData.code === 0) {
-                        // to do
-                    } else {
-                        showMsg(this.$store, resData.msg)
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！')
-                })
+            //提供正确时间格式
+            //value 可选 new Date、时间戳、"2016-08-05 14:22:09" 时间格式
+            //fmt 可选 以下格式(以及位置调换)
+            //  yyyy-MM-dd hh:mm:ss
+            //  yyyy-MM-dd hh:mm:ss.S
+            //  yyyy/MM/dd hh:mm:ss
+            //  yyyy年MM月dd日 hh时mm分ss秒
+            //  yyyyMMddhhmmss
+            fmtDate: function(value, fmt) {
+                // var v = value.replace(/-/g, "/").substring(0, 19);
+                var date = new Date(value);
+                if (date == "Invalid Date") {
+                    date = new Date(parseFloat(value));
+                }
+                if(!fmt){
+                    fmt = 'yyyy-MM-dd hh:mm:ss';
+                }
+                var o = {
+                    "M+": date.getMonth() + 1, //月份 
+                    "d+": date.getDate(), //日 
+                    "h+": date.getHours(), //小时 
+                    "m+": date.getMinutes(), //分 
+                    "s+": date.getSeconds(), //秒 
+                    "q+": Math.floor((date.getMonth() + 3) / 3), //季度 
+                    "S": date.getMilliseconds() //毫秒 
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
             }
         }
     }
