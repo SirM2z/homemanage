@@ -241,12 +241,16 @@
             },
             modifyEstate: function(){
                 let _this = this;
+                if(!this.estate_name.trim() || !this.estate_address.trim()){
+                    showMsg(this.$store, '请填写完整相关信息！');
+                    return;
+                }
                 this.$http.post(base_url+'/lock/modifyEstate', {
                     id : this.$route.query.id,
-                    name : this.estate_name,
+                    name : this.estate_name.trim(),
                     image : this.estate_image,
-                    address : this.estate_address,
-                    note : this.estate_note,
+                    address : this.estate_address.trim(),
+                    note : this.estate_note.trim(),
                     gateways : this.estate_bindgw_selected
                 }).then(function(response) {
                     if (!response.ok) {

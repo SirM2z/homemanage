@@ -106,7 +106,7 @@
             }
         },
         ready: function() {
-                this.getUserInfo();
+            this.getUserInfo();
         },
         components: {
             Modal,
@@ -139,29 +139,27 @@
             modifyName: function(){
                 let _this = this;
                 if(!this.user_name.trim()){
-                    showMsg(this.$store,"请填写用户名！")
-                }else{
-                    this.$http.post(base_url+'/user/modifyName', {
-                        name : this.user_name
-                    }).then(function(response) {
-                        if (!response.ok) {
-                            showMsg(this.$store, '请求超时！');
-                            return
-                        }
-                        let resData = response.json();
-                    //  console.log(resData);
-                        if (resData.code === 0) {
-                            // to do
-                            window.localStorage.setItem('homemanage_username',_this.user_name);
-                            showMsg(this.$store, "保存成功!");
-                            //window.location.reload();
-                        } else {
-                            showMsg(this.$store, resData.msg)
-                        }
-                    }, function(response) {
-                        showMsg(this.$store, '请求超时！')
-                    })
+                    showMsg(this.$store,"请填写用户名！");
+                    return;
                 }
+                this.$http.post(base_url+'/user/modifyName', {
+                    name : this.user_name
+                }).then(function(response) {
+                    if (!response.ok) {
+                        showMsg(this.$store, '请求超时！');
+                        return
+                    }
+                    let resData = response.json();
+                    //console.log(resData);
+                    if (resData.code === 0) {
+                        window.localStorage.setItem('homemanage_username',_this.user_name);
+                        showMsg(this.$store, "保存成功!");
+                    } else {
+                        showMsg(this.$store, resData.msg)
+                    }
+                }, function(response) {
+                    showMsg(this.$store, '请求超时！')
+                })
             }
         }
     }

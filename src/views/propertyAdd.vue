@@ -214,6 +214,10 @@
             addEstate: function(){
                 let _this = this;
                 //console.log(this.gatewayListSelected);
+                if(!this.name.trim() || !this.address.trim()){
+                    showMsg(this.$store, '请填写完整相关信息！');
+                    return;
+                }
                 showLoading(this.$store);
                 this.$http.post(base_url+'/lock/addEstate', {
                     name : this.name.trim(),

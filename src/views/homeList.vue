@@ -33,6 +33,9 @@
     .list-box .table>tbody>tr>td{
         padding: 12px;
     }
+    .list-box .table>tbody>tr>td>a{
+        cursor: pointer;
+    }
     .list-box .modal-ne .delete-bottom {
         padding-top: 30px;
         height: 150px;
@@ -176,7 +179,7 @@
                 let _this = this;
                 this.$http.post(base_url+'/lock/delEstate', { 
                         id : this.$route.query.id
-                    }).then(function(response) {
+                }).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
                         return

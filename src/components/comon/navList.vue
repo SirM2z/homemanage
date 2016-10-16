@@ -71,10 +71,13 @@
 	.nav-box .dropdown-menu>li:first-child{
 		padding-bottom: 10px;
 	}
+	.nav-box .navbar {
+		margin-bottom: 0;
+	}
 </style>
 <template>
 	<div class="nav-box">
-		<navbar placement="top" type="default">
+		<navbar placement="static" type="default">
 			<a slot="brand" v-link="{name: 'index'}" title="Home" class="navbar-brand">LOGO</a>
 			<li class="dropdown">
 				<a v-link="{name: 'index'}" class="dropdown-toggle">房产管理</a>

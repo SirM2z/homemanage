@@ -166,6 +166,10 @@
         },
         methods: {
             loginSystem:function(){
+                if(!this.user_name.trim() || !this.user_password.trim()){
+                    showMsg(this.$store, '请填写完整账号密码！');
+                    return;
+                }
                 showLoading(this.$store);//展示loading动画
                 this.$http.post(base_url+'/user/login', {
                     user: this.user_name.trim(),
@@ -195,6 +199,10 @@
                 this.showModal();
             },
             sureVerifi:function(){
+                if(this.verifi_phone.trim()==''){
+                    showMsg(this.$store, '请填写手机号！');
+                    return;
+                }
                 if(this.verifi_code.trim()==''){
                     showMsg(this.$store, '请输入验证码')
                     return;
@@ -246,6 +254,10 @@
                 this.hideModal();
             },
             sureChangePass:function(){
+                if(!this.verifi_phone.trim() || !this.verifi_phone.trim() || !this.verifi_code.trim()){
+                    showMsg(this.$store, '请填写完整信息！');
+                    return;
+                }
                 this.$http.post(base_url+'/user/modifyPassword', {
                     user : this.verifi_phone.trim(),
                     newPassword : this.verifi_phone.trim(),

@@ -65,6 +65,7 @@
 	
 	.home-box .info-tab .rent-pass-manage .rent-password-btn {
 		padding-left: 22px;
+		cursor: pointer;
 	}
 	
 	.home-box .info-tab .rent-pass-manage .ice-password {
@@ -263,7 +264,7 @@
 							<div class="no-password-btn" @click="changeModalType('add_tenant_code')">添加租客密码</div>
 						</div>
 						<table v-else class="table table-striped rent-pass-manage">
-							<tr v-if="get_TC.freeze==true">
+							<tr v-if="get_TC.freeze==false">
 								<td class="blue">{{get_TC.name}}</td>
 								<td>{{get_TC.time}}</td>
 								<td class="blue rent-password-btn ice-password" @click="changeModalType('freeze_tenant_code')">冻结密码</td>
@@ -336,7 +337,7 @@
 			</tabs>
 		</div>
 		<Modal>
-			<!--租客信息修改-->
+			<!--租客信息添加/修改-->
 			<div class="modal-ne" v-show="modal_type==='set_tenant'">
 				<div class="modal-head">租客信息修改</div>
 				<div class="modal-bottom info-edit">
@@ -396,6 +397,7 @@
 						<div class="fl item-title name-title">失效次数</div>
 						<div class="fl">
 							<select type="text" v-model="add_TC.opentime" class="form-control">
+                                <option value="0" selected="selected">请选择</option>
                                 <option value="1">一次有效</option>
                                 <option value="-1">永久有效</option>
                             </select>
@@ -426,7 +428,7 @@
 					</div>
 					<div class="modal-item">
 						<div class="fl item-title name-title">失效时间</div>
-						<div class="input-group date form_datetime col-md-5" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="TCc-data">
+						<div class="input-group date form_datetime_1 col-md-5" data-date-format="dd MM yyyy - HH:ii p" data-link-field="TCc-data">
                             <input class="form-control TC-input" size="16" type="text" value="" readonly>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                         </div>
@@ -436,6 +438,7 @@
 						<div class="fl item-title name-title">失效次数</div>
 						<div class="fl">
 							<select type="text" v-model="modify_TC.opentime" class="form-control">
+                                <option value="0" selected="selected">请选择</option>
                                 <option value="1">一次有效</option>
                                 <option value="-1">永久有效</option>
                             </select>
@@ -460,7 +463,7 @@
 					<p>冻结密码后，租客将无法使用该密码进行开锁。</p>
 					<p>是否继续冻结密码？</p>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="freezeTenantCode">确认</button>
+					<button class="btn btn-primary btn-confirm" @click="lockOperation('SetTempLockPWD','1')">确认</button>
 				</div>
 			</div>
 			<!--解冻租客密码-->
@@ -474,7 +477,7 @@
 					<p>解冻密码后，租客将可以使用该密码进行开锁。</p>
 					<p>是否继续解冻密码？</p>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="thawTenantCode">确认</button>
+					<button class="btn btn-primary btn-confirm" @click="lockOperation('SetTempLockPWD','2')">确认</button>
 				</div>
 			</div>
 			<!--删除租客密码-->
@@ -565,7 +568,7 @@
 			<div class="modal-ne" v-show="modal_type==='get_result'">
 				<div class="modal-head">提示</div>
 				<div class="modal-bottom">
-					<p>由于对锁的修改较慢，现在提醒您上次操作成功！</p>
+					<p>{{result_text}}</p>
 					<!--<p>请点击确认按钮！</p>-->
 					<button class="btn btn-primary btn-confirm fr" @click="hideModal">确认</button>
 				</div>
@@ -641,7 +644,7 @@
                     name: '',
                     password: '',
                     endtime: '',
-                    opentime: '',
+                    opentime: 0,
                     code: ''
                 },
                 //修改租客密码
@@ -696,7 +699,20 @@
                 page_count: 'first',
                 last_page_count: '',
                 last_index: -1,
-                time_wait: null
+                //查询结果接口定时器
+                time_wait: null,
+                //查询结果接口返回码
+                result_code: {
+                    '-1': '操作失败！',
+                    '1': '设备不在线！',
+                    '2': '当前设备类型不支持该操作！',
+                    '-10000': '缓存异常！',
+                    '10000': '线程异常！',
+                    '20000': '执行超时，网关并未上传执行结果！'
+                },
+                //查询结果弹窗文本
+                result_text: ''
+
             }
         },
         ready: function() {
@@ -723,6 +739,14 @@
                 showMeridian: 1,
                 format: 'yyyy-mm-dd hh:ii'
             });
+            $('.form_datetime_1').datetimepicker({
+                language:  'zh-CN',
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                showMeridian: 1,
+                format: 'yyyy-mm-dd hh:ii'
+            });
         },
         beforeDestroy: function() {
             if(this.time_wait){
@@ -741,22 +765,41 @@
                     let resData = response.json();;
                     //console.log(resData);
                     if(resData.code == 0) {
-                        if (resData.data == 5) {
+                        if(resData.data == 0){//执行成功
+                            if(_this.time_wait){
+                                window.clearInterval(_this.time_wait);
+                            }
+                            hideLoading(this.$store);
+                            _this.reGetCode();
+                            _this.result_text = "操作成功！";
+                            _this.changeModalType('get_result');
+                            
+                        }
+                        else if(resData.data == 5) {//无任务
                             hideLoading(this.$store);
                             if(_this.time_wait){
                                 window.clearInterval(_this.time_wait);
                             }
                         }
-                        else if(resData.data == 6) {
+                        else if(resData.data == 6) {//有任务在执行
                             _this.time_wait = setInterval(function() {
                                 _this.longLoop();
                             },5000);
                         }
-                        else {
+                        else if(resData.data == -1) {
                             if(_this.time_wait){
                                 window.clearInterval(_this.time_wait);
                             }
                             hideLoading(this.$store);
+                            _this.result_text = _this.result_code[resData.data] + '请检查失效时间或管理员密码是否有误！';
+                            _this.changeModalType('get_result');
+                        }
+                        else{
+                            if(_this.time_wait){
+                                window.clearInterval(_this.time_wait);
+                            }
+                            hideLoading(this.$store);
+                            _this.result_text = _this.result_code[resData.data];
                             _this.changeModalType('get_result');
                         }
                     }
@@ -778,21 +821,41 @@
                     let resData = response.json();;
                     //console.log(resData);
                     if(resData.code == 0) {
-                        if (resData.data == 5) {
+                        if(resData.data == 0){//执行成功
+                            if(_this.time_wait){
+                                window.clearInterval(_this.time_wait);
+                            }
+                            hideLoading(this.$store);
+                            _this.reGetCode();
+                            _this.result_text = "操作成功！";
+                            _this.changeModalType('get_result');
+                        }
+                        else if (resData.data == 5) {//无任务
                             hideLoading(this.$store);
                             if(_this.time_wait){
                                 window.clearInterval(_this.time_wait);
                             }
                             return;
                         }
-                        else if(resData.data == 6) {
+                        else if(resData.data == 6) {//有任务在执行
                             return;
                         }
-                        if(_this.time_wait){
-                            window.clearInterval(_this.time_wait);
+                        else if(resData.data == -1) {
+                            if(_this.time_wait){
+                                window.clearInterval(_this.time_wait);
+                            }
+                            hideLoading(this.$store);
+                            _this.result_text = _this.result_code[resData.data] + '请检查失效时间或管理员密码是否有误！';
+                            _this.changeModalType('get_result');
                         }
-                        hideLoading(this.$store);
-                        _this.changeModalType('get_result');
+                        else{
+                            if(_this.time_wait){
+                                window.clearInterval(_this.time_wait);
+                            }
+                            hideLoading(this.$store);
+                            _this.result_text = _this.result_code[resData.data];
+                            _this.changeModalType('get_result');
+                        }
                     } 
                     else {
                         showMsg(this.$store, resData.msg)
@@ -898,6 +961,7 @@
                         if(!resData.data){
                             _this.no_TC = true;
                         }else{
+                            _this.no_TC = false;
                             _this.get_TC.id = resData.data.id;
                             _this.get_TC.freeze = resData.data.freeze;
                             _this.get_TC.name = resData.data.name;
@@ -926,10 +990,11 @@
                         if(!resData.data)return;
                         for(let i=0;i<resData.data.length;i++){
                             //归入两个数组
-                            if(resData.data[i].index < 9) {
-                                _this.bycode.first[index-1] = resData.data[i]
+                            let index = resData.data[i]['index'];
+                            if(index < 9) {
+                                _this.bycode['first'].$set([index-1], resData.data[i]);
                             }else {
-                                _this.bycode.second[index-9] = resData.data[i]
+                                _this.bycode['second'].$set([index-9], resData.data[i]);
                             }
                         }
                     } else {
@@ -1004,6 +1069,10 @@
             setTenant: function(){
                 let _this = this;
                 this.tenant_data_temp.id =this.$route.query.id;
+                if(!this.tenant_data_temp.name.trim() || !this.tenant_data_temp.phone.trim() || !this.tenant_data_temp.IDcard.trim() || this.tenant_data_temp.time.trim()){
+                    showMsg(this.$store, '请完整填写相关信息！');
+                    return;
+                }
                 this.$http.post(base_url+'/lock/setTenant', this.tenant_data_temp).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
@@ -1066,12 +1135,20 @@
                 };
                 if(operation == "SetPermaLockPWD"){//设置/重制备用密码
                     if(type == "add"){//设置备用密码
+                        if(!this.add_code.password.trim() || !this.add_code.name.trim() || this.code_current_index.trim() || this.add_code.code.trim()){
+                            showMsg(this.$store, '请完整填写相关信息！');
+                            return;
+                        }
                         data.password = this.add_code.password;
                         data.name = this.add_code.name;
                         data.index = this.code_current_index;
                         data.code = this.add_code.code;
                     }
                     else if(type == "change"){//重制备用密码
+                        if(!this.modify_code.password.trim() || !this.modify_code.name.trim() || this.code_current_index.trim() || this.modify_code.code.trim()){
+                            showMsg(this.$store, '请完整填写相关信息！');
+                            return;
+                        }
                         data.password = this.modify_code.password;
                         data.name = this.modify_code.name;
                         data.index = this.code_current_index;
@@ -1084,6 +1161,10 @@
                     //end  "2016-09-19 08:08:08"
                     //mode  1/-1
                     if(type == "add"){//设置租客密码
+                        if(!this.add_TC.password.trim() || !this.add_TC.name.trim() || !this.add_TC.code.trim() || $('#TCa-data')[0].value || this.add_TC.opentime.trim()){
+                            showMsg(this.$store, '请完整填写相关信息！');
+                            return;
+                        }
                         data.password = this.add_TC.password;
                         data.name = this.add_TC.name;
                         data.index = 255;
@@ -1096,6 +1177,10 @@
                         data.mode = this.add_TC.opentime;
                     }
                     else if(type == "change"){//重制租客密码
+                        if(!this.modify_TC.password.trim() || !this.modify_TC.name.trim() || !this.modify_TC.code.trim() || $('#TCc-data')[0].value || this.modify_TC.opentime.trim()){
+                            showMsg(this.$store, '请完整填写相关信息！');
+                            return;
+                        }
                         data.password = this.modify_TC.password;
                         data.name = this.modify_TC.name;
                         data.index = 255;
@@ -1109,23 +1194,32 @@
                 }
                 else if(operation == "DelLockPWD"){//删除密码任意，租客密码index=255 
                     if(type == 'tenant'){//删除租客密码
+                        if(!this.del_TC_code.trim()){
+                            showMsg(this.$store, '请填写管理员密码！');
+                            return;
+                        }
                         data.index = 255 ;
                         data.code = this.del_TC_code;
                     }
                     else if(type == 'code'){//删除备用密码
+                        if(!this.del_C_code.trim()){
+                            showMsg(this.$store, '请填写管理员密码！');
+                            return;
+                        }
                         data.index = this.code_current_index;
                         data.code = this.del_C_code;
                     }
 
                 }
-                showLoading(this.$store,"正在重新配置锁数据，大约需要15秒，请耐心等待！");
+                showLoading(this.$store,"正在重新配置锁数据，大约需要5秒，请耐心等待！");
                 this.$http.post(base_url+'/lock/operation', data).then(function(response) {
+                    _this.hideModal(_this.$store);
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
                         return
                     }
                     let resData = response.json();
-                    console.log(resData);
+                    //console.log(resData);
                     if (resData.code === 0) {
                         _this.getResult();
                     } else {
@@ -1166,6 +1260,87 @@
                 for (var k in o)
                     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
                 return fmt;
+            },
+            //重新获取租客密码和备用密码
+            reGetCode: function(){
+                //初始化租客密码
+                this.get_TC= {
+                    id: '',
+                    freeze: false,
+                    name: '',
+                    time: ''
+                },
+                //初始化添加租客密码
+                this.add_TC= {
+                    name: '',
+                    password: '',
+                    endtime: '',
+                    opentime: 0,
+                    code: ''
+                },
+                //初始化修改租客密码
+                this.modify_TC= {
+                    name: '',
+                    password: '',
+                    endtime: '',
+                    opentime: '',
+                    code: ''
+                },
+                //初始化冻结租客密码管理员密码
+                this.freeze_TC_code= '',
+                //初始化解冻租客密码管理员密码
+                this.thaw_TC_code= '',
+                //初始化删除租客密码管理员密码
+                this.del_TC_code= '',
+                //初始化删除备用密码管理员密码
+                this.del_C_code= '',
+                //初始化当前操作备用密码位置
+                this.code_current_index= -1,
+                //初始化添加备用密码
+                this.add_code= {
+                    name: '',
+                    password: '',
+                    code: ''
+                },
+                //初始化修改备用密码
+                this.modify_code= {
+                    name: '',
+                    password: '',
+                    code: ''
+                },
+                //初始化备用密码
+                this.bycode= {
+                    first: new Array(8),
+                    second: new Array(8)
+                };
+                //初始化备用密码显示隐藏按钮
+                this.bycode_btn_isshow= {
+                    first: new Array(8),
+                    second: new Array(8)
+                };
+                //初始化上次点击备用密码位置
+                this.last_index= -1;
+                //获取租客密码
+                this.getTenantCode();
+                //获取备用密码
+                this.getCode();
+                //时间插件初始化
+                $('.form_datetime').datetimepicker({
+                    language:  'zh-CN',
+                    todayBtn:  1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    showMeridian: 1,
+                    format: 'yyyy-mm-dd hh:ii'
+                });
+                $('.form_datetime_1').datetimepicker({
+                    language:  'zh-CN',
+                    todayBtn:  1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    showMeridian: 1,
+                    format: 'yyyy-mm-dd hh:ii'
+                });
             }
         }
     }
