@@ -165,6 +165,7 @@
         },
         methods: {
             getGatewayList: function(){
+                let _this =this;
                 this.$http.post(base_url+'/lock/getGatewayList').then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！');
@@ -175,7 +176,12 @@
                     if (resData.code === 0) {
                         //TO DO
                         this.gatewayList = resData.data;
-                    } else {
+                    }  
+                    else if(resData.code === 10102 ){
+                        showMsg(this.$store, '请先登陆！')
+                        _this.$router.go({name: 'login'});
+                    }
+                    else {
                         showMsg(this.$store, resData.msg)
                     }
                 }, function(response) {

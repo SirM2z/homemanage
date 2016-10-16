@@ -134,6 +134,7 @@
         },
         methods: {
             getEstateList: function(){
+                let _this = this;
                 showLoading(this.$store);
                 this.$http.post(base_url+'/lock/getEstateList').then(function(response) {
                     hideLoading(this.$store);
@@ -146,7 +147,12 @@
                     if (resData.code === 0) {
                         // this.getUserInfo({},this.$router);
                         this.estateList = resData.data;
-                    } else {
+                    } 
+                    else if(resData.code === 10102 ){
+                        showMsg(this.$store, '请先登陆！')
+                        _this.$router.go({name: 'login'});
+                    }
+                    else {
                         showMsg(this.$store, resData.msg)
                     }
                 }, function(response) {

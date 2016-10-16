@@ -134,6 +134,7 @@
         },
         methods: {
             getEstate: function(){
+                let _this = this;
                 this.$http.post(base_url+'/lock/getEstate', {
                     id : this.$route.query.id
                 }).then(function(response) {
@@ -149,7 +150,12 @@
                         this.get_estate_gwNames = resData.data.gwNames;
                         this.get_estate_note = resData.data.note;
 
-                    } else {
+                    }  
+                    else if(resData.code === 10102 ){
+                        showMsg(this.$store, '请先登陆！')
+                        _this.$router.go({name: 'login'});
+                    }
+                    else {
                         showMsg(this.$store, resData.msg)
                     }
                 }, function(response) {
@@ -157,6 +163,7 @@
                 })
             },
             getLockList:function(){
+                let _this = this;
                 this.$http.post(base_url+'/lock/getLockList', {
                     id : this.$route.query.id  
                 }).then(function(response) {
@@ -168,7 +175,12 @@
                     //console.log(resData.data);
                     if (resData.code === 0) {
                         this.lock_list = resData.data;
-                    } else {
+                    }  
+                    else if(resData.code === 10102 ){
+                        showMsg(this.$store, '请先登陆！')
+                        _this.$router.go({name: 'login'});
+                    }
+                    else {
                         showMsg(this.$store, resData.msg)
                     }
                 }, function(response) {

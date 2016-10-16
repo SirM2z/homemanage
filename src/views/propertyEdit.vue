@@ -166,6 +166,7 @@
             getEstate: function(){
                 // this.$route.query.id
                 //console.log(this.$route.query.id);
+                let _this = this;
                 this.$http.post(base_url+'/lock/getEstate', {
                     id : this.$route.query.id
                 }).then(function(response) {
@@ -183,7 +184,12 @@
                         this.estate_bindgw_selected = resData.data.bindgw;
                         this.estate_note = resData.data.note;
                         this.gatewaysNum = resData.data.bindgw.length;
-                    } else {
+                    }  
+                    else if(resData.code === 10102 ){
+                        showMsg(this.$store, '请先登陆！')
+                        _this.$router.go({name: 'login'});
+                    }
+                    else {
                         showMsg(this.$store, resData.msg)
                     }
                 }, function(response) {

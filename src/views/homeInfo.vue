@@ -803,6 +803,10 @@
                             _this.changeModalType('get_result');
                         }
                     }
+                    else if(resData.code === 10102 ){
+                        showMsg(this.$store, '请先登陆！')
+                        _this.$router.go({name: 'login'});
+                    }
                     else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -856,7 +860,11 @@
                             _this.result_text = _this.result_code[resData.data];
                             _this.changeModalType('get_result');
                         }
-                    } 
+                    }  
+                    else if(resData.code === 10102 ){
+                        showMsg(this.$store, '请先登陆！')
+                        _this.$router.go({name: 'login'});
+                    }
                     else {
                         showMsg(this.$store, resData.msg)
                     }
@@ -910,7 +918,12 @@
                         _this.tenant_data.phone = resData.data.phone;
                         _this.tenant_data.IDcard = resData.data.IDcard;
                         _this.tenant_data.time = resData.data.time;
-                    } else {
+                    }  
+                    else if(resData.code === 10102 ){
+                        showMsg(this.$store, '请先登陆！')
+                        _this.$router.go({name: 'login'});
+                    }
+                    else {
                         showMsg(this.$store, resData.msg)
                     }
                 }, function(response) {
@@ -938,7 +951,12 @@
                         _this.get_LI.gw_ver = resData.data.gw_ver;
                         _this.get_LI.last_ver = resData.data.last_ver;
                         _this.get_LI.zb_ver = resData.data.zb_ver;
-                    } else {
+                    }  
+                    else if(resData.code === 10102 ){
+                        showMsg(this.$store, '请先登陆！')
+                        _this.$router.go({name: 'login'});
+                    }
+                    else {
                         showMsg(this.$store, resData.msg)
                     }
                 }, function(response) {
@@ -967,7 +985,12 @@
                             _this.get_TC.name = resData.data.name;
                             _this.get_TC.time = resData.data.time;
                         }
-                    } else {
+                    }  
+                    else if(resData.code === 10102 ){
+                        showMsg(this.$store, '请先登陆！')
+                        _this.$router.go({name: 'login'});
+                    }
+                    else {
                         showMsg(this.$store, resData.msg)
                     }
                 }, function(response) {
@@ -997,7 +1020,12 @@
                                 _this.bycode['second'].$set([index-9], resData.data[i]);
                             }
                         }
-                    } else {
+                    }  
+                    else if(resData.code === 10102 ){
+                        showMsg(this.$store, '请先登陆！')
+                        _this.$router.go({name: 'login'});
+                    }
+                    else {
                         showMsg(this.$store, resData.msg)
                     }
                 }, function(response) {
@@ -1027,7 +1055,12 @@
                             //如果小于20条 done改成true
                             _this.lockopen_done = true;
                         }
-                    } else {
+                    }  
+                    else if(resData.code === 10102 ){
+                        showMsg(this.$store, '请先登陆！')
+                        _this.$router.go({name: 'login'});
+                    }
+                    else {
                         showMsg(this.$store, resData.msg)
                     }
                 }, function(response) {
@@ -1058,7 +1091,12 @@
                             //如果小于20条 done改成true
                             _this.operation_done = true;
                         }
-                    } else {
+                    }  
+                    else if(resData.code === 10102 ){
+                        showMsg(this.$store, '请先登陆！')
+                        _this.$router.go({name: 'login'});
+                    }
+                    else {
                         showMsg(this.$store, resData.msg)
                     }
                 }, function(response) {
