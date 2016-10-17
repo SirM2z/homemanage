@@ -1326,7 +1326,7 @@
                         showMsg(this.$store, '请填写管理员密码！', 'error');
                         return;
                     }
-                    if(!!$('#TCr-data')[0].value){
+                    if(!$('#TCr-data')[0].value){
                         showMsg(this.$store, '请选择结束时间！', 'error');
                         return;
                     }
