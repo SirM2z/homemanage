@@ -27,6 +27,7 @@
 	}
 	.nav-box .navbar-default .navbar-nav>li>a {
 		color: #fff;
+		cursor: pointer;
 	}
 	.nav-box .navbar-nav>li>.dropdown-menu{
 		background-color: #0275d8

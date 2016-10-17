@@ -1321,7 +1321,7 @@
                         data.code = this.del_C_code.trim();
                     }
                 }
-                else if(operation == "FreezeCodePWD"){
+                else if(operation == "FreezeCodePWD"){//冻结租客密码
                     if(!this.freeze_TC_code.trim()){
                         showMsg(this.$store, '请填写管理员密码！', 'error');
                         return;
@@ -1329,7 +1329,7 @@
                     data.index = 255 ;
                     data.code = this.freeze_TC_code.trim();
                 }
-                else if(operation == "UnfreezeCodePWD"){
+                else if(operation == "UnfreezeCodePWD"){//解冻租客密码
                     if(!this.thaw_TC_code.trim()){
                         showMsg(this.$store, '请填写管理员密码！', 'error');
                         return;
@@ -1337,7 +1337,7 @@
                     data.index = 255 ;
                     data.code = this.thaw_TC_code.trim();
                 }
-                else if(operation == "ReletTempLockPWD"){
+                else if(operation == "ReletTempLockPWD"){//续租租客密码
                     if(!this.rene_TC.code.trim()){
                         showMsg(this.$store, '请填写管理员密码！', 'error');
                         return;
@@ -1348,6 +1348,7 @@
                     }
                     this.rene_TC.endtime = $('#TCr-data')[0].value;
                     data.end = this.rene_TC.endtime;
+                    data.index = 255;
                     data.code = this.rene_TC.code.trim();
                 }
                 showLoading(this.$store,"正在重新配置锁数据，大约需要5秒，请耐心等待！");
