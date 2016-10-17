@@ -1,7 +1,10 @@
 <style>
     .index-box {
-        padding: 50px 250px 100px;
-        min-height: 100%;
+        /*padding: 50px 250px 100px;*/
+        width: 998px;
+        min-width: 998px;
+        margin: 0 auto 150px;
+        min-height: 78%;
         height: auto !important;
         height: 100%;
     }
@@ -28,8 +31,9 @@
     
     .index-box .fc-info img {
         width: 90%;
-        height: 230px;
+        height: 200px;
         margin-bottom: 20px;
+        cursor: pointer;
     }
     
     .index-box .fc-info .fc-name {
@@ -40,7 +44,7 @@
     .index-box .add-info {
         position: relative;
         width: 90%;
-        height: 230px;
+        height: 200px;
         text-align: center;
         font-size: 20px;
         font-weight: 500;
@@ -139,7 +143,7 @@
                 this.$http.post(base_url+'/lock/getEstateList').then(function(response) {
                     hideLoading(this.$store);
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -148,16 +152,16 @@
                         // this.getUserInfo({},this.$router);
                         this.estateList = resData.data;
                     } 
-                    else if(resData.code === 10102 ){
-                        showMsg(this.$store, '请先登陆！')
+                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
+                        showMsg(this.$store, '请先登陆！', 'error')
                         _this.$router.go({name: 'login'});
                     }
                     else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
                     hideLoading(this.$store);
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             goAddEstate: function(){

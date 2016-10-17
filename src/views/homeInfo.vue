@@ -1,7 +1,10 @@
 <style>
 	.home-box {
-		padding: 50px 250px 100px;
-		min-height: 100%;
+		/*padding: 50px 250px 100px;*/
+        width: 998px;
+        min-width: 998px;
+        margin: 0 auto 150px;
+        min-height: 78%;
 		height: auto !important;
 		height: 100%;
 	}
@@ -202,7 +205,7 @@
 			<div v-if="tenant_data==null">
 				<div class="row">
 					<div class="col-md-6 btn-row-dev">尚未入住</div>
-					<div class="col-md-6"><button type="button" class="btn btn-primary fr" @click="changeModalType('set_tenant')">添加租客</button></div>
+					<div class="col-md-6"><button type="button" class="btn btn-primary fr" @click="changeModalType('set_tenant','add')">添加租客</button></div>
 				</div>
 			</div>
 			<div v-else>
@@ -213,7 +216,7 @@
 				<div class="row">
 					<div class="col-md-4 btn-row-dev">身份证：{{tenant_data.IDcard}}</div>
 					<div class="col-md-4 btn-row-dev">合同到期时间：{{tenant_data.time}}</div>
-					<div class="col-md-4"><button type="button" class="btn btn-primary fr" @click="changeModalType('set_tenant')">修改信息</button></div>
+					<div class="col-md-4"><button type="button" class="btn btn-primary fr" @click="changeModalType('set_tenant','change')">修改信息</button></div>
 				</div>
 				<div class="row">
 					<div class="col-md-3">入住情况：{{tenant_data.status==1?"未入住":"已入住"}}</div>
@@ -268,6 +271,7 @@
 								<td class="blue">{{get_TC.name}}</td>
 								<td>{{get_TC.time}}</td>
 								<td class="blue rent-password-btn ice-password" @click="changeModalType('freeze_tenant_code')">冻结密码</td>
+								<td class="blue rent-password-btn  change-password" @click="changeModalType('modify_tenant_code')">续租密码</td>
 								<td class="blue rent-password-btn  change-password" @click="changeModalType('modify_tenant_code')">修改密码</td>
 								<td class="blue rent-password-btn  delete-password" @click="changeModalType('del_tenant_code')">删除密码</td>
 							</tr>
@@ -339,7 +343,7 @@
 		<Modal>
 			<!--租客信息添加/修改-->
 			<div class="modal-ne" v-show="modal_type==='set_tenant'">
-				<div class="modal-head">租客信息修改</div>
+				<div class="modal-head">租客信息{{tenant_data_text}}</div>
 				<div class="modal-bottom info-edit">
 					<div class="modal-item">
 						<div class="fl item-title name-title">入住情况</div>
@@ -616,6 +620,8 @@
                 },
                 //租客信息--修改
                 tenant_data_temp: null,
+                //租客信息--弹出框文字
+                tenant_data_text: '添加',
                 //锁状态
                 estate_name: this.$route.query.estate_name,
                 lock_power: this.$route.query.power,
@@ -759,7 +765,7 @@
                 let _this = this;                
                 this.$http.post(base_url+'/lock/getResult').then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();;
@@ -803,15 +809,15 @@
                             _this.changeModalType('get_result');
                         }
                     }
-                    else if(resData.code === 10102 ){
-                        showMsg(this.$store, '请先登陆！')
+                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
+                        showMsg(this.$store, '请先登陆！', 'error')
                         _this.$router.go({name: 'login'});
                     }
                     else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             //轮询方法
@@ -819,7 +825,7 @@
                 let _this = this;                
                 this.$http.post(base_url+'/lock/getResult').then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();;
@@ -861,19 +867,27 @@
                             _this.changeModalType('get_result');
                         }
                     }  
-                    else if(resData.code === 10102 ){
-                        showMsg(this.$store, '请先登陆！')
+                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
+                        showMsg(this.$store, '请先登陆！', 'error')
                         _this.$router.go({name: 'login'});
                     }
                     else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             //改变弹出框
-            changeModalType: function(type){
+            changeModalType: function(type,typeInfo){
+                if(type == 'set_tenant'){
+                    if(typeInfo == 'add'){
+                        this.tenant_data_text = '添加';
+                    }
+                    else{
+                        this.tenant_data_text = '修改';
+                    }
+                }
                 this.modal_type = type;
                 this.showModal();
             },
@@ -906,7 +920,7 @@
                     id : this.$route.query.id
                 }).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -919,15 +933,15 @@
                         _this.tenant_data.IDcard = resData.data.IDcard;
                         _this.tenant_data.time = resData.data.time;
                     }  
-                    else if(resData.code === 10102 ){
-                        showMsg(this.$store, '请先登陆！')
+                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
+                        showMsg(this.$store, '请先登陆！', 'error')
                         _this.$router.go({name: 'login'});
                     }
                     else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             //获取锁信息(设备信息)
@@ -937,7 +951,7 @@
                     id : this.$route.query.id
                 }).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -952,15 +966,15 @@
                         _this.get_LI.last_ver = resData.data.last_ver;
                         _this.get_LI.zb_ver = resData.data.zb_ver;
                     }  
-                    else if(resData.code === 10102 ){
-                        showMsg(this.$store, '请先登陆！')
+                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
+                        showMsg(this.$store, '请先登陆！', 'error')
                         _this.$router.go({name: 'login'});
                     }
                     else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             //获取租客密码
@@ -970,7 +984,7 @@
                     id : this.$route.query.id
                 }).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -986,15 +1000,15 @@
                             _this.get_TC.time = resData.data.time;
                         }
                     }  
-                    else if(resData.code === 10102 ){
-                        showMsg(this.$store, '请先登陆！')
+                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
+                        showMsg(this.$store, '请先登陆！', 'error')
                         _this.$router.go({name: 'login'});
                     }
                     else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             //获取备用密码
@@ -1004,7 +1018,7 @@
                     id : this.$route.query.id
                 }).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -1021,15 +1035,15 @@
                             }
                         }
                     }  
-                    else if(resData.code === 10102 ){
-                        showMsg(this.$store, '请先登陆！')
+                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
+                        showMsg(this.$store, '请先登陆！', 'error')
                         _this.$router.go({name: 'login'});
                     }
                     else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             //获取开锁日志
@@ -1041,7 +1055,7 @@
                     index : this.lockopen_page*this.record_pageNum
                 }).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -1056,15 +1070,15 @@
                             _this.lockopen_done = true;
                         }
                     }  
-                    else if(resData.code === 10102 ){
-                        showMsg(this.$store, '请先登陆！')
+                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
+                        showMsg(this.$store, '请先登陆！', 'error')
                         _this.$router.go({name: 'login'});
                     }
                     else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             //获取操作日志
@@ -1077,7 +1091,7 @@
                     index : this.operation_page*this.record_pageNum
                 }).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -1092,15 +1106,15 @@
                             _this.operation_done = true;
                         }
                     }  
-                    else if(resData.code === 10102 ){
-                        showMsg(this.$store, '请先登陆！')
+                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
+                        showMsg(this.$store, '请先登陆！', 'error')
                         _this.$router.go({name: 'login'});
                     }
                     else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             //添加或修改租户信息 
@@ -1108,12 +1122,12 @@
                 let _this = this;
                 this.tenant_data_temp.id =this.$route.query.id;
                 if(!this.tenant_data_temp.name.trim() || !this.tenant_data_temp.phone.trim() || !this.tenant_data_temp.IDcard.trim() || this.tenant_data_temp.time.trim()){
-                    showMsg(this.$store, '请完整填写相关信息！');
+                    showMsg(this.$store, '请完整填写相关信息！', 'error');
                     return;
                 }
                 this.$http.post(base_url+'/lock/setTenant', this.tenant_data_temp).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -1128,10 +1142,10 @@
                         _this.tenant_data.time = _this.tenant_data_temp.time;
                         _this.hideModal(_this.$store);
                     } else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             //改变备用密码页码
@@ -1174,7 +1188,7 @@
                 if(operation == "SetPermaLockPWD"){//设置/重制备用密码
                     if(type == "add"){//设置备用密码
                         if(!this.add_code.password.trim() || !this.add_code.name.trim() || this.code_current_index.trim() || this.add_code.code.trim()){
-                            showMsg(this.$store, '请完整填写相关信息！');
+                            showMsg(this.$store, '请完整填写相关信息！', 'error');
                             return;
                         }
                         data.password = this.add_code.password;
@@ -1184,7 +1198,7 @@
                     }
                     else if(type == "change"){//重制备用密码
                         if(!this.modify_code.password.trim() || !this.modify_code.name.trim() || this.code_current_index.trim() || this.modify_code.code.trim()){
-                            showMsg(this.$store, '请完整填写相关信息！');
+                            showMsg(this.$store, '请完整填写相关信息！', 'error');
                             return;
                         }
                         data.password = this.modify_code.password;
@@ -1200,7 +1214,7 @@
                     //mode  1/-1
                     if(type == "add"){//设置租客密码
                         if(!this.add_TC.password.trim() || !this.add_TC.name.trim() || !this.add_TC.code.trim() || $('#TCa-data')[0].value || this.add_TC.opentime.trim()){
-                            showMsg(this.$store, '请完整填写相关信息！');
+                            showMsg(this.$store, '请完整填写相关信息！', 'error');
                             return;
                         }
                         data.password = this.add_TC.password;
@@ -1216,7 +1230,7 @@
                     }
                     else if(type == "change"){//重制租客密码
                         if(!this.modify_TC.password.trim() || !this.modify_TC.name.trim() || !this.modify_TC.code.trim() || $('#TCc-data')[0].value || this.modify_TC.opentime.trim()){
-                            showMsg(this.$store, '请完整填写相关信息！');
+                            showMsg(this.$store, '请完整填写相关信息！', 'error');
                             return;
                         }
                         data.password = this.modify_TC.password;
@@ -1233,7 +1247,7 @@
                 else if(operation == "DelLockPWD"){//删除密码任意，租客密码index=255 
                     if(type == 'tenant'){//删除租客密码
                         if(!this.del_TC_code.trim()){
-                            showMsg(this.$store, '请填写管理员密码！');
+                            showMsg(this.$store, '请填写管理员密码！', 'error');
                             return;
                         }
                         data.index = 255 ;
@@ -1241,7 +1255,7 @@
                     }
                     else if(type == 'code'){//删除备用密码
                         if(!this.del_C_code.trim()){
-                            showMsg(this.$store, '请填写管理员密码！');
+                            showMsg(this.$store, '请填写管理员密码！', 'error');
                             return;
                         }
                         data.index = this.code_current_index;
@@ -1253,7 +1267,7 @@
                 this.$http.post(base_url+'/lock/operation', data).then(function(response) {
                     _this.hideModal(_this.$store);
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -1262,10 +1276,10 @@
                         _this.getResult();
                     } else {
                         hideLoading(this.$store);
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             //提供正确时间格式

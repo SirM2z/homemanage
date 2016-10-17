@@ -1,8 +1,10 @@
 <style>
     .personal-box {
-        padding: 50px 250px 100px;
-        margin: 0 auto;
-        min-height: 100%;
+        /*padding: 50px 250px 100px;*/
+        width: 998px;
+        min-width: 998px;
+        margin: 0 auto 150px;
+        min-height: 78%;
         height: auto !important;
         height: 100%;
     }
@@ -122,7 +124,7 @@
                 let _this = this;
                 this.$http.post(base_url+'/user/info').then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -131,28 +133,28 @@
                         // to do
                         this.user_name = resData.data.name;
                     }  
-                    else if(resData.code === 10102 ){
-                        showMsg(this.$store, '请先登陆！')
+                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
+                        showMsg(this.$store, '请先登陆！', 'error')
                         _this.$router.go({name: 'login'});
                     }
                     else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             modifyName: function(){
                 let _this = this;
                 if(!this.user_name.trim()){
-                    showMsg(this.$store,"请填写用户名！");
+                    showMsg(this.$store,"请填写用户名！", 'error');
                     return;
                 }
                 this.$http.post(base_url+'/user/modifyName', {
                     name : this.user_name
                 }).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -161,10 +163,10 @@
                         window.localStorage.setItem('homemanage_username',_this.user_name);
                         showMsg(this.$store, "保存成功!");
                     } else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             }
         }

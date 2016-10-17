@@ -1,7 +1,7 @@
-#home-manage
+# home-manage
 > 所有的目录结构和webpack配置都可以根据自己需要修改
 
-##目录结构
+## 目录结构
 <pre>
 │  .gitignore          # 忽略文件,比如 node_modules
 │  package.json        # 项目配置
@@ -65,7 +65,7 @@
 </pre>
 
 
-##说明
+## 说明
 目前已将css(使用@import的和.vue内style的)样式都独立抽离为main.css文件,如果想按需加载,可以将webpack.base.js内的如下代码注释
 ```javascript
 vue: {
@@ -83,37 +83,38 @@ vue: {
 new ExtractTextPlugin("[name].css",{ allChunks : true,resolve : ['modules'] }),
 ```
 
-#如何使用
+# 如何使用
 
-##说明
+## 说明
 > 目前已将打包后的dist目录和webpack生成的index.html和index_prod.html加入了git忽略列表,如果不需要这样做,请修改。
 > 目前分开发环境和生产环境,分别对应webpack.dev.config.js和webpack.prod.config.js可以根据自己需要来调整相关webpack配置,比如添加灰度环境配置。
 > 目前的开发环境文件使用默认命名,生产环境使用带hash值的命名,可根据自己需要修改,但不建议修改本地环境为带hash的。
 > 入口的html文件模板在src/template/index.html内,可自行修改
 
-##安装
+## 安装
 ```
 // 安装前请先确保已安装node和npm
-// 需要提前在全局安装webpack和webpack-dev-server,如果已安装请忽略
+// 需要提前在全局安装webpack,如果已安装请忽略
 npm install webpack -g
-npm install webpack-dev-server -g
 
 // 安装成功后,再安装依赖
 npm install
 ```
 
-##运行
-####开发环境
+## 运行
+#### 开发环境
 ```
 // 注意首次使用需要执行下面的init命令来生成入口html文件,以后不用再执行
 npm run init
 npm run dev
 ```
 
-####生产环境(打包)
+#### 生产环境(打包)
 ```
 npm run build
 ```
 
-####访问
+将dist文件夹和index.html文件放入服务器目录，并在index.html文件所在目录建立 src/libs/文件夹，将项目中同级目录（src/libs/）下的文件拷贝到服务器同级目录（src/libs/）下，以后服务器更新只需运行打包命令后，将dist文件夹和index.html文件覆盖进服务器目录中即可
+
+#### 访问
 在浏览器地址栏输入http://127.0.0.1:8080

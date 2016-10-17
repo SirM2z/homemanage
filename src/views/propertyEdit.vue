@@ -1,8 +1,10 @@
 <style>
      .propertyedit-box {
-        padding: 50px 250px 100px;
-        margin: 0 auto;
-        min-height: 100%;
+        /*padding: 50px 250px 100px;*/
+        width: 998px;
+        min-width: 998px;
+        margin: 0 auto 150px;
+        min-height: 78%;
         height: auto !important;
         height: 100%;
     }
@@ -171,7 +173,7 @@
                     id : this.$route.query.id
                 }).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -185,21 +187,21 @@
                         this.estate_note = resData.data.note;
                         this.gatewaysNum = resData.data.bindgw.length;
                     }  
-                    else if(resData.code === 10102 ){
-                        showMsg(this.$store, '请先登陆！')
+                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
+                        showMsg(this.$store, '请先登陆！', 'error')
                         _this.$router.go({name: 'login'});
                     }
                     else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             getGatewayList: function(){
                 this.$http.post(base_url+'/lock/getGatewayList').then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -208,10 +210,10 @@
                         //TO DO
                         this.gatewayList = resData.data;
                     } else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             uploadFile: function(e){
@@ -226,7 +228,7 @@
                 //}
                 this.$http.post(base_url+'/lock/upload',formdata).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -235,10 +237,10 @@
                         //TO DO
                         this.estate_image = resData.data;
                     } else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             addSelect: function(){
@@ -248,7 +250,7 @@
             modifyEstate: function(){
                 let _this = this;
                 if(!this.estate_name.trim() || !this.estate_address.trim()){
-                    showMsg(this.$store, '请填写完整相关信息！');
+                    showMsg(this.$store, '请填写完整相关信息！', 'error');
                     return;
                 }
                 this.$http.post(base_url+'/lock/modifyEstate', {
@@ -260,7 +262,7 @@
                     gateways : this.estate_bindgw_selected
                 }).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -272,10 +274,10 @@
                             name: 'index'
                         })
                     } else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             }
         }

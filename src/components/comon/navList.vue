@@ -3,8 +3,10 @@
 		background-color: #0275d8;
 	}
 	.nav-box .container-fluid {
-		padding-right: 200px;
-		padding-left: 200px;
+		/*padding-right: 200px;
+		padding-left: 200px;*/
+        width: 998px;
+        margin: 0 auto;
 	}
 	.nav-box .container-fluid>.navbar-header{
 		margin-right: 50px;

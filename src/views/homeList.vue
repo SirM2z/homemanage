@@ -1,7 +1,10 @@
 <style>
     .list-box{
-        padding: 50px 250px 100px;
-        min-height: 100%;
+        /*padding: 50px 250px 100px;*/
+        width: 998px;
+        min-width: 998px;
+        margin: 0 auto 150px;
+        min-height: 78%;
         height: auto !important;
         height: 100%;
     }
@@ -57,7 +60,7 @@
         <div class="info-body">
             <div class="body-left">
                 <div>房产地址：{{get_estate_address}}</div>
-                <div>绑定网关：{{get_estate_gwNames}}</div>
+                <div>绑定网关：{{get_estate_gwNames?get_estate_gwNames:'暂无绑定网管'}}</div>
                 <div>备注信息：{{get_estate_note}}</div>
             </div>
             <div class="body-btn">
@@ -139,7 +142,7 @@
                     id : this.$route.query.id
                 }).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -151,15 +154,15 @@
                         this.get_estate_note = resData.data.note;
 
                     }  
-                    else if(resData.code === 10102 ){
-                        showMsg(this.$store, '请先登陆！')
+                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
+                        showMsg(this.$store, '请先登陆！', 'error')
                         _this.$router.go({name: 'login'});
                     }
                     else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             getLockList:function(){
@@ -168,7 +171,7 @@
                     id : this.$route.query.id  
                 }).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -176,15 +179,15 @@
                     if (resData.code === 0) {
                         this.lock_list = resData.data;
                     }  
-                    else if(resData.code === 10102 ){
-                        showMsg(this.$store, '请先登陆！')
+                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
+                        showMsg(this.$store, '请先登陆！', 'error')
                         _this.$router.go({name: 'login'});
                     }
                     else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             deleteEstate: function(){
@@ -193,7 +196,7 @@
                         id : this.$route.query.id
                 }).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -205,10 +208,10 @@
                             name: 'index'
                         })
                     } else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             goPropertyEdit: function(){

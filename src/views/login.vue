@@ -167,7 +167,7 @@
         methods: {
             loginSystem:function(){
                 if(!this.user_name.trim() || !this.user_password.trim()){
-                    showMsg(this.$store, '请填写完整账号密码！');
+                    showMsg(this.$store, '请填写完整账号密码！', 'error');
                     return;
                 }
                 showLoading(this.$store);//展示loading动画
@@ -177,7 +177,7 @@
                 }).then(function(response) {
                     if (!response.ok) {//请求出现问题
                         hideLoading(this.$store);//隐藏loading动画
-                        showMsg(this.$store, '请求超时！');//显示请求错误提示
+                        showMsg(this.$store, '请求超时！', 'error');//显示请求错误提示
                         return
                     }
                     let resData = response.json();//对接口返回数据json序列化
@@ -186,11 +186,11 @@
                         this.getUserInfo({},this.$router);//登陆后调用获取用户信息接口
                     } else {
                         hideLoading(this.$store);//隐藏loading动画
-                        showMsg(this.$store, resData.msg)//显示接口无法请求到正确数据的提示
+                        showMsg(this.$store, resData.msg, 'error')//显示接口无法请求到正确数据的提示
                     }
                 }, function(response) {//请求出现问题
                     hideLoading(this.$store);//隐藏loading动画
-                    showMsg(this.$store, '请求超时！')//显示请求错误提示
+                    showMsg(this.$store, '请求超时！', 'error')//显示请求错误提示
                 })
             },
             changeModalType:function(type){
@@ -200,11 +200,11 @@
             },
             sureVerifi:function(){
                 if(this.verifi_phone.trim()==''){
-                    showMsg(this.$store, '请填写手机号！');
+                    showMsg(this.$store, '请填写手机号！', 'error');
                     return;
                 }
                 if(this.verifi_code.trim()==''){
-                    showMsg(this.$store, '请输入验证码')
+                    showMsg(this.$store, '请输入验证码', 'error')
                     return;
                 }
                 this.hideModal();
@@ -214,7 +214,7 @@
             getVerifiCode:function(){
                 let _this = this;
                 if(this.verifi_phone.trim()==''){
-                    showMsg(this.$store, '请填写手机号！');
+                    showMsg(this.$store, '请填写手机号！', 'error');
                     return;
                 }
                 this.verifi_time = 60;
@@ -229,7 +229,7 @@
                     phone : this.verifi_phone.trim()
                 }).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
@@ -237,10 +237,10 @@
                     if (resData.code === 0) {
                         // to do
                     } else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             cancleVerifi:function(){
@@ -254,8 +254,9 @@
                 this.hideModal();
             },
             sureChangePass:function(){
+                let _this = this;
                 if(!this.verifi_phone.trim() || !this.verifi_phone.trim() || !this.verifi_code.trim()){
-                    showMsg(this.$store, '请填写完整信息！');
+                    showMsg(this.$store, '请填写完整信息！', 'error');
                     return;
                 }
                 this.$http.post(base_url+'/user/modifyPassword', {
@@ -264,18 +265,20 @@
                     code : this.verifi_code.trim(),
                 }).then(function(response) {
                     if (!response.ok) {
-                        showMsg(this.$store, '请求超时！');
+                        showMsg(this.$store, '请求超时！', 'error');
                         return
                     }
                     let resData = response.json();
                     // console.log(resData);
                     if (resData.code === 0) {
-                        this.getUserInfo({},this.$router);
+                        _this.hideModal(_this.$store);
+                        showMsg(this.$store, '修改成功！')
+                        //this.getUserInfo({},this.$router);
                     } else {
-                        showMsg(this.$store, resData.msg)
+                        showMsg(this.$store, resData.msg, 'error')
                     }
                 }, function(response) {
-                    showMsg(this.$store, '请求超时！')
+                    showMsg(this.$store, '请求超时！', 'error')
                 })
             },
             particlesApp:function(){
