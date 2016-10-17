@@ -74,6 +74,10 @@
 	.home-box .info-tab .rent-pass-manage .ice-password {
 		background: url("../images/icePass.png") center left no-repeat;
 	}
+
+	.home-box .info-tab .rent-pass-manage .rene-password {
+		background: url("../images/renePass.png") center left no-repeat;
+	}
 	
 	.home-box .info-tab .rent-pass-manage .change-password {
 		background: url("../images/changePass.png") center left no-repeat;
@@ -271,8 +275,8 @@
 								<td class="blue">{{get_TC.name}}</td>
 								<td>{{get_TC.time}}</td>
 								<td class="blue rent-password-btn ice-password" @click="changeModalType('freeze_tenant_code')">冻结密码</td>
-								<td class="blue rent-password-btn  change-password" @click="changeModalType('modify_tenant_code')">续租密码</td>
-								<td class="blue rent-password-btn  change-password" @click="changeModalType('modify_tenant_code')">修改密码</td>
+								<td class="blue rent-password-btn  rene-password" @click="changeModalType('rene_tenant_code')">续租密码</td>
+								<td class="blue rent-password-btn  change-password" @click="changeModalType('modify_tenant_code')">重置密码</td>
 								<td class="blue rent-password-btn  delete-password" @click="changeModalType('del_tenant_code')">删除密码</td>
 							</tr>
 							<tr v-else>
@@ -433,7 +437,7 @@
 					<div class="modal-item">
 						<div class="fl item-title name-title">失效时间</div>
 						<div class="input-group date form_datetime_1 col-md-5" data-date-format="dd MM yyyy - HH:ii p" data-link-field="TCc-data">
-                            <input class="form-control TC-input" size="16" type="text" value="" readonly>
+                            <input class="form-control TC-input" size="16" type="text" :value="modify_TC.endtime" readonly>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                         </div>
                         <input type="hidden" id="TCc-data" v-model="modify_TC.endtime" />
@@ -456,6 +460,26 @@
 					<button class="btn btn-primary btn-confirm" @click="lockOperation('SetTempLockPWD','change')">确认</button>
 				</div>
 			</div>
+			<!--续租租客密码-->
+			<div class="modal-ne" v-show="modal_type==='rene_tenant_code'">
+				<div class="modal-head">续租密码</div>
+				<div class="modal-bottom">
+					<div class="modal-item">
+						<div class="fl item-title name-title">失效时间</div>
+						<div class="input-group date form_datetime_1 col-md-5" data-date-format="dd MM yyyy - HH:ii p" data-link-field="TCr-data">
+                            <input class="form-control TC-input" size="16" type="text" :value="rene_TC.endtime" readonly>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        </div>
+                        <input type="hidden" id="TCr-data" v-model="rene_TC.endtime" />
+					</div>
+					<div class="modal-item">
+						<div class="fl item-title name-title">验证管理员密码</div>
+						<div class="fl"><input type="password" v-model="rene_TC.code" class="form-control"></div>
+					</div>
+					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
+					<button class="btn btn-primary btn-confirm" @click="lockOperation('ReletTempLockPWD')">确认</button>
+				</div>
+			</div>
 			<!--冻结租客密码-->
 			<div class="modal-ne" v-show="modal_type==='freeze_tenant_code'">
 				<div class="modal-head">冻结密码</div>
@@ -467,7 +491,7 @@
 					<p>冻结密码后，租客将无法使用该密码进行开锁。</p>
 					<p>是否继续冻结密码？</p>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="lockOperation('SetTempLockPWD','1')">确认</button>
+					<button class="btn btn-primary btn-confirm" @click="lockOperation('FreezeCodePWD')">确认</button>
 				</div>
 			</div>
 			<!--解冻租客密码-->
@@ -481,7 +505,7 @@
 					<p>解冻密码后，租客将可以使用该密码进行开锁。</p>
 					<p>是否继续解冻密码？</p>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="lockOperation('SetTempLockPWD','2')">确认</button>
+					<button class="btn btn-primary btn-confirm" @click="lockOperation('UnfreezeCodePWD')">确认</button>
 				</div>
 			</div>
 			<!--删除租客密码-->
@@ -658,7 +682,12 @@
                     name: '',
                     password: '',
                     endtime: '',
-                    opentime: '',
+                    opentime: 0,
+                    code: ''
+                },
+                //续租租客密码
+                rene_TC:{
+                    endtime: '',
                     code: ''
                 },
                 //冻结租客密码管理员密码
@@ -998,6 +1027,10 @@
                             _this.get_TC.freeze = resData.data.freeze;
                             _this.get_TC.name = resData.data.name;
                             _this.get_TC.time = resData.data.time;
+                            _this.modify_TC.name = resData.data.name;
+                            _this.modify_TC.endtime = resData.data.time;
+                            //_this.modify_TC.opentime = 
+                            _this.rene_TC.endtime = resData.data.time;
                         }
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
@@ -1213,7 +1246,7 @@
                     //end  "2016-09-19 08:08:08"
                     //mode  1/-1
                     if(type == "add"){//设置租客密码
-                        if(!this.add_TC.password.trim() || !this.add_TC.name.trim() || !this.add_TC.code.trim() || $('#TCa-data')[0].value || this.add_TC.opentime.trim()){
+                        if(!this.add_TC.password.trim() || !this.add_TC.name.trim() || !this.add_TC.code.trim() || !$('#TCa-data')[0].value || this.add_TC.opentime.trim()){
                             showMsg(this.$store, '请完整填写相关信息！', 'error');
                             return;
                         }
@@ -1229,7 +1262,7 @@
                         data.mode = this.add_TC.opentime;
                     }
                     else if(type == "change"){//重制租客密码
-                        if(!this.modify_TC.password.trim() || !this.modify_TC.name.trim() || !this.modify_TC.code.trim() || $('#TCc-data')[0].value || this.modify_TC.opentime.trim()){
+                        if(!this.modify_TC.password.trim() || !this.modify_TC.name.trim() || !this.modify_TC.code.trim() || !$('#TCc-data')[0].value || this.modify_TC.opentime.trim()){
                             showMsg(this.$store, '请完整填写相关信息！', 'error');
                             return;
                         }
@@ -1261,7 +1294,35 @@
                         data.index = this.code_current_index;
                         data.code = this.del_C_code;
                     }
-
+                }
+                else if(operation == "FreezeCodePWD"){
+                    if(!this.freeze_TC_code.trim()){
+                        showMsg(this.$store, '请填写管理员密码！', 'error');
+                        return;
+                    }
+                    data.index = 255 ;
+                    data.code = this.freeze_TC_code.trim();
+                }
+                else if(operation == "UnfreezeCodePWD"){
+                    if(!this.thaw_TC_code.trim()){
+                        showMsg(this.$store, '请填写管理员密码！', 'error');
+                        return;
+                    }
+                    data.index = 255 ;
+                    data.code = this.thaw_TC_code.trim();
+                }
+                else if(operation == "ReletTempLockPWD"){
+                    if(!this.rene_TC.code.trim()){
+                        showMsg(this.$store, '请填写管理员密码！', 'error');
+                        return;
+                    }
+                    if(!!$('#TCr-data')[0].value){
+                        showMsg(this.$store, '请选择结束时间！', 'error');
+                        return;
+                    }
+                    this.rene_TC.endtime = $('#TCr-data')[0].value;
+                    data.end = this.rene_TC.endtime;
+                    data.code = this.rene_TC.code.trim();
                 }
                 showLoading(this.$store,"正在重新配置锁数据，大约需要5秒，请耐心等待！");
                 this.$http.post(base_url+'/lock/operation', data).then(function(response) {

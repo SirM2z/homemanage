@@ -4,7 +4,7 @@
         width: 998px;
         min-width: 998px;
         margin: 0 auto 150px;
-        min-height: 100%;
+        min-height: 78%;
         height: auto !important;
         height: 100%;
     }
