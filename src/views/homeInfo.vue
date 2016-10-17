@@ -372,7 +372,11 @@
 					</div>
 					<div class="modal-item">
 						<div class="fl item-title name-title">合同到期时间</div>
-						<div class="fl"><input type="text" v-model="tenant_data_temp.time" class="form-control"></div>
+						<div class="input-group date form_datetime col-md-5" data-date-format="dd MM yyyy - HH:ii" data-link-field="TC-data">
+                            <input class="form-control TC-input" size="16" type="text" :value="tenant_data_temp.time" readonly>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        </div>
+                        <input type="hidden" id="TC-data" v-model="tenant_data_temp.time" />
 					</div>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
 					<button class="btn btn-primary btn-confirm" @click="setTenant">确认</button>
@@ -698,8 +702,6 @@
                 del_TC_code: '',
                 //删除备用密码管理员密码
                 del_C_code: '',
-                //当前操作备用密码位置
-                code_current_index: -1,
                 //添加备用密码
                 add_code:{
                     name: '',
@@ -734,6 +736,8 @@
                 page_count: 'first',
                 last_page_count: '',
                 last_index: -1,
+                //当前操作备用密码位置
+                code_current_index: -1,
                 //查询结果接口定时器
                 time_wait: null,
                 //查询结果接口返回码
@@ -916,6 +920,9 @@
                     else{
                         this.tenant_data_text = '修改';
                     }
+                }
+                else if(type == 'modify_Code'){
+                    this.modify_code.name = this.bycode[this.page_count][this.code_current_index].name;
                 }
                 this.modal_type = type;
                 this.showModal();
@@ -1154,7 +1161,10 @@
             setTenant: function(){
                 let _this = this;
                 this.tenant_data_temp.id =this.$route.query.id;
-                if(!this.tenant_data_temp.name.trim() || !this.tenant_data_temp.phone.trim() || !this.tenant_data_temp.IDcard.trim() || this.tenant_data_temp.time.trim()){
+                this.tenant_data_temp.time = $('#TC-data')[0].value;
+                //console.log(this.tenant_data_temp.time);
+                //return;
+                if(!this.tenant_data_temp.name.trim() || !this.tenant_data_temp.phone.trim() || !this.tenant_data_temp.IDcard.trim() || !this.tenant_data_temp.time){
                     showMsg(this.$store, '请完整填写相关信息！', 'error');
                     return;
                 }
@@ -1220,7 +1230,7 @@
                 };
                 if(operation == "SetPermaLockPWD"){//设置/重制备用密码
                     if(type == "add"){//设置备用密码
-                        if(!this.add_code.password.trim() || !this.add_code.name.trim() || this.code_current_index.trim() || this.add_code.code.trim()){
+                        if(!this.add_code.password.trim() || !this.add_code.name.trim() || !this.code_current_index || !this.add_code.code.trim()){
                             showMsg(this.$store, '请完整填写相关信息！', 'error');
                             return;
                         }
@@ -1230,7 +1240,7 @@
                         data.code = this.add_code.code;
                     }
                     else if(type == "change"){//重制备用密码
-                        if(!this.modify_code.password.trim() || !this.modify_code.name.trim() || this.code_current_index.trim() || this.modify_code.code.trim()){
+                        if(!this.modify_code.password.trim() || !this.modify_code.name.trim() || !this.code_current_index || !this.modify_code.code.trim()){
                             showMsg(this.$store, '请完整填写相关信息！', 'error');
                             return;
                         }
@@ -1246,14 +1256,14 @@
                     //end  "2016-09-19 08:08:08"
                     //mode  1/-1
                     if(type == "add"){//设置租客密码
-                        if(!this.add_TC.password.trim() || !this.add_TC.name.trim() || !this.add_TC.code.trim() || !$('#TCa-data')[0].value || this.add_TC.opentime.trim()){
+                        if(!this.add_TC.password.trim() || !this.add_TC.name.trim() || !this.add_TC.code.trim() || !$('#TCa-data')[0].value || !this.add_TC.opentime){
                             showMsg(this.$store, '请完整填写相关信息！', 'error');
                             return;
                         }
-                        data.password = this.add_TC.password;
-                        data.name = this.add_TC.name;
+                        data.password = this.add_TC.password.trim();
+                        data.name = this.add_TC.name.trim();
                         data.index = 255;
-                        data.code = this.add_TC.code;
+                        data.code = this.add_TC.code.trim();
                         data.start = _this.fmtDate(new Date());
                         this.add_TC.endtime = $('#TCa-data')[0].value;
                         data.end = this.add_TC.endtime;
@@ -1262,14 +1272,14 @@
                         data.mode = this.add_TC.opentime;
                     }
                     else if(type == "change"){//重制租客密码
-                        if(!this.modify_TC.password.trim() || !this.modify_TC.name.trim() || !this.modify_TC.code.trim() || !$('#TCc-data')[0].value || this.modify_TC.opentime.trim()){
+                        if(!this.modify_TC.password.trim() || !this.modify_TC.name.trim() || !this.modify_TC.code.trim() || !$('#TCc-data')[0].value || !this.modify_TC.opentime){
                             showMsg(this.$store, '请完整填写相关信息！', 'error');
                             return;
                         }
-                        data.password = this.modify_TC.password;
-                        data.name = this.modify_TC.name;
+                        data.password = this.modify_TC.password.trim();
+                        data.name = this.modify_TC.name.trim();
                         data.index = 255;
-                        data.code = this.modify_TC.code;
+                        data.code = this.modify_TC.code.trim();
                         data.start = _this.fmtDate(new Date());
                         this.modify_TC.endtime = $('#TCc-data')[0].value;
                         data.end = this.modify_TC.endtime;
@@ -1284,7 +1294,7 @@
                             return;
                         }
                         data.index = 255 ;
-                        data.code = this.del_TC_code;
+                        data.code = this.del_TC_code.trim();
                     }
                     else if(type == 'code'){//删除备用密码
                         if(!this.del_C_code.trim()){
@@ -1292,7 +1302,7 @@
                             return;
                         }
                         data.index = this.code_current_index;
-                        data.code = this.del_C_code;
+                        data.code = this.del_C_code.trim();
                     }
                 }
                 else if(operation == "FreezeCodePWD"){

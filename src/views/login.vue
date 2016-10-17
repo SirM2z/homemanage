@@ -255,13 +255,17 @@
             },
             sureChangePass:function(){
                 let _this = this;
-                if(!this.verifi_phone.trim() || !this.verifi_phone.trim() || !this.verifi_code.trim()){
+                if(!this.verifi_phone.trim() || !this.new_password_verifi.trim() || !this.new_password.trim() || !this.verifi_code.trim()){
                     showMsg(this.$store, '请填写完整信息！', 'error');
+                    return;
+                }
+                if(this.new_password_verifi.trim() == this.new_password.trim()){
+                    showMsg(this.$store, '两次密码输入不一致！', 'error');
                     return;
                 }
                 this.$http.post(base_url+'/user/modifyPassword', {
                     user : this.verifi_phone.trim(),
-                    newPassword : this.verifi_phone.trim(),
+                    newPassword : this.new_password.trim(),
                     code : this.verifi_code.trim(),
                 }).then(function(response) {
                     if (!response.ok) {

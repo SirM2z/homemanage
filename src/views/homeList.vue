@@ -193,7 +193,7 @@
             deleteEstate: function(){
                 let _this = this;
                 this.$http.post(base_url+'/lock/delEstate', { 
-                        id : this.$route.query.id
+                    id : this.$route.query.id
                 }).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！', 'error');
