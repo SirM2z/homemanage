@@ -423,9 +423,9 @@
 					<button class="btn btn-primary btn-confirm" @click="lockOperation('SetTempLockPWD','add')">确认</button>
 				</div>
 			</div>
-			<!--修改租客密码-->
+			<!--重置租客密码-->
 			<div class="modal-ne" v-show="modal_type==='modify_tenant_code'">
-				<div class="modal-head">修改租客密码</div>
+				<div class="modal-head">重置租客密码</div>
 				<div class="modal-bottom add-password">
 					<div class="modal-item">
 						<div class="fl item-title name-title">密码备注名</div>
@@ -434,8 +434,8 @@
 					<div class="modal-item">
 						<div class="fl item-title name-title">输入租客密码</div>
 						<div class="fl">
-							<input type="password" v-model="modify_TC.password" class="form-control fl" placeholder="请输入4~16位数字密码">
-							<button @click="generatePass('change')" class="btn btn-link btn-count">随机生成</button>
+							<input type="number" v-model="modify_TC.password" class="form-control fl" placeholder="请输入4~16位数字密码">
+							<button @click="generatePass('change')" class="btn btn-link btn-code-random">随机生成</button>
 						</div>
 					</div>
 					<div class="modal-item">
@@ -922,7 +922,7 @@
                     }
                 }
                 else if(type == 'modify_Code'){
-                    this.modify_code.name = this.bycode[this.page_count][this.code_current_index].name;
+                    this.modify_code.name = this.bycode[this.page_count][this.code_current_index-1].name;
                 }
                 this.modal_type = type;
                 this.showModal();
@@ -1234,6 +1234,10 @@
                             showMsg(this.$store, '请完整填写相关信息！', 'error');
                             return;
                         }
+                        if(this.add_code.password.trim().length < 4 || this.add_code.password.trim().length > 16){
+                            showMsg(this.$store, '请填写规定长度的密码！', 'error');
+                            return;
+                        }
                         data.password = this.add_code.password;
                         data.name = this.add_code.name;
                         data.index = this.code_current_index;
@@ -1242,6 +1246,10 @@
                     else if(type == "change"){//重制备用密码
                         if(!this.modify_code.password.trim() || !this.modify_code.name.trim() || !this.code_current_index || !this.modify_code.code.trim()){
                             showMsg(this.$store, '请完整填写相关信息！', 'error');
+                            return;
+                        }
+                        if(this.modify_code.password.trim().length < 4 || this.modify_code.password.trim().length > 16){
+                            showMsg(this.$store, '请填写规定长度的密码！', 'error');
                             return;
                         }
                         data.password = this.modify_code.password;
@@ -1260,6 +1268,10 @@
                             showMsg(this.$store, '请完整填写相关信息！', 'error');
                             return;
                         }
+                        if(this.add_TC.password.trim().length < 4 || this.add_TC.password.trim().length > 16){
+                            showMsg(this.$store, '请填写规定长度的密码！', 'error');
+                            return;
+                        }
                         data.password = this.add_TC.password.trim();
                         data.name = this.add_TC.name.trim();
                         data.index = 255;
@@ -1274,6 +1286,10 @@
                     else if(type == "change"){//重制租客密码
                         if(!this.modify_TC.password.trim() || !this.modify_TC.name.trim() || !this.modify_TC.code.trim() || !$('#TCc-data')[0].value || !this.modify_TC.opentime){
                             showMsg(this.$store, '请完整填写相关信息！', 'error');
+                            return;
+                        }
+                        if(this.modify_TC.password.trim().length < 4 || this.modify_TC.password.trim().length > 16){
+                            showMsg(this.$store, '请填写规定长度的密码！', 'error');
                             return;
                         }
                         data.password = this.modify_TC.password.trim();
