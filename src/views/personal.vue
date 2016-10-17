@@ -64,7 +64,7 @@
             </div>-->
             <div class="info-item pass-btn">
                 <button @click="modifyName" class="btn btn-primary btn-lg btn-s">保存</button>
-                <button class="btn btn-default btn-lg btn-c">取消</button>
+                <button @click="cancleModifyName" class="btn btn-default btn-lg btn-c">取消</button>
             </div>
         </div>
         <Modal>
@@ -167,6 +167,11 @@
                     }
                 }, function(response) {
                     showMsg(this.$store, '请求超时！', 'error')
+                })
+            },
+            cancleModifyName: function(){
+                this.$router.go({
+                    name: 'index'
                 })
             }
         }

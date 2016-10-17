@@ -120,7 +120,7 @@
             </div>
             <div class="info-item pass-btn">
                 <button class="btn btn-primary btn-lg" @click="modifyEstate">保存</button>
-                <button class="btn btn-default btn-lg">取消</button>
+                <button class="btn btn-default btn-lg" @click="cancleModifyEstate">取消</button>
             </div>
         </div>
     </div>
@@ -155,7 +155,7 @@
         },
         ready: function() {
             this.getEstate();
-            this.getGatewayList();
+            this.getEstateGateway();
         },
         components: {
             navList,
@@ -198,8 +198,10 @@
                     showMsg(this.$store, '请求超时！', 'error')
                 })
             },
-            getGatewayList: function(){
-                this.$http.post(base_url+'/lock/getGatewayList').then(function(response) {
+            getEstateGateway: function(){
+                this.$http.post(base_url+'/lock/getEstateGateway', {
+                    id : this.$route.query.id
+                }).then(function(response) {
                     if (!response.ok) {
                         showMsg(this.$store, '请求超时！', 'error');
                         return
@@ -278,6 +280,14 @@
                     }
                 }, function(response) {
                     showMsg(this.$store, '请求超时！', 'error')
+                })
+            },
+            cancleModifyEstate: function(){
+                this.$router.go({
+                    name: 'homeList',
+                    query: {
+                        id: this.$route.query.id
+                    }
                 })
             }
         }

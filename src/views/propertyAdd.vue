@@ -121,7 +121,7 @@
             </div>
             <div class="info-item pass-btn">
                 <button @click="addEstate" class="btn btn-primary btn-lg">保存</button>
-                <button class="btn btn-default btn-lg">取消</button>
+                <button @click="cancleAddEstate" class="btn btn-default btn-lg">取消</button>
             </div>
         </div>
     </div>
@@ -252,6 +252,11 @@
                     }
                 }, function(response) {
                     showMsg(this.$store, '请求超时！', 'error')
+                })
+            },
+            cancleAddEstate: function(){
+                this.$router.go({
+                    name: 'index'
                 })
             }
         }
