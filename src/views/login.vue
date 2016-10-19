@@ -1,6 +1,13 @@
 <style>
     .login-box {}
-    
+    #particles-js{
+        width: 100%;
+        height: 100%;
+        background-color: rgb(46, 147, 242);
+        background-size: cover;
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+    }
     .login-box .login-modal {
         position: absolute;
         width: 520px;
@@ -105,7 +112,7 @@
             <div class="modal-ne" v-show="modal_type==='registere'">
                 <div class="modal-head">申请开通</div>
                 <div class="modal-bottom">
-                    <p>目前管理平台开启注册，如需使用请联系客服进行开通：</p>
+                    <p>目前管理平台仍未开启注册功能，如需使用请联系客服进行开通：</p>
                     <p>热线电话：0571-87654321</p>
                     <p>客服邮箱：service@pstone.cc</p>
                     <button class="btn btn-primary btn-confirm fr" @click="hideModal">确认</button>
@@ -183,7 +190,7 @@
                     let resData = response.json();//对接口返回数据json序列化
                     // console.log(resData);
                     if (resData.code === 0) {
-                        this.getUserInfo({},this.$router);//登陆后调用获取用户信息接口
+                        this.getUserInfo();//登陆后调用获取用户信息接口
                     } else {
                         hideLoading(this.$store);//隐藏loading动画
                         showMsg(this.$store, resData.msg, 'error')//显示接口无法请求到正确数据的提示
@@ -259,7 +266,7 @@
                     showMsg(this.$store, '请填写完整信息！', 'error');
                     return;
                 }
-                if(this.new_password_verifi.trim() == this.new_password.trim()){
+                if(this.new_password_verifi.trim() != this.new_password.trim()){
                     showMsg(this.$store, '两次密码输入不一致！', 'error');
                     return;
                 }
@@ -289,119 +296,113 @@
                 window.particlesJS('particles-js',
                     {
                         "particles": {
-                        "number": {
-                            "value": 80,
-                            "density": {
-                            "enable": true,
-                            "value_area": 800
-                            }
-                        },
-                        "color": {
-                            "value": "#ffffff"
-                        },
-                        "shape": {
-                            "type": "circle",
-                            "stroke": {
-                            "width": 0,
-                            "color": "#000000"
+                            "number": {
+                                "value": 15,
+                                "density": {
+                                    "enable": true,
+                                    "value_area": 800
+                                }
                             },
-                            "polygon": {
-                            "nb_sides": 5
+                            "color": {
+                                "value": "#e6e1e1"
                             },
-                            "image": {
-                            "src": "img/github.svg",
-                            "width": 100,
-                            "height": 100
+                            "shape": {
+                                "type": "circle",
+                                "stroke": {
+                                    "width": 0,
+                                    "color": "#000000"
+                                },
+                                "polygon": {
+                                    "nb_sides": 5
+                                },
+                                "image": {
+                                    "src": "img/github.svg",
+                                    "width": 100,
+                                    "height": 100
+                                }
+                            },
+                            "opacity": {
+                                "value": 1,
+                                "random": true,
+                                "anim": {
+                                    "enable": false,
+                                    "speed": 1,
+                                    "opacity_min": 0.1,
+                                    "sync": false
+                                }
+                            },
+                            "size": {
+                                "value": 5,
+                                "random": true,
+                                "anim": {
+                                    "enable": false,
+                                    "speed": 40,
+                                    "size_min": 0.1,
+                                    "sync": false
+                                }
+                            },
+                            "line_linked": {
+                                "enable": true,
+                                "distance": 300,
+                                "color": "#ffffff",
+                                "opacity": 0.7,
+                                "width": 1
+                            },
+                            "move": {
+                                "enable": true,
+                                "speed": 3,
+                                "direction": "none",
+                                "random": true,
+                                "straight": false,
+                                "out_mode": "out",
+                                "bounce": false,
+                                "attract": {
+                                    "enable": false,
+                                    "rotateX": 600,
+                                    "rotateY": 1200
+                                }
                             }
-                        },
-                        "opacity": {
-                            "value": 0.5,
-                            "random": false,
-                            "anim": {
-                            "enable": false,
-                            "speed": 1,
-                            "opacity_min": 0.1,
-                            "sync": false
-                            }
-                        },
-                        "size": {
-                            "value": 5,
-                            "random": true,
-                            "anim": {
-                            "enable": false,
-                            "speed": 40,
-                            "size_min": 0.1,
-                            "sync": false
-                            }
-                        },
-                        "line_linked": {
-                            "enable": true,
-                            "distance": 150,
-                            "color": "#ffffff",
-                            "opacity": 0.4,
-                            "width": 1
-                        },
-                        "move": {
-                            "enable": true,
-                            "speed": 6,
-                            "direction": "none",
-                            "random": false,
-                            "straight": false,
-                            "out_mode": "out",
-                            "attract": {
-                            "enable": false,
-                            "rotateX": 600,
-                            "rotateY": 1200
-                            }
-                        }
                         },
                         "interactivity": {
-                        "detect_on": "canvas",
-                        "events": {
-                            "onhover": {
-                            "enable": true,
-                            "mode": "repulse"
-                            },
-                            "onclick": {
-                            "enable": true,
-                            "mode": "push"
-                            },
-                            "resize": true
-                        },
-                        "modes": {
-                            "grab": {
-                            "distance": 400,
-                            "line_linked": {
-                                "opacity": 1
+                            "detect_on": "canvas",
+                            "events": {
+                                "onhover": {
+                                    "enable": true,
+                                    "mode": "grab"
+                                },
+                                "onclick": {
+                                    "enable": false,
+                                    "mode": "push"
+                                },
+                                "resize": true
+                                },
+                                "modes": {
+                                "grab": {
+                                    "distance": 400,
+                                    "line_linked": {
+                                    "opacity": 1
+                                    }
+                                },
+                                "bubble": {
+                                    "distance": 400,
+                                    "size": 40,
+                                    "duration": 2,
+                                    "opacity": 8,
+                                    "speed": 3
+                                },
+                                "repulse": {
+                                    "distance": 200,
+                                    "duration": 0.4
+                                },
+                                "push": {
+                                    "particles_nb": 4
+                                },
+                                "remove": {
+                                    "particles_nb": 2
+                                }
                             }
-                            },
-                            "bubble": {
-                            "distance": 400,
-                            "size": 40,
-                            "duration": 2,
-                            "opacity": 8,
-                            "speed": 3
-                            },
-                            "repulse": {
-                            "distance": 200
-                            },
-                            "push": {
-                            "particles_nb": 4
-                            },
-                            "remove": {
-                            "particles_nb": 2
-                            }
-                        }
                         },
-                        "retina_detect": true,
-                        "config_demo": {
-                        "hide_card": false,
-                        "background_color": "#b61924",
-                        "background_image": "",
-                        "background_position": "50% 50%",
-                        "background_repeat": "no-repeat",
-                        "background_size": "cover"
-                        }
+                        "retina_detect": true
                     }
                 );
 

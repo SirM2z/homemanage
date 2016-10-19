@@ -3,17 +3,17 @@
 module.exports = function(routers) {
     routers.map({
         '/': {
-            name: 'index',
-            title: '天策房屋管理后台',
-            component: function(resolve) {
-                require(['./views/index.vue'], resolve);
-            }
-        },
-        'login': {
             name: 'login',
             title: '登陆',
             component: function(resolve) {
                 require(['./views/login.vue'], resolve);
+            }
+        },
+        '/index': {
+            name: 'index',
+            title: '天策房屋管理后台',
+            component: function(resolve) {
+                require(['./views/index.vue'], resolve);
             }
         },
         'personal': {

@@ -12,7 +12,7 @@ let $http = Vue.http;
 let $router = Vue.router;
 let msg = '请求超时！';
 
-export const getUserInfo = (store, options, router) => {
+export const getUserInfo = (store, options) => {
     // console.log(router);
 	$http.post(base_url+'/user/info', options,{
 		headers: {
@@ -35,7 +35,7 @@ export const getUserInfo = (store, options, router) => {
 			window.localStorage.setItem('homemanage_username',resData.data.name);
 			store.dispatch(types.SUCCESS_USER_INFO, data)
             // window.location.href = window.location.origin+'/index';
-            router.go({name: 'index'});
+            $router.go({name: 'index'});
 		} else {
 			showMsg(store, resData.m)
 			store.dispatch(types.FAILURE_USER_INFO)

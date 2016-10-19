@@ -19,11 +19,11 @@
 		line-height: 37px;
 	}
 	
-	.home-box .info-head .lock-status {
+	.home-box .info-head .status-green {
 		color: #2aa160;
 	}
 	
-	.home-box .info-head .last-num {
+	.home-box .info-head .status-red {
 		color: #d9736a;
 	}
 	
@@ -199,10 +199,10 @@
 				</h1>
 			</div>
 			<div class="col-md-2">
-				<div class="status-btn">门锁状态：<span class="lock-status">{{lock_status==1?"在线":"离线"}}</span></div>
+				<div class="status-btn">门锁状态：<span class="status-red">{{lock_status==1?"在线":"离线"}}</span></div>
 			</div>
 			<div class="col-md-2">
-				<div class="status-btn">剩余电量：<span class="last-num">{{lock_power==1?"正常":"低电量"}}</span></div>
+				<div class="status-btn">剩余电量：<span class="status-green">{{lock_power==1?"正常":"低电量"}}</span></div>
 			</div>
 		</div>
 		<div class="info-body">
@@ -844,7 +844,7 @@
                     }
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: 'login'});
+                        _this.$router.go({name: '/'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -902,7 +902,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: 'login'});
+                        _this.$router.go({name: '/'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -971,7 +971,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: 'login'});
+                        _this.$router.go({name: '/'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -1004,7 +1004,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: 'login'});
+                        _this.$router.go({name: '/'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -1042,7 +1042,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: 'login'});
+                        _this.$router.go({name: '/'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -1077,7 +1077,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: 'login'});
+                        _this.$router.go({name: '/'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -1112,7 +1112,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: 'login'});
+                        _this.$router.go({name: '/'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -1148,7 +1148,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: 'login'});
+                        _this.$router.go({name: '/'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')

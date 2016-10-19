@@ -86,6 +86,7 @@ new ExtractTextPlugin("[name].css",{ allChunks : true,resolve : ['modules'] }),
 # 如何使用
 
 ## 说明
+> 修改接口的 baseurl，只需修改 /src/common.js文件第四行url参数即可
 > 目前已将打包后的dist目录和webpack生成的index.html和index_prod.html加入了git忽略列表,如果不需要这样做,请修改。
 > 目前分开发环境和生产环境,分别对应webpack.dev.config.js和webpack.prod.config.js可以根据自己需要来调整相关webpack配置,比如添加灰度环境配置。
 > 目前的开发环境文件使用默认命名,生产环境使用带hash值的命名,可根据自己需要修改,但不建议修改本地环境为带hash的。
@@ -107,6 +108,8 @@ npm install
 // 注意首次使用需要执行下面的init命令来生成入口html文件,以后不用再执行
 npm run init
 npm run dev
+//修改本地host,添加如下,通过 http://pstonetest.cn/login 访问
+127.0.0.1 pstonetest.cn
 ```
 
 #### 生产环境(打包)
@@ -117,4 +120,4 @@ npm run build
 将dist文件夹和index.html文件放入服务器目录，并在index.html文件所在目录建立 src/libs/文件夹，将项目中同级目录（src/libs/）下的文件拷贝到服务器同级目录（src/libs/）下，以后服务器更新只需运行打包命令后，将dist文件夹和index.html文件覆盖进服务器目录中即可
 
 #### 访问
-在浏览器地址栏输入http://127.0.0.1:8080
+在浏览器地址栏输入http://pstonetest.cn/login

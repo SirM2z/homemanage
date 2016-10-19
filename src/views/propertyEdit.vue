@@ -189,7 +189,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: 'login'});
+                        _this.$router.go({name: '/'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -273,7 +273,10 @@
                         // to do
                         showMsg(this.$store, '保存成功！');
                         _this.$router.go({
-                            name: 'index'
+                            name: 'homeList',
+                            query: {
+                                id: this.$route.query.id
+                            }
                         })
                     } else {
                         showMsg(this.$store, resData.msg, 'error')
