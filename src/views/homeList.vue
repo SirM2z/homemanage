@@ -78,7 +78,7 @@
             </tr>
             <tr v-for="item in lock_list" track-by="$index">
                 <td><a @click="goHomeInfo(get_estate_name,item.id,item.status,item.power)">{{item.name}}</a></td>
-                <td>{{item.status = true?"在线":"离线"}}</td>
+                <td>{{item.status == true?"在线":"离线"}}</td>
                 <td>{{item.gw_name}}</td>
                 <td>{{item.power}}</td>
                 <td>{{item.tenant == 1?"未住":"已住"}}</td>
@@ -156,7 +156,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: '/'});
+                        _this.$router.go({name: 'login'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -181,7 +181,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: '/'});
+                        _this.$router.go({name: 'login'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
