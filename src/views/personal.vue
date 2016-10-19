@@ -86,7 +86,7 @@
                         <div class="fl"><input type="password" class="form-control" placeholder="输入4~16位密码"></div>
                     </div>
                     <button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-                    <button class="btn btn-primary btn-confirm" @click="hideModal">确认</button>
+                    <button class="btn btn-primary btn-confirm blue-btn" @click="hideModal">确认</button>
                 </div>
             </div>
         </Modal>

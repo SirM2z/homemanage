@@ -109,7 +109,7 @@
                 <div class="modal-bottom delete-bottom">
                     <p class="delete-text">这将同时删除房产旗下所有门锁的开锁记录与操作记录，是否继续？</p>
                     <button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-                    <button class="btn btn-primary btn-confirm" @click="deleteEstate">确认</button>
+                    <button class="btn btn-primary btn-confirm blue-btn" @click="deleteEstate">确认</button>
                 </div>
             </div>
         </Modal>
