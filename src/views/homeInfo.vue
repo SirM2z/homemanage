@@ -299,13 +299,13 @@
 								<td>{{item?item.name:'无'}}</td>
 								<td>
 									<div class="bycode-btn">
-										<div @click.stop="changeModalType('modify_Code')" v-show="bycode_btn_isshow[page_count][$index].showY" class="bycode-change">修改密码</div>
+										<div @click.stop="changeModalType('modify_Code')" v-show="bycode_btn_isshow[page_count][$index].showY" class="bycode-change blue-text">修改密码</div>
 									</div>
 								</td>
 								<td>
 									<div class="bycode-btn">
-										<div @click.stop="changeModalType('add_Code')" v-show="bycode_btn_isshow[page_count][$index].showN" class="bycode-add">添加密码</div>
-										<div @click.stop="changeModalType('del_Code')" v-show="bycode_btn_isshow[page_count][$index].showY" class="bycode-del">删除密码</div>
+										<div @click.stop="changeModalType('add_Code')" v-show="bycode_btn_isshow[page_count][$index].showN" class="bycode-add blue-text">添加密码</div>
+										<div @click.stop="changeModalType('del_Code')" v-show="bycode_btn_isshow[page_count][$index].showY" class="bycode-del blue-text">删除密码</div>
 									</div>
 								</td>
 							</tr>
@@ -383,7 +383,7 @@
                         <input type="hidden" id="TC-data" v-model="tenant_data_temp.time" />
 					</div>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="setTenant">确认</button>
+					<button class="btn btn-primary btn-confirm blue-btn" @click="setTenant">确认</button>
 				</div>
 			</div>
 			<!--添加租客密码-->
@@ -398,7 +398,7 @@
 						<div class="fl item-title name-title">输入租客密码</div>
 						<div class="fl">
 							<input type="number" v-model="add_TC.password" class="form-control fl" placeholder="请输入4~16位数字密码">
-							<button @click="generatePass('add')" class="btn btn-link btn-code-random">随机生成</button>
+							<button @click="generatePass('add')" class="btn btn-link btn-code-random blue-text">随机生成</button>
 						</div>
 					</div>
 					<div class="modal-item">
@@ -424,7 +424,7 @@
 						<div class="fl"><input type="password" v-model="add_TC.code" class="form-control"></div>
 					</div>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="lockOperation('SetTempLockPWD','add')">确认</button>
+					<button class="btn btn-primary btn-confirm blue-btn" @click="lockOperation('SetTempLockPWD','add')">确认</button>
 				</div>
 			</div>
 			<!--重置租客密码-->
@@ -439,7 +439,7 @@
 						<div class="fl item-title name-title">输入租客密码</div>
 						<div class="fl">
 							<input type="number" v-model="modify_TC.password" class="form-control fl" placeholder="请输入4~16位数字密码">
-							<button @click="generatePass('change')" class="btn btn-link btn-code-random">随机生成</button>
+							<button @click="generatePass('change')" class="btn btn-link btn-code-random blue-text">随机生成</button>
 						</div>
 					</div>
 					<div class="modal-item">
@@ -465,7 +465,7 @@
 						<div class="fl"><input type="password" v-model="modify_TC.code" class="form-control"></div>
 					</div>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="lockOperation('SetTempLockPWD','change')">确认</button>
+					<button class="btn btn-primary btn-confirm blue-btn" @click="lockOperation('SetTempLockPWD','change')">确认</button>
 				</div>
 			</div>
 			<!--续租租客密码-->
@@ -485,7 +485,7 @@
 						<div class="fl"><input type="password" v-model="rene_TC.code" class="form-control"></div>
 					</div>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="lockOperation('ReletTempLockPWD')">确认</button>
+					<button class="btn btn-primary btn-confirm blue-btn" @click="lockOperation('ReletTempLockPWD')">确认</button>
 				</div>
 			</div>
 			<!--冻结租客密码-->
@@ -499,7 +499,7 @@
 					<p>冻结密码后，租客将无法使用该密码进行开锁。</p>
 					<p>是否继续冻结密码？</p>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="lockOperation('FreezeCodePWD')">确认</button>
+					<button class="btn btn-primary btn-confirm blue-btn" @click="lockOperation('FreezeCodePWD')">确认</button>
 				</div>
 			</div>
 			<!--解冻租客密码-->
@@ -513,7 +513,7 @@
 					<p>解冻密码后，租客将可以使用该密码进行开锁。</p>
 					<p>是否继续解冻密码？</p>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="lockOperation('UnfreezeCodePWD')">确认</button>
+					<button class="btn btn-primary btn-confirm blue-btn" @click="lockOperation('UnfreezeCodePWD')">确认</button>
 				</div>
 			</div>
 			<!--删除租客密码-->
@@ -527,7 +527,7 @@
 					<p>删除密码后，租客将无法使用该密码进行开锁。</p>
 					<p>是否继续删除密码？</p>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="lockOperation('DelLockPWD','tenant')">确认</button>
+					<button class="btn btn-primary btn-confirm  blue-btn" @click="lockOperation('DelLockPWD','tenant')">确认</button>
 				</div>
 			</div>
 			<!--身份验证-->
@@ -539,7 +539,7 @@
 						<div class="fl"><input type="password" class="form-control" placeholder="输入4~16位密码"></div>
 					</div>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="hideModal">下一步</button>
+					<button class="btn btn-primary btn-confirm blue-btn" @click="hideModal">下一步</button>
 				</div>
 			</div>
 			<!--添加备用密码-->
@@ -561,7 +561,7 @@
 						<div class="fl"><input type="password" v-model="add_code.code" class="form-control"></div>
 					</div>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="lockOperation('SetPermaLockPWD','add')">确认</button>
+					<button class="btn btn-primary btn-confirm blue-btn" @click="lockOperation('SetPermaLockPWD','add')">确认</button>
 				</div>
 			</div>
 			<!--删除备用密码-->
@@ -575,7 +575,7 @@
 					<p>删除密码后，租客将无法使用该密码进行开锁。</p>
 					<p>是否继续删除密码？</p>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="lockOperation('DelLockPWD','code')">确认</button>
+					<button class="btn btn-primary btn-confirm blue-btn" @click="lockOperation('DelLockPWD','code')">确认</button>
 				</div>
 			</div>
 			<!--修改备用密码-->
@@ -597,7 +597,7 @@
 						<div class="fl"><input type="password" v-model="modify_code.code" class="form-control"></div>
 					</div>
 					<button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
-					<button class="btn btn-primary btn-confirm" @click="lockOperation('SetPermaLockPWD','change')">确认</button>
+					<button class="btn btn-primary btn-confirm blue-btn" @click="lockOperation('SetPermaLockPWD','change')">确认</button>
 				</div>
 			</div>
 			<!--提示指令操作结果-->
@@ -606,7 +606,7 @@
 				<div class="modal-bottom">
 					<p>{{result_text}}</p>
 					<!--<p>请点击确认按钮！</p>-->
-					<button class="btn btn-primary btn-confirm fr" @click="hideModal">确认</button>
+					<button class="btn btn-primary btn-confirm fr blue-btn" @click="hideModal">确认</button>
 				</div>
 			</div>
 		</Modal>
