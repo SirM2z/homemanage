@@ -85,5 +85,20 @@ body {
     width: 80px;
 }
 .modal-ne .btn-cancle {
-    margin-left: 400px;
+    margin-left: 440px;
+}
+.blue-text {
+    color: #0275d8;
+}
+.blue-btn {
+    color: #fff;
+    border-radius: 6px;
+    background-color: #0275d8;
+    border-color: #0275d8;
+}
+.blue-btn:hover {
+    background-color: #0275d8;
+}
+.blue-btn:focus {
+    background-color: #0275d8;
 }

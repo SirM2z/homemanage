@@ -18,7 +18,7 @@ module.exports = function(routers) {
         },
         'index': {
             name: 'index',
-            title: '天策房屋管理后台',
+            title: '权石科技房屋管理后台',
             component: function(resolve) {
                 require(['./views/index.vue'], resolve);
             }

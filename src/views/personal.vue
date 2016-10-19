@@ -9,12 +9,12 @@
         height: 100%;
     }
     .personal-box .btn-s,.btn-c {
-        margin-right: 10px;
-        width: 150px;
+        margin-right: 16px;
+        width: 100px;
     }
     .personal-box .personal-info .info-item{
         overflow: hidden;
-        padding: 20px;
+        padding: 15px;
     }
     .personal-box .personal-info .info-item>div{
         padding-right: 15px;
@@ -27,11 +27,17 @@
         line-height: 34px;
     }
     .personal-box .personal-info .item-title {
-        margin-right: 30px;
+        margin-right: 25px;
     }
     .personal-box .personal-info .user-img {
         width: 80px;
         height: 80px;
+    }
+    .personal-box .info-head {
+        margin-bottom: 35px;
+    }
+    .personal-box .pass-btn {
+        margin-top: 20px;
     }
 </style>
 <template>
@@ -55,15 +61,15 @@
                 <div v-else class="fl"><img :src="user_img" class="img-circle user-img"></div>
                 <div class="fl"><input type="file" accept="image/*" /></div>
             </div>-->
-            <!--<div class="info-item">
+            <div class="info-item">
                 <div class="fl item-title">登录密码：</div>
                 <div class="fl pass-link">
-                    <div class=""><a href="#" @click="showModal">修改密码</a></div>
-                    <div class=""><a href="#" @click="showModal">忘记密码？</a></div>
+                    <div class=""><a href="#" @click="showModal" class="blue-text">修改密码</a></div>
+                    <!--<div class=""><a href="#" @click="showModal">忘记密码？</a></div>-->
                 </div>
-            </div>-->
+            </div>
             <div class="info-item pass-btn">
-                <button @click="modifyName" class="btn btn-primary btn-lg btn-s">保存</button>
+                <button @click="modifyName" class="btn btn-primary btn-lg btn-s blue-btn">保存</button>
                 <button @click="cancleModifyName" class="btn btn-default btn-lg btn-c">取消</button>
             </div>
         </div>

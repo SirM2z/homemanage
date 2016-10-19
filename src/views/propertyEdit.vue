@@ -10,13 +10,13 @@
     }
     
     .propertyedit-box button {
-        margin-right: 10px;
-        width: 150px;
+        margin-right: 16px;
+        width: 100px;
     }
     
     .propertyedit-box .propertyedit-info .info-item {
         overflow: hidden;
-        padding: 20px;
+        padding: 15px;
     }
     .propertyedit-box .propertyedit-info .info-item.wg-item{
         padding-top: 10px;
@@ -39,7 +39,7 @@
     }
     
     .propertyedit-box .propertyedit-info .item-title {
-        margin-right: 30px;
+        margin-right: 25px;
     }
     
     .propertyedit-box .propertyedit-info .add-wg {
@@ -74,6 +74,12 @@
         margin-right: 25px;
         margin-bottom: 15px;
     }
+    .propertyedit-box .info-head {
+        margin-bottom: 35px;
+    }
+    .propertyedit-box .pass-btn {
+        margin-top: 20px;
+    }
 </style>
 <template>
     <nav-list></nav-list>
@@ -107,7 +113,7 @@
                             <option v-for="item in gatewayList" track-by="$index" :value="item.id">{{item.name}}</option>
                         </select>
                         <div class="add-wg wg-option">
-                            <div class="add-wg-btn" @click="addSelect">添加网关</div>
+                            <div class="add-wg-btn blue-text" @click="addSelect">添加网关</div>
                         </div>
                     </div>
                 </div>
@@ -119,7 +125,7 @@
                 </div>
             </div>
             <div class="info-item pass-btn">
-                <button class="btn btn-primary btn-lg" @click="modifyEstate">保存</button>
+                <button class="btn btn-primary btn-lg blue-btn" @click="modifyEstate">保存</button>
                 <button class="btn btn-default btn-lg" @click="cancleModifyEstate">取消</button>
             </div>
         </div>

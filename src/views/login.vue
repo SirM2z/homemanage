@@ -1,5 +1,4 @@
 <style>
-    .login-box {}
     #particles-js{
         width: 100%;
         height: 100%;
@@ -52,23 +51,30 @@
         height: 40px;
         line-height: 40px;
     }
+    .login-box .blue-text {
+        color: #0275d8;
+    }
+    .login-box .blue-btn {
+        border-radius: 6px;
+        background-color: #0275d8;
+    }
 </style>
 <template>
     <div id="particles-js"></div>
     <div class="login-box">
         <div class="login-modal">
             <div class="form-group text-title">
-                <h1 class="text-center text-primary">天策房屋管理后台</h1>
+                <h1 class="text-center blue-text">权石科技房屋管理后台</h1>
             </div>
             <div class="text-title">
                 <p class="text-center">用户登录</p>
             </div>
             <input type="text" v-model="user_name" class="form-control text-input" placeholder="输入注册手机号">
             <input type="password" v-model="user_password" class="form-control text-input" placeholder="输入密码">
-            <a href="#" class="text-left" @click="changeModalType('registere')">申请开通</a>
-            <a href="#" class="pull-right" @click="changeModalType('verifi')">忘记密码</a>
+            <a href="#" class="text-left blue-text" @click="changeModalType('registere')">申请开通</a>
+            <a href="#" class="pull-right blue-text" @click="changeModalType('verifi')">忘记密码</a>
             <div class="login-btn">
-                <button class="btn btn-primary btn-lg btn-block" @click="loginSystem">登录</button>
+                <button class="btn btn-primary btn-lg btn-block blue-btn" @click="loginSystem">登录</button>
             </div>
         </div>
         <Modal>
@@ -84,12 +90,12 @@
                     <div class="modal-item">
                         <div class="fl item-title name-title">输入验证码</div>
                         <div class="fl"><input type="text" v-model="verifi_code" class="form-control code-input"></div>
-                        <button v-if="verifi_time===0" class="btn btn-link btn-verifi" @click="getVerifiCode">获取验证码</button>
-                        <button v-else class="btn btn-link btn-verifi">重新获取</button>
+                        <button v-if="verifi_time===0" @click="getVerifiCode" class="btn btn-link btn-verifi blue-text">获取验证码</button>
+                        <button v-else class="btn btn-link btn-verifi blue-text">重新获取</button>
                         <span v-if="verifi_time!==0" class="color_999 verifi_time_down">({{verifi_time}})</span>
                     </div>
-                    <button class="btn btn-default btn-cancle" @click="cancleVerifi">取消</button>
-                    <button class="btn btn-primary btn-confirm" @click="sureVerifi">确认</button>
+                    <button @click="cancleVerifi" class="btn btn-default btn-cancle">取消</button>
+                    <button @click="sureVerifi" class="btn btn-primary btn-confirm blue-btn">确认</button>
                 </div>
             </div>
             <!--修改密码-->
@@ -98,14 +104,14 @@
                 <div class="modal-bottom">
                     <div class="modal-item">
                         <div class="fl item-title name-title">输入新密码</div>
-                        <div class="fl"><input type="password" v-model="new_password_verifi" class="form-control tel-input" placeholder="输入4~16位密码"></div>
+                        <div class="fl"><input type="password" v-model="new_password_verifi" class="form-control" placeholder="输入4~16位密码"></div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">再次输入密码</div>
-                        <div class="fl"><input type="password" v-model="new_password" class="form-control code-input" placeholder="输入4~16位密码"></div>
+                        <div class="fl"><input type="password" v-model="new_password" class="form-control" placeholder="输入4~16位密码"></div>
                     </div>
-                    <button class="btn btn-default btn-cancle" @click="cancleChangePass">取消</button>
-                    <button class="btn btn-primary btn-confirm" @click="sureChangePass">确认</button>
+                    <button @click="cancleChangePass" class="btn btn-default btn-cancle">取消</button>
+                    <button @click="sureChangePass" class="btn btn-primary btn-confirm blue-btn">确认</button>
                 </div>
             </div>
             <!--申请开通-->
@@ -115,7 +121,7 @@
                     <p>目前管理平台仍未开启注册功能，如需使用请联系客服进行开通：</p>
                     <p>热线电话：0571-87654321</p>
                     <p>客服邮箱：service@pstone.cc</p>
-                    <button class="btn btn-primary btn-confirm fr" @click="hideModal">确认</button>
+                    <button @click="hideModal" class="btn btn-primary btn-confirm fr blue-btn">确认</button>
                 </div>
             </div>
         </Modal>

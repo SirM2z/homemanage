@@ -16,7 +16,7 @@
     
     .propertyadd-box .propertyadd-info .info-item {
         overflow: hidden;
-        padding: 20px;
+        padding: 15px;
     }
     .propertyadd-box .propertyadd-info .info-item.wg-item{
         padding-top: 10px;
@@ -39,7 +39,7 @@
     }
     
     .propertyadd-box .propertyadd-info .item-title {
-        margin-right: 30px;
+        margin-right: 25px;
     }
     
     .propertyadd-box .propertyadd-info .add-wg {
@@ -73,6 +73,16 @@
         margin-top: 10px;
         margin-right: 25px;
         margin-bottom: 15px;
+    }
+    .propertyadd-box .info-head {
+        margin-bottom: 35px;
+    }
+    .propertyadd-box .pass-btn {
+        margin-top: 20px;
+    }
+    .propertyadd-box .btn-s,.propertyadd-box .btn-c {
+        margin-right: 16px;
+        width: 100px;
     }
     
 </style>
@@ -120,8 +130,8 @@
                 </div>
             </div>
             <div class="info-item pass-btn">
-                <button @click="addEstate" class="btn btn-primary btn-lg">保存</button>
-                <button @click="cancleAddEstate" class="btn btn-default btn-lg">取消</button>
+                <button @click="addEstate" class="btn btn-primary btn-lg btn-s blue-btn">保存</button>
+                <button @click="cancleAddEstate" class="btn btn-default btn-lg btn-c">取消</button>
             </div>
         </div>
     </div>

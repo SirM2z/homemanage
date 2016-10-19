@@ -11,11 +11,12 @@
     .list-box .info-body{
         margin-top: 20px;
         width: 100%;
-        padding: 10px 50px;
+        padding: 20px 50px;
         border: 1px solid #e5e5e5;
         border-radius: 3px;
         background-color: #fafafa;
         display: flex;
+        align-items: center;
     }
     .list-box .info-body .body-left{
         flex: 1;
@@ -46,6 +47,24 @@
     .list-box .modal-ne .delete-bottom .delete-text {
         margin-bottom: 30px;
     }
+    .list-box .head-title {
+        color: #202224;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 50px 0 30px;
+    }
+    .list-box .info-box {
+        color: #161617;
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+    .list-box .list-text {
+        font-weight: bold;
+    }
+    .list-box .note-box {
+        color: #161617;
+        font-size: 16px;
+    }
 </style>
 <template>
     <nav-list></nav-list>
@@ -59,16 +78,16 @@
         </div>
         <div class="info-body">
             <div class="body-left">
-                <div>房产地址：{{get_estate_address}}</div>
-                <div>绑定网关：{{get_estate_gwNames?get_estate_gwNames:'暂无绑定网管'}}</div>
-                <div>备注信息：{{get_estate_note}}</div>
+                <div class="info-box"><span class="list-text">房产地址：</span>{{get_estate_address}}</div>
+                <div class="info-box"><span class="list-text">绑定网关：</span>{{get_estate_gwNames?get_estate_gwNames:'暂无绑定网管'}}</div>
+                <div class="note-box"><span class="list-text">备注信息：</span>{{get_estate_note}}</div>
             </div>
             <div class="body-btn">
-                <button type="button" class="btn btn-primary" @click="goPropertyEdit">修改信息</button>
-                <button type="button" class="btn btn-default" @click="showModal">删除信息</button>
+                <button type="button" class="btn btn-primary blue-btn" @click="goPropertyEdit">修改信息</button>
+                <button type="button" class="btn btn-default" @click="showModal">删除房产</button>
             </div>
         </div>
-        <table class="table table-striped home-list">
+        <table class="table home-list">
             <tr>
                 <th>智能门锁</th>
                 <th>门锁状态</th>
@@ -77,7 +96,7 @@
                 <th>入住状态</th>
             </tr>
             <tr v-for="item in lock_list" track-by="$index">
-                <td><a @click="goHomeInfo(get_estate_name,item.id,item.status,item.power)">{{item.name}}</a></td>
+                <td><a @click="goHomeInfo(get_estate_name,item.id,item.status,item.power)" class="blue-text">{{item.name}}</a></td>
                 <td>{{item.status == true?"在线":"离线"}}</td>
                 <td>{{item.gw_name}}</td>
                 <td>{{item.power}}</td>
