@@ -203,10 +203,10 @@
 				</h1>
 			</div>
 			<div class="col-md-2">
-				<div class="status-btn">门锁状态：<span class="status-red">{{lock_status==1?"在线":"离线"}}</span></div>
+				<div class="status-btn">门锁状态：<span :class="{'status-green':lock_status==1,'status-red':lock_status!=1}">{{lock_status==1?"在线":"离线"}}</span></div>
 			</div>
 			<div class="col-md-2">
-				<div class="status-btn">剩余电量：<span class="status-green">{{lock_power==1?"正常":"低电量"}}</span></div>
+				<div class="status-btn">剩余电量：<span :class="{'status-green':lock_power==1,'status-red':lock_power!=1}">{{lock_power==1?"正常":"低电量"}}</span></div>
 			</div>
 		</div>
 		<div class="info-body">
@@ -318,7 +318,7 @@
 						</div>
 					</tab>
 				</tab-group>
-				<tab header="开锁记录">
+				<tab header="开锁记录" @click="test">
 					<div v-for="item in lockopen_list" track-by="$index">
 						<div v-if="$index == 0 || item.time.split(' ')[0]!=lockopen_list[$index-1].time.split(' ')[0]" class="operation-day color_333">
 							{{item.time.split(' ')[0]}}
@@ -332,7 +332,7 @@
                         </tr>
                     </table>
 				</tab>
-				<tab header="操作记录">
+				<tab header="操作记录" @click="test1">
 					<div v-for="item in operation_data" track-by="$index">
 						<div v-if="$index == 0 || item.time.split(' ')[0]!=operation_data[$index-1].time.split(' ')[0]" class="operation-day color_333">
 							{{item.time.split(' ')[0]}}
@@ -368,7 +368,7 @@
 					</div>
 					<div class="modal-item">
 						<div class="fl item-title name-title">联系方式</div>
-						<div class="fl"><input type="text" v-model="tenant_data_temp.phone" class="form-control"></div>
+						<div class="fl"><input type="number" v-model="tenant_data_temp.phone" class="form-control"></div>
 					</div>
 					<div class="modal-item">
 						<div class="fl item-title name-title">身份证号</div>
@@ -376,7 +376,7 @@
 					</div>
 					<div class="modal-item">
 						<div class="fl item-title name-title">合同到期时间</div>
-						<div class="input-group date form_datetime col-md-5" data-date-format="dd MM yyyy - HH:ii" data-link-field="TC-data">
+						<div class="input-group date form_datetime col-md-5" id="TC_data" data-date-format="dd MM yyyy - HH:ii" data-link-field="TC-data">
                             <input class="form-control TC-input" size="16" type="text" :value="tenant_data_temp.time" readonly>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                         </div>
@@ -444,7 +444,7 @@
 					</div>
 					<div class="modal-item">
 						<div class="fl item-title name-title">失效时间</div>
-						<div class="input-group date form_datetime_1 col-md-5" data-date-format="dd MM yyyy - HH:ii p" data-link-field="TCc-data">
+						<div class="input-group date form_datetime col-md-5" data-date-format="dd MM yyyy - HH:ii p" data-link-field="TCc-data">
                             <input class="form-control TC-input" size="16" type="text" :value="modify_TC.endtime" readonly>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                         </div>
@@ -474,7 +474,7 @@
 				<div class="modal-bottom">
 					<div class="modal-item">
 						<div class="fl item-title name-title">失效时间</div>
-						<div class="input-group date form_datetime_1 col-md-5" data-date-format="dd MM yyyy - HH:ii p" data-link-field="TCr-data">
+						<div class="input-group date form_datetime col-md-5" data-date-format="dd MM yyyy - HH:ii p" data-link-field="TCr-data">
                             <input class="form-control TC-input" size="16" type="text" :value="rene_TC.endtime" readonly>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                         </div>
@@ -782,14 +782,6 @@
                 showMeridian: 1,
                 format: 'yyyy-mm-dd hh:ii'
             });
-            $('.form_datetime_1').datetimepicker({
-                language:  'zh-CN',
-                todayBtn:  1,
-                autoclose: 1,
-                todayHighlight: 1,
-                showMeridian: 1,
-                format: 'yyyy-mm-dd hh:ii'
-            });
         },
         beforeDestroy: function() {
             if(this.time_wait){
@@ -797,6 +789,12 @@
             }
         },
         methods: {
+            test: function(){
+                console.log(1)
+            },
+            test1: function(){
+                console.log(2)
+            },
             //查询指令结果
             getResult: function() {
                 let _this = this;                
@@ -848,7 +846,7 @@
                     }
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: '/'});
+                        _this.$router.go({name: 'login'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -906,7 +904,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: '/'});
+                        _this.$router.go({name: 'login'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -935,7 +933,8 @@
             generatePass: function(type){
                 let pass = '';
                 //parseInt(Math.random()*(上限-下限+1)+下限);
-                let num = parseInt(Math.random()*13 + 4);
+                //let num = parseInt(Math.random()*13 + 4);
+                let num = 6;
                 for(let i=0;i<num;i++){
                     let tmp = parseInt(Math.random()*10);
                     if(tmp == 10){
@@ -975,7 +974,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: '/'});
+                        _this.$router.go({name: 'login'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -1008,7 +1007,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: '/'});
+                        _this.$router.go({name: 'login'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -1046,7 +1045,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: '/'});
+                        _this.$router.go({name: 'login'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -1081,7 +1080,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: '/'});
+                        _this.$router.go({name: 'login'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -1116,7 +1115,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: '/'});
+                        _this.$router.go({name: 'login'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -1152,7 +1151,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: '/'});
+                        _this.$router.go({name: 'login'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -1170,6 +1169,24 @@
                 //return;
                 if(!this.tenant_data_temp.name.trim() || !this.tenant_data_temp.phone.trim() || !this.tenant_data_temp.IDcard.trim() || !this.tenant_data_temp.time){
                     showMsg(this.$store, '请完整填写相关信息！', 'error');
+                    return;
+                }
+                let date_tmp = this.tenant_data_temp.time.replace(/-/g, "/");
+                if(new Date() > Date.parse(date_tmp)){
+                    showMsg(this.$store, '请将时间修改为当前时间之后！', 'warning');
+                    return;
+                }
+                if(this.tenant_data_temp.name.trim().length>10){
+                    showMsg(this.$store, '租客姓名不能超过10个字！', 'warning');
+                    return;
+                }
+                if(this.tenant_data_temp.phone.length>20){
+                    showMsg(this.$store, '租客联系方式不能超过20个数字！', 'warning');
+                    return;
+                }
+                let reg=/^[1-9]{1}[0-9]{14}$|^[1-9]{1}[0-9]{16}([0-9]|[xX])$/;
+                if(!reg.test(this.tenant_data_temp.IDcard.trim())){
+                    showMsg(this.$store, '请输入正确格式的身份证号码！', 'warning');
                     return;
                 }
                 this.$http.post(base_url+'/lock/setTenant', this.tenant_data_temp).then(function(response) {
@@ -1268,8 +1285,14 @@
                     //end  "2016-09-19 08:08:08"
                     //mode  1/-1
                     if(type == "add"){//设置租客密码
-                        if(!this.add_TC.password.trim() || !this.add_TC.name.trim() || !this.add_TC.code.trim() || !$('#TCa-data')[0].value || !this.add_TC.opentime){
+                        let time = $('#TCa-data')[0].value;
+                        if(!this.add_TC.password.trim() || !this.add_TC.name.trim() || !this.add_TC.code.trim() || !time || !this.add_TC.opentime){
                             showMsg(this.$store, '请完整填写相关信息！', 'error');
+                            return;
+                        }
+                        let date_tmp = time.replace(/-/g, "/");
+                        if(new Date() > Date.parse(date_tmp)){
+                            showMsg(this.$store, '请将时间修改为当前时间之后！', 'warning');
                             return;
                         }
                         if(this.add_TC.password.trim().length < 4 || this.add_TC.password.trim().length > 16){
@@ -1281,15 +1304,21 @@
                         data.index = 255;
                         data.code = this.add_TC.code.trim();
                         data.start = _this.fmtDate(new Date());
-                        this.add_TC.endtime = $('#TCa-data')[0].value;
+                        this.add_TC.endtime = time;
                         data.end = this.add_TC.endtime;
                         //console.log(data.start);
                         //console.log($('#TC-data')[0].value);
                         data.mode = this.add_TC.opentime;
                     }
                     else if(type == "change"){//重制租客密码
-                        if(!this.modify_TC.password.trim() || !this.modify_TC.name.trim() || !this.modify_TC.code.trim() || !$('#TCc-data')[0].value || !this.modify_TC.opentime){
+                        let time = $('#TCc-data')[0].value;
+                        if(!this.modify_TC.password.trim() || !this.modify_TC.name.trim() || !this.modify_TC.code.trim() || !time || !this.modify_TC.opentime){
                             showMsg(this.$store, '请完整填写相关信息！', 'error');
+                            return;
+                        }
+                        let date_tmp = time.replace(/-/g, "/");
+                        if(new Date() > Date.parse(date_tmp)){
+                            showMsg(this.$store, '请将时间修改为当前时间之后！', 'warning');
                             return;
                         }
                         if(this.modify_TC.password.trim().length < 4 || this.modify_TC.password.trim().length > 16){
@@ -1301,7 +1330,7 @@
                         data.index = 255;
                         data.code = this.modify_TC.code.trim();
                         data.start = _this.fmtDate(new Date());
-                        this.modify_TC.endtime = $('#TCc-data')[0].value;
+                        this.modify_TC.endtime = time;
                         data.end = this.modify_TC.endtime;
                         data.mode = this.modify_TC.opentime;
                     }
@@ -1346,11 +1375,17 @@
                         showMsg(this.$store, '请填写管理员密码！', 'error');
                         return;
                     }
-                    if(!$('#TCr-data')[0].value){
+                    let time = $('#TCr-data')[0].value;
+                    if(!time){
                         showMsg(this.$store, '请选择结束时间！', 'error');
                         return;
                     }
-                    this.rene_TC.endtime = $('#TCr-data')[0].value;
+                    let date_tmp = time.replace(/-/g, "/");
+                    if(new Date() > Date.parse(date_tmp)){
+                        showMsg(this.$store, '请将时间修改为当前时间之后！', 'warning');
+                        return;
+                    }
+                    this.rene_TC.endtime = time;
                     data.end = this.rene_TC.endtime;
                     data.index = 255;
                     data.code = this.rene_TC.code.trim();
@@ -1470,14 +1505,6 @@
                 this.getCode();
                 //时间插件初始化
                 $('.form_datetime').datetimepicker({
-                    language:  'zh-CN',
-                    todayBtn:  1,
-                    autoclose: 1,
-                    todayHighlight: 1,
-                    showMeridian: 1,
-                    format: 'yyyy-mm-dd hh:ii'
-                });
-                $('.form_datetime_1').datetimepicker({
                     language:  'zh-CN',
                     todayBtn:  1,
                     autoclose: 1,

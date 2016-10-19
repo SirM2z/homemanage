@@ -184,14 +184,14 @@
                         return
                     }
                     let resData = response.json();
-                    console.log(resData);
+                    //console.log(resData);
                     if (resData.code === 0) {
                         //TO DO
                         this.gatewayList = resData.data;
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: '/'});
+                        _this.$router.go({name: 'login'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
@@ -227,13 +227,22 @@
                 })
             },
             addSelect: function(){
+                let length = this.gatewayList?this.gatewayList.length:1;
+                if(this.gatewayListSelectNum == length){
+                    showMsg(this.$store, '不能再添加网关绑定的个数', 'warning')
+                    return;
+                }
                 this.gatewayListSelectNum++;
             },
             addEstate: function(){
                 let _this = this;
                 //console.log(this.gatewayListSelected);
                 if(!this.name.trim() || !this.address.trim()){
-                    showMsg(this.$store, '请填写完整相关信息！');
+                    showMsg(this.$store, '请填写完整相关信息！','warning');
+                    return;
+                }
+                if(this.note.trim().length>40){
+                    showMsg(this.$store, '请将备注控制在40字以内！','warning');
                     return;
                 }
                 showLoading(this.$store);

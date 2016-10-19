@@ -141,7 +141,7 @@
                     }  
                     else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
                         showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: '/'});
+                        _this.$router.go({name: 'login'});
                     }
                     else {
                         showMsg(this.$store, resData.msg, 'error')
