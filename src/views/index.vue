@@ -92,7 +92,7 @@
                 <div class="add-info">
                     <div class="add-fc" @click="goAddEstate">
                         <img src="../images/addinfo.png">
-                        <p>点击添加房产</p>
+                        <p class="blue-text">点击添加房产</p>
                     </div>
                 </div>
             </div>

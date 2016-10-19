@@ -188,6 +188,10 @@
         background-color: #fff;
         width: 219px;
     }
+    .home-box .head-title {
+        font-size: 24px;
+        font-weight: bold;
+    }
 </style>
 <template>
 	<nav-list></nav-list>
@@ -195,7 +199,7 @@
 		<div class="row info-head">
 			<div class="col-md-8">
 				<h1 class="head-title fl">
-					{{estate_name}}-{{get_LI.name}}
+                    <a class="blue-text">{{estate_name}}</a>-{{get_LI.name}}
 				</h1>
 			</div>
 			<div class="col-md-2">
@@ -220,7 +224,7 @@
 				<div class="row">
 					<div class="col-md-4 btn-row-dev">身份证：{{tenant_data.IDcard}}</div>
 					<div class="col-md-4 btn-row-dev">合同到期时间：{{tenant_data.time}}</div>
-					<div class="col-md-4"><button type="button" class="btn btn-primary fr" @click="changeModalType('set_tenant','change')">修改信息</button></div>
+					<div class="col-md-4"><button type="button" class="btn btn-primary fr blue-btn" @click="changeModalType('set_tenant','change')">修改信息</button></div>
 				</div>
 				<div class="row">
 					<div class="col-md-3">入住情况：{{tenant_data.status==1?"未入住":"已入住"}}</div>
@@ -230,7 +234,7 @@
 		<div class="info-tab">
 			<tabs>
 				<tab header="设备信息">
-					<table class="table table-striped">
+					<table class="table">
 						<tr>
 							<td>绑定时间</td>
 							<td>{{get_LI.bindtime}}</td>
@@ -270,7 +274,7 @@
 						<div v-if="no_TC" class="no-password">
 							<div class="no-password-btn" @click="changeModalType('add_tenant_code')">添加租客密码</div>
 						</div>
-						<table v-else class="table table-striped rent-pass-manage">
+						<table v-else class="table rent-pass-manage">
 							<tr v-if="get_TC.freeze==false">
 								<td class="blue">{{get_TC.name}}</td>
 								<td>{{get_TC.time}}</td>
@@ -289,7 +293,7 @@
 						</table>
 					</tab>
 					<tab header="备用密码管理">
-						<table class="table table-striped ready-pass">
+						<table class="table ready-pass">
 							<tr v-for="item in bycode[page_count]" track-by="$index" @click="changeCodeBtnShow($index)" :class="{ 'no-set': !item}">
 								<td>{{page_count=='first'?$index+1:$index+9}}</td>
 								<td>{{item?item.name:'无'}}</td>
@@ -308,8 +312,8 @@
 						</table>
 						<div class="page">
 							<div class="fr">
-								<button @click="changeCodePage(1)" type="button" class="btn btn-primary">1</button>
-								<button @click="changeCodePage(2)" type="button" class="btn btn-primary">2</button>
+								<button @click="changeCodePage(1)" type="button" class="btn btn-primary blue-btn">1</button>
+								<button @click="changeCodePage(2)" type="button" class="btn btn-primary blue-btn">2</button>
 							</div>
 						</div>
 					</tab>
@@ -321,8 +325,8 @@
 						</div>
 						<div class="operation-time color_666">{{item.time.split(' ')[1]}} {{item.desc}}</div>
 					</div>
-					<button @click="getLockopen" v-show="!lockopen_done" class="btn btn-primary btn-more pull-right">更多记录</button>
-                    <table v-if="!lockopen_list || lockopen_list.length==0" class="table table-striped">
+					<button @click="getLockopen" v-show="!lockopen_done" class="btn btn-primary btn-more pull-right blue-btn">更多记录</button>
+                    <table v-if="!lockopen_list || lockopen_list.length==0" class="table">
                         <tr>
                             <td>暂无开锁记录</td>
                         </tr>
@@ -335,8 +339,8 @@
 						</div>
 						<div class="operation-time color_666">{{item.time.split(' ')[1]}} {{item.desc}}</div>
 					</div>
-					<button @click="getOperation" v-show="!operation_done" class="btn btn-primary btn-more pull-right">更多记录</button>
-                    <table v-if="!operation_data || operation_data.length==0" class="table table-striped">
+					<button @click="getOperation" v-show="!operation_done" class="btn btn-primary btn-more pull-right blue-btn">更多记录</button>
+                    <table v-if="!operation_data || operation_data.length==0" class="table">
                         <tr>
                             <td>暂无开锁记录</td>
                         </tr>
