@@ -190,7 +190,7 @@
                     let resData = response.json();//对接口返回数据json序列化
                     // console.log(resData);
                     if (resData.code === 0) {
-                        this.getUserInfo();//登陆后调用获取用户信息接口
+                        this.getUserInfo({},this.$router);//登陆后调用获取用户信息接口
                     } else {
                         hideLoading(this.$store);//隐藏loading动画
                         showMsg(this.$store, resData.msg, 'error')//显示接口无法请求到正确数据的提示

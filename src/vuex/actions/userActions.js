@@ -12,8 +12,9 @@ let $http = Vue.http;
 let $router = Vue.router;
 let msg = '请求超时！';
 
-export const getUserInfo = (store, options) => {
+export const getUserInfo = (store, options, route) => {
     // console.log(router);
+	let _this = this;
 	$http.post(base_url+'/user/info', options,{
 		headers: {
 			'Content-Type': 'application/x-www-form-urlencoded'
@@ -35,7 +36,7 @@ export const getUserInfo = (store, options) => {
 			window.localStorage.setItem('homemanage_username',resData.data.name);
 			store.dispatch(types.SUCCESS_USER_INFO, data)
             // window.location.href = window.location.origin+'/index';
-            $router.go({name: 'index'});
+            route.go({name: 'index'});
 		} else {
 			showMsg(store, resData.m)
 			store.dispatch(types.FAILURE_USER_INFO)

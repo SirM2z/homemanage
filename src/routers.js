@@ -2,14 +2,21 @@
 
 module.exports = function(routers) {
     routers.map({
-        '/': {
+        '*': {
             name: 'login',
             title: '登陆',
             component: function(resolve) {
                 require(['./views/login.vue'], resolve);
             }
         },
-        '/index': {
+        'login': {
+            name: 'login',
+            title: '登陆',
+            component: function(resolve) {
+                require(['./views/login.vue'], resolve);
+            }
+        },
+        'index': {
             name: 'index',
             title: '天策房屋管理后台',
             component: function(resolve) {
@@ -49,13 +56,6 @@ module.exports = function(routers) {
             title: '房屋信息',
             component: function(resolve) {
                 require(['./views/homeInfo.vue'], resolve);
-            }
-        },
-        '*': {
-            name: 'index',
-            title: '天策房屋管理后台',
-            component: function(resolve) {
-                require(['./views/index.vue'], resolve);
             }
         },
         'test': {
