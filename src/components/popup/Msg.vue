@@ -1,6 +1,6 @@
 <style>
-	.msg-info{
-		box-shadow: 0 2px 4px 0 rgba(0,0,0,.12),0 0 6px 0 rgba(0,0,0,.04);
+	.msg-info {
+		box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12), 0 0 6px 0 rgba(0, 0, 0, .04);
 		min-width: 300px;
 		box-sizing: border-box;
 		border-radius: 2px;
@@ -10,20 +10,22 @@
 		-webkit-transform: translateX(-50%);
 		transform: translateX(-50%);
 		background-color: #fff;
-		-webkit-transition: opacity .3s,-webkit-transform .4s;
-		transition: opacity .3s,-webkit-transform .4s;
-		transition: opacity .3s,transform .4s;
-		transition: opacity .3s,transform .4s,-webkit-transform .4s;
+		-webkit-transition: opacity .3s, -webkit-transform .4s;
+		transition: opacity .3s, -webkit-transform .4s;
+		transition: opacity .3s, transform .4s;
+		transition: opacity .3s, transform .4s, -webkit-transform .4s;
 		overflow: hidden;
 		z-index: 2000;
 		display: flex;
 	}
-	.msg-info img{
+	
+	.msg-info img {
 		width: 40px;
 		height: 40px;
 		display: block;
 	}
-	.msg-info .msg-content{
+	
+	.msg-info .msg-content {
 		flex: 1;
 		height: 40px;
 		line-height: 40px;
@@ -31,13 +33,15 @@
 		padding-left: 20px;
 	}
 	/* 必需 */
+	
 	.msgdown-transition {
 		transition: all .3s ease-out;
 	}
-
 	/* .expand-enter 定义进入的开始状态 */
 	/* .expand-leave 定义离开的结束状态 */
-	.msgdown-enter, .msgdown-leave {
+	
+	.msgdown-enter,
+	.msgdown-leave {
 		top: 0;
 		opacity: 0.5;
 	}

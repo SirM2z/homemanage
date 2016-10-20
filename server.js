@@ -12,6 +12,6 @@ var app = new WebpackDevServer(webpack(config), {
 	historyApiFallback: true,
 	compress: true
 });
-app.listen(80, function() {
+app.listen(80, function () {
 	console.log('start server：http://pstonetest.cn')
 });

@@ -1,5 +1,5 @@
 <style>
-     .propertyedit-box {
+    .propertyedit-box {
         /*padding: 50px 250px 100px;*/
         width: 998px;
         min-width: 998px;
@@ -18,7 +18,8 @@
         overflow: hidden;
         padding: 15px;
     }
-    .propertyedit-box .propertyedit-info .info-item.wg-item{
+    
+    .propertyedit-box .propertyedit-info .info-item.wg-item {
         padding-top: 10px;
     }
     
@@ -34,7 +35,8 @@
         height: 34px;
         line-height: 34px;
     }
-    .propertyedit-box .propertyedit-info .info-item .name-title.wg-title{
+    
+    .propertyedit-box .propertyedit-info .info-item .name-title.wg-title {
         line-height: 65px;
     }
     
@@ -74,15 +76,16 @@
         margin-right: 25px;
         margin-bottom: 15px;
     }
+    
     .propertyedit-box .info-head {
         margin-bottom: 35px;
     }
+    
     .propertyedit-box .pass-btn {
         margin-top: 20px;
     }
 </style>
 <template>
-    <nav-list></nav-list>
     <div class="propertyedit-box">
         <div class="row info-head">
             <div class="col-md-8">
@@ -98,7 +101,7 @@
             </div>
             <div class="info-item">
                 <div class="fl item-title">房产图片：</div>
-                <div class="fl"><input type="file" accept="image/*" @change="uploadFile"/></div>
+                <div class="fl"><input type="file" accept="image/*" @change="uploadFile" /></div>
             </div>
             <div class="info-item">
                 <div class="fl item-title name-title">房产地址：</div>
@@ -130,184 +133,182 @@
             </div>
         </div>
     </div>
-        <foot></foot>
+    <foot></foot>
 </template>
 <script>
-    import navList from '../components/comon/navList.vue'
-    import foot from '../components/comon/foot.vue'
-    import {base_url} from '../common.js'
-    import {showModal, hideModal, showLoading, showMsg} from '../vuex/actions/popupActions'
-    export default {
-        vuex: {
-            actions: {
-                showModal,
-                hideModal,
-                showLoading,
-                showMsg
-            }
-        },
-        data: function() {
-            return {
-                estate_name: '',
-                estate_address: '',
-                estate_bindgw: '',
-                estate_note: '',
-                estate_image: '',
-                gatewayList: null,
-                gateways: null,
-                gatewaysNum: 1,
-                estate_bindgw_selected: null
-            }
-        },
-        ready: function() {
-            this.getEstate();
-            this.getEstateGateway();
-        },
-        components: {
-            navList,
-            foot
-        },
-        beforeDestroy: function() {
+import foot from '../components/comon/foot.vue'
+import {base_url} from '../common.js'
+import {showModal, hideModal, showLoading, showMsg} from '../vuex/actions/popupActions'
+export default {
+    vuex: {
+        actions: {
+            showModal,
+            hideModal,
+            showLoading,
+            showMsg
+        }
+    },
+    data: function() {
+        return {
+            estate_name: '',
+            estate_address: '',
+            estate_bindgw: '',
+            estate_note: '',
+            estate_image: '',
+            gatewayList: null,
+            gateways: null,
+            gatewaysNum: 1,
+            estate_bindgw_selected: null
+        }
+    },
+    ready: function() {
+        this.getEstate();
+        this.getEstateGateway();
+    },
+    components: {
+        foot
+    },
+    beforeDestroy: function() {
 
+    },
+    methods: {
+        getEstate: function(){
+            // this.$route.query.id
+            //console.log(this.$route.query.id);
+            let _this = this;
+            this.$http.post(base_url+'/lock/getEstate', {
+                id : this.$route.query.id
+            }).then(function(response) {
+                if (!response.ok) {
+                    showMsg(this.$store, '请求超时！', 'error');
+                    return
+                }
+                let resData = response.json();
+                //console.log(resData);
+                if (resData.code === 0) {
+                    // to do
+                    this.estate_name = resData.data.name;
+                    this.estate_address = resData.data.address;
+                    // this.estate_bindgw = resData.data.bindgw.split('、');
+                    this.estate_bindgw_selected = resData.data.bindgw;
+                    this.estate_note = resData.data.note;
+                    this.gatewaysNum = resData.data.bindgw.length;
+                }  
+                else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
+                    showMsg(this.$store, '请先登陆！', 'error')
+                    _this.$router.go({name: 'login'});
+                }
+                else {
+                    showMsg(this.$store, resData.msg, 'error')
+                }
+            }, function(response) {
+                showMsg(this.$store, '请求超时！', 'error')
+            })
         },
-        methods: {
-            getEstate: function(){
-                // this.$route.query.id
-                //console.log(this.$route.query.id);
-                let _this = this;
-                this.$http.post(base_url+'/lock/getEstate', {
-                    id : this.$route.query.id
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！', 'error');
-                        return
-                    }
-                    let resData = response.json();
-                    //console.log(resData);
-                    if (resData.code === 0) {
-                        // to do
-                        this.estate_name = resData.data.name;
-                        this.estate_address = resData.data.address;
-                        // this.estate_bindgw = resData.data.bindgw.split('、');
-                        this.estate_bindgw_selected = resData.data.bindgw;
-                        this.estate_note = resData.data.note;
-                        this.gatewaysNum = resData.data.bindgw.length;
-                    }  
-                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
-                        showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: 'login'});
-                    }
-                    else {
-                        showMsg(this.$store, resData.msg, 'error')
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！', 'error')
-                })
-            },
-            getEstateGateway: function(){
-                this.$http.post(base_url+'/lock/getEstateGateway', {
-                    id : this.$route.query.id
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！', 'error');
-                        return
-                    }
-                    let resData = response.json();
-                    //console.log(resData);
-                    if (resData.code === 0) {
-                        //TO DO
-                        this.gatewayList = resData.data;
-                    } else {
-                        showMsg(this.$store, resData.msg, 'error')
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！', 'error')
-                })
-            },
-            uploadFile: function(e){
-                let formdata = new FormData();  
-                this.file = e.target.files[0];
-                //console.log(this.file);
-                formdata.append("img", this.file);
-                //, {
-                //   headers: {
-                //        'Content-Type': 'multipart/form-data'
-                //    }
-                //}
-                this.$http.post(base_url+'/lock/upload',formdata).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！', 'error');
-                        return
-                    }
-                    let resData = response.json();
-                    //console.log(resData);
-                    if (resData.code === 0) {
-                        //TO DO
-                        this.estate_image = resData.data;
-                    } else {
-                        showMsg(this.$store, resData.msg, 'error')
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！', 'error')
-                })
-            },
-            addSelect: function(){
-                let length = this.gatewayList?this.gatewayList.length:1;
-                if(this.gatewaysNum == length){
-                    showMsg(this.$store, '不能再添加网关绑定的个数', 'warning')
-                    return;
+        getEstateGateway: function(){
+            this.$http.post(base_url+'/lock/getEstateGateway', {
+                id : this.$route.query.id
+            }).then(function(response) {
+                if (!response.ok) {
+                    showMsg(this.$store, '请求超时！', 'error');
+                    return
                 }
-                this.estate_bindgw_selected[this.gatewaysNum]=0;
-                this.gatewaysNum++;
-            },
-            modifyEstate: function(){
-                let _this = this;
-                if(!this.estate_name.trim() || !this.estate_address.trim()){
-                    showMsg(this.$store, '请填写完整相关信息！','warning');
-                    return;
+                let resData = response.json();
+                //console.log(resData);
+                if (resData.code === 0) {
+                    //TO DO
+                    this.gatewayList = resData.data;
+                } else {
+                    showMsg(this.$store, resData.msg, 'error')
                 }
-                if(this.estate_note.trim().length>40){
-                    showMsg(this.$store, '请将备注控制在40字以内！','warning');
-                    return;
+            }, function(response) {
+                showMsg(this.$store, '请求超时！', 'error')
+            })
+        },
+        uploadFile: function(e){
+            let formdata = new FormData();  
+            this.file = e.target.files[0];
+            //console.log(this.file);
+            formdata.append("img", this.file);
+            //, {
+            //   headers: {
+            //        'Content-Type': 'multipart/form-data'
+            //    }
+            //}
+            this.$http.post(base_url+'/lock/upload',formdata).then(function(response) {
+                if (!response.ok) {
+                    showMsg(this.$store, '请求超时！', 'error');
+                    return
                 }
-                this.$http.post(base_url+'/lock/modifyEstate', {
-                    id : this.$route.query.id,
-                    name : this.estate_name.trim(),
-                    image : this.estate_image,
-                    address : this.estate_address.trim(),
-                    note : this.estate_note.trim(),
-                    gateways : this.estate_bindgw_selected
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！', 'error');
-                        return
-                    }
-                    let resData = response.json();
-                    //console.log(resData);
-                    if (resData.code === 0) {
-                        // to do
-                        showMsg(this.$store, '保存成功！');
-                        _this.$router.go({
-                            name: 'homeList',
-                            query: {
-                                id: this.$route.query.id
-                            }
-                        })
-                    } else {
-                        showMsg(this.$store, resData.msg, 'error')
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！', 'error')
-                })
-            },
-            cancleModifyEstate: function(){
-                this.$router.go({
-                    name: 'homeList',
-                    query: {
-                        id: this.$route.query.id
-                    }
-                })
+                let resData = response.json();
+                //console.log(resData);
+                if (resData.code === 0) {
+                    //TO DO
+                    this.estate_image = resData.data;
+                } else {
+                    showMsg(this.$store, resData.msg, 'error')
+                }
+            }, function(response) {
+                showMsg(this.$store, '请求超时！', 'error')
+            })
+        },
+        addSelect: function(){
+            let length = this.gatewayList?this.gatewayList.length:1;
+            if(this.gatewaysNum == length){
+                showMsg(this.$store, '不能再添加网关绑定的个数', 'warning')
+                return;
             }
+            this.estate_bindgw_selected[this.gatewaysNum]=0;
+            this.gatewaysNum++;
+        },
+        modifyEstate: function(){
+            let _this = this;
+            if(!this.estate_name.trim() || !this.estate_address.trim()){
+                showMsg(this.$store, '请填写完整相关信息！','warning');
+                return;
+            }
+            if(this.estate_note.trim().length>40){
+                showMsg(this.$store, '请将备注控制在40字以内！','warning');
+                return;
+            }
+            this.$http.post(base_url+'/lock/modifyEstate', {
+                id : this.$route.query.id,
+                name : this.estate_name.trim(),
+                image : this.estate_image,
+                address : this.estate_address.trim(),
+                note : this.estate_note.trim(),
+                gateways : this.estate_bindgw_selected
+            }).then(function(response) {
+                if (!response.ok) {
+                    showMsg(this.$store, '请求超时！', 'error');
+                    return
+                }
+                let resData = response.json();
+                //console.log(resData);
+                if (resData.code === 0) {
+                    // to do
+                    showMsg(this.$store, '保存成功！');
+                    _this.$router.go({
+                        name: 'homeList',
+                        query: {
+                            id: this.$route.query.id
+                        }
+                    })
+                } else {
+                    showMsg(this.$store, resData.msg, 'error')
+                }
+            }, function(response) {
+                showMsg(this.$store, '请求超时！', 'error')
+            })
+        },
+        cancleModifyEstate: function(){
+            this.$router.go({
+                name: 'homeList',
+                query: {
+                    id: this.$route.query.id
+                }
+            })
         }
     }
+}
 </script>

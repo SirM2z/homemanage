@@ -9,7 +9,7 @@ export const showMsg = ({
 		type: type,
 		show: true
 	})
-	setTimeout(function() {
+	setTimeout(function () {
 		cb();
 	}, 1000)
 }

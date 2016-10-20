@@ -1,12 +1,4 @@
 <style>
-    #particles-js{
-        width: 100%;
-        height: 100%;
-        background-color: rgb(46, 147, 242);
-        background-size: cover;
-        background-position: 50% 50%;
-        background-repeat: no-repeat;
-    }
     .login-box .login-modal {
         position: absolute;
         width: 520px;
@@ -32,6 +24,7 @@
     .login-box .login-btn {
         margin-top: 40px;
     }
+    
     .login-box .modal-ne .modal-item .tel-input {
         width: 300px;
     }
@@ -39,28 +32,35 @@
     .login-box .modal-ne .modal-item .code-input {
         width: 200px;
     }
-    .login-box .btn-verifi{
+    
+    .login-box .btn-verifi {
         margin-top: -5px;
     }
-    .login-box .btn-verifi:focus, .login-box .btn-verifi:active:focus {
+    
+    .login-box .btn-verifi:focus,
+    .login-box .btn-verifi:active:focus {
         outline: none;
         outline-offset: -2px;
     }
-    .login-box .verifi_time_down{
+    
+    .login-box .verifi_time_down {
         display: inline-block;
         height: 40px;
         line-height: 40px;
     }
+    
     .login-box .blue-text {
         color: #0275d8;
     }
+    
     .login-box .blue-btn {
         border-radius: 6px;
         background-color: #0275d8;
     }
 </style>
 <template>
-    <div id="particles-js"></div>
+    <div id="particles-js" style="background-color: rgb(46, 147, 242); background-image: url("
+        "); background-size: cover; background-repeat: no-repeat; background-position: 50% 50%;"></div>
     <div class="login-box">
         <div class="login-modal">
             <div class="form-group text-title">
@@ -128,291 +128,291 @@
     </div>
 </template>
 <script>
-    import navList from '../components/comon/navList.vue'
-    import Modal from '../components/popup/Modal.vue'
-    import {getUserInfo} from '../vuex/actions/userActions'
-    import {showModal, hideModal, showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
-    import {base_url} from '../common.js'
-    export default {
-        vuex: {
-            getters: {
-            },
-            actions: {
-                showModal,
-                hideModal,
-                showLoading,
-                showMsg,
-                hideLoading,
-                getUserInfo
+import navList from '../components/comon/navList.vue'
+import Modal from '../components/popup/Modal.vue'
+import {getUserInfo} from '../vuex/actions/userActions'
+import {showModal, hideModal, showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
+import {base_url} from '../common.js'
+export default {
+    vuex: {
+        getters: {
+        },
+        actions: {
+            showModal,
+            hideModal,
+            showLoading,
+            showMsg,
+            hideLoading,
+            getUserInfo
+        }
+    },
+    ready: function(){
+    },
+    components: {
+        Modal,
+        navList
+    },
+    filters: {
+    },
+    directives: {
+    },
+    data: function() {
+        return {
+            user_name: '18888888881',
+            user_password: '123456',
+            modal_type: '',
+            verifi_phone: '',
+            verifi_time: 0,
+            time_down: null,
+            verifi_code: '',
+            new_password_verifi: '',
+            new_password: ''
+        }
+    },
+    ready: function() {
+        this.particlesApp()
+    },
+    beforeDestroy: function() {
+        if(this.time_down){
+            window.clearInterval(this.time_down);
+        }
+    },
+    methods: {
+        loginSystem:function(){
+            if(!this.user_name.trim() || !this.user_password.trim()){
+                showMsg(this.$store, '请填写完整账号密码！', 'warning');
+                return;
             }
-        },
-        ready: function(){
-        },
-        components: {
-            Modal,
-            navList
-        },
-        filters: {
-        },
-        directives: {
-        },
-        data: function() {
-            return {
-                user_name: '18888888881',
-                user_password: '123456',
-                modal_type: '',
-                verifi_phone: '',
-                verifi_time: 0,
-                time_down: null,
-                verifi_code: '',
-                new_password_verifi: '',
-                new_password: ''
-            }
-        },
-        ready: function() {
-            this.particlesApp()
-        },
-        beforeDestroy: function() {
-            if(this.time_down){
-                window.clearInterval(this.time_down);
-            }
-        },
-        methods: {
-            loginSystem:function(){
-                if(!this.user_name.trim() || !this.user_password.trim()){
-                    showMsg(this.$store, '请填写完整账号密码！', 'error');
-                    return;
-                }
-                showLoading(this.$store);//展示loading动画
-                this.$http.post(base_url+'/user/login', {
-                    user: this.user_name.trim(),
-                    password: this.user_password.trim()
-                }).then(function(response) {
-                    if (!response.ok) {//请求出现问题
-                        hideLoading(this.$store);//隐藏loading动画
-                        showMsg(this.$store, '请求超时！', 'error');//显示请求错误提示
-                        return
-                    }
-                    let resData = response.json();//对接口返回数据json序列化
-                    // console.log(resData);
-                    if (resData.code === 0) {
-                        this.getUserInfo({},this.$router);//登陆后调用获取用户信息接口
-                    } else {
-                        hideLoading(this.$store);//隐藏loading动画
-                        showMsg(this.$store, resData.msg, 'error')//显示接口无法请求到正确数据的提示
-                    }
-                }, function(response) {//请求出现问题
+            showLoading(this.$store);//展示loading动画
+            this.$http.post(base_url+'/user/login', {
+                user: this.user_name.trim(),
+                password: this.user_password.trim()
+            }).then(function(response) {
+                if (!response.ok) {//请求出现问题
                     hideLoading(this.$store);//隐藏loading动画
-                    showMsg(this.$store, '请求超时！', 'error')//显示请求错误提示
-                })
-            },
-            changeModalType:function(type){
-                this.modal_type = type;
-                // console.log(this.modal_type);
-                this.showModal();
-            },
-            sureVerifi:function(){
-                if(this.verifi_phone.trim()==''){
-                    showMsg(this.$store, '请填写手机号！', 'error');
-                    return;
+                    showMsg(this.$store, '请求超时！', 'error');//显示请求错误提示
+                    return
                 }
-                if(this.verifi_code.trim()==''){
-                    showMsg(this.$store, '请输入验证码', 'error')
-                    return;
+                let resData = response.json();//对接口返回数据json序列化
+                // console.log(resData);
+                if (resData.code === 0) {
+                    this.getUserInfo({},this.$router);//登陆后调用获取用户信息接口
+                } else {
+                    hideLoading(this.$store);//隐藏loading动画
+                    showMsg(this.$store, resData.msg, 'error')//显示接口无法请求到正确数据的提示
                 }
-                this.hideModal();
-                this.modal_type = 'change_pass';
-                this.showModal();
-            },
-            getVerifiCode:function(){
-                let _this = this;
-                if(this.verifi_phone.trim()==''){
-                    showMsg(this.$store, '请填写手机号！', 'error');
-                    return;
-                }
-                this.verifi_time = 60;
-                this.time_down = setInterval(function() {
-                    if(_this.verifi_time == 0){
-                        clearInterval(_this.time_down);
-                        return;
-                    }
-                    _this.verifi_time--;
-                }, 1000);
-                this.$http.post(base_url+'/user/sendCode', {
-                    phone : this.verifi_phone.trim()
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！', 'error');
-                        return
-                    }
-                    let resData = response.json();
-                    // console.log(resData);
-                    if (resData.code === 0) {
-                        // to do
-                    } else {
-                        showMsg(this.$store, resData.msg, 'error')
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！', 'error')
-                })
-            },
-            cancleVerifi:function(){
-                this.verifi_time = 0;
-                this.verifi_code = '';
-                this.hideModal();
-            },
-            cancleChangePass:function(){
-                this.modal_type = 'verifi';
-                this.verifi_code = '';
-                this.hideModal();
-            },
-            sureChangePass:function(){
-                let _this = this;
-                if(!this.verifi_phone.trim() || !this.new_password_verifi.trim() || !this.new_password.trim() || !this.verifi_code.trim()){
-                    showMsg(this.$store, '请填写完整信息！', 'error');
-                    return;
-                }
-                if(this.new_password_verifi.trim() != this.new_password.trim()){
-                    showMsg(this.$store, '两次密码输入不一致！', 'error');
-                    return;
-                }
-                this.$http.post(base_url+'/user/modifyPassword', {
-                    user : this.verifi_phone.trim(),
-                    newPassword : this.new_password.trim(),
-                    code : this.verifi_code.trim(),
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！', 'error');
-                        return
-                    }
-                    let resData = response.json();
-                    // console.log(resData);
-                    if (resData.code === 0) {
-                        _this.hideModal(_this.$store);
-                        showMsg(this.$store, '修改成功！')
-                        //this.getUserInfo({},this.$router);
-                    } else {
-                        showMsg(this.$store, resData.msg, 'error')
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！', 'error')
-                })
-            },
-            particlesApp:function(){
-                window.particlesJS('particles-js',
-                    {
-                        "particles": {
-                            "number": {
-                                "value": 15,
-                                "density": {
-                                    "enable": true,
-                                    "value_area": 800
-                                }
-                            },
-                            "color": {
-                                "value": "#e6e1e1"
-                            },
-                            "shape": {
-                                "type": "circle",
-                                "stroke": {
-                                    "width": 0,
-                                    "color": "#000000"
-                                },
-                                "polygon": {
-                                    "nb_sides": 5
-                                },
-                                "image": {
-                                    "src": "img/github.svg",
-                                    "width": 100,
-                                    "height": 100
-                                }
-                            },
-                            "opacity": {
-                                "value": 1,
-                                "random": true,
-                                "anim": {
-                                    "enable": false,
-                                    "speed": 1,
-                                    "opacity_min": 0.1,
-                                    "sync": false
-                                }
-                            },
-                            "size": {
-                                "value": 5,
-                                "random": true,
-                                "anim": {
-                                    "enable": false,
-                                    "speed": 40,
-                                    "size_min": 0.1,
-                                    "sync": false
-                                }
-                            },
-                            "line_linked": {
-                                "enable": true,
-                                "distance": 300,
-                                "color": "#ffffff",
-                                "opacity": 0.7,
-                                "width": 1
-                            },
-                            "move": {
-                                "enable": true,
-                                "speed": 3,
-                                "direction": "none",
-                                "random": true,
-                                "straight": false,
-                                "out_mode": "out",
-                                "bounce": false,
-                                "attract": {
-                                    "enable": false,
-                                    "rotateX": 600,
-                                    "rotateY": 1200
-                                }
-                            }
-                        },
-                        "interactivity": {
-                            "detect_on": "canvas",
-                            "events": {
-                                "onhover": {
-                                    "enable": true,
-                                    "mode": "grab"
-                                },
-                                "onclick": {
-                                    "enable": false,
-                                    "mode": "push"
-                                },
-                                "resize": true
-                                },
-                                "modes": {
-                                "grab": {
-                                    "distance": 400,
-                                    "line_linked": {
-                                    "opacity": 1
-                                    }
-                                },
-                                "bubble": {
-                                    "distance": 400,
-                                    "size": 40,
-                                    "duration": 2,
-                                    "opacity": 8,
-                                    "speed": 3
-                                },
-                                "repulse": {
-                                    "distance": 200,
-                                    "duration": 0.4
-                                },
-                                "push": {
-                                    "particles_nb": 4
-                                },
-                                "remove": {
-                                    "particles_nb": 2
-                                }
-                            }
-                        },
-                        "retina_detect": true
-                    }
-                );
-
+            }, function(response) {//请求出现问题
+                hideLoading(this.$store);//隐藏loading动画
+                showMsg(this.$store, '请求超时！', 'error')//显示请求错误提示
+            })
+        },
+        changeModalType:function(type){
+            this.modal_type = type;
+            // console.log(this.modal_type);
+            this.showModal();
+        },
+        sureVerifi:function(){
+            if(this.verifi_phone.trim()==''){
+                showMsg(this.$store, '请填写手机号！', 'warning');
+                return;
             }
+            if(this.verifi_code.trim()==''){
+                showMsg(this.$store, '请输入验证码', 'warning')
+                return;
+            }
+            this.hideModal();
+            this.modal_type = 'change_pass';
+            this.showModal();
+        },
+        getVerifiCode:function(){
+            let _this = this;
+            if(this.verifi_phone.trim()==''){
+                showMsg(this.$store, '请填写手机号！', 'error');
+                return;
+            }
+            this.verifi_time = 60;
+            this.time_down = setInterval(function() {
+                if(_this.verifi_time == 0){
+                    clearInterval(_this.time_down);
+                    return;
+                }
+                _this.verifi_time--;
+            }, 1000);
+            this.$http.post(base_url+'/user/sendCode', {
+                phone : this.verifi_phone.trim()
+            }).then(function(response) {
+                if (!response.ok) {
+                    showMsg(this.$store, '请求超时！', 'error');
+                    return
+                }
+                let resData = response.json();
+                // console.log(resData);
+                if (resData.code === 0) {
+                    // to do
+                } else {
+                    showMsg(this.$store, resData.msg, 'error')
+                }
+            }, function(response) {
+                showMsg(this.$store, '请求超时！', 'error')
+            })
+        },
+        cancleVerifi:function(){
+            this.verifi_time = 0;
+            this.verifi_code = '';
+            this.hideModal();
+        },
+        cancleChangePass:function(){
+            this.modal_type = 'verifi';
+            this.verifi_code = '';
+            this.hideModal();
+        },
+        sureChangePass:function(){
+            let _this = this;
+            if(!this.verifi_phone.trim() || !this.new_password_verifi.trim() || !this.new_password.trim() || !this.verifi_code.trim()){
+                showMsg(this.$store, '请填写完整信息！', 'error');
+                return;
+            }
+            if(this.new_password_verifi.trim() != this.new_password.trim()){
+                showMsg(this.$store, '两次密码输入不一致！', 'error');
+                return;
+            }
+            this.$http.post(base_url+'/user/modifyPassword', {
+                user : this.verifi_phone.trim(),
+                newPassword : this.new_password.trim(),
+                code : this.verifi_code.trim(),
+            }).then(function(response) {
+                if (!response.ok) {
+                    showMsg(this.$store, '请求超时！', 'error');
+                    return
+                }
+                let resData = response.json();
+                // console.log(resData);
+                if (resData.code === 0) {
+                    _this.hideModal(_this.$store);
+                    showMsg(this.$store, '修改成功！')
+                    //this.getUserInfo({},this.$router);
+                } else {
+                    showMsg(this.$store, resData.msg, 'error')
+                }
+            }, function(response) {
+                showMsg(this.$store, '请求超时！', 'error')
+            })
+        },
+        particlesApp:function(){
+            window.particlesJS('particles-js',
+                {
+                    "particles": {
+                        "number": {
+                            "value": 15,
+                            "density": {
+                                "enable": true,
+                                "value_area": 800
+                            }
+                        },
+                        "color": {
+                            "value": "#e6e1e1"
+                        },
+                        "shape": {
+                            "type": "circle",
+                            "stroke": {
+                                "width": 0,
+                                "color": "#000000"
+                            },
+                            "polygon": {
+                                "nb_sides": 5
+                            },
+                            "image": {
+                                "src": "img/github.svg",
+                                "width": 100,
+                                "height": 100
+                            }
+                        },
+                        "opacity": {
+                            "value": 1,
+                            "random": true,
+                            "anim": {
+                                "enable": false,
+                                "speed": 1,
+                                "opacity_min": 0.1,
+                                "sync": false
+                            }
+                        },
+                        "size": {
+                            "value": 5,
+                            "random": true,
+                            "anim": {
+                                "enable": false,
+                                "speed": 40,
+                                "size_min": 0.1,
+                                "sync": false
+                            }
+                        },
+                        "line_linked": {
+                            "enable": true,
+                            "distance": 300,
+                            "color": "#ffffff",
+                            "opacity": 0.7,
+                            "width": 1
+                        },
+                        "move": {
+                            "enable": true,
+                            "speed": 3,
+                            "direction": "none",
+                            "random": true,
+                            "straight": false,
+                            "out_mode": "out",
+                            "bounce": false,
+                            "attract": {
+                                "enable": false,
+                                "rotateX": 600,
+                                "rotateY": 1200
+                            }
+                        }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": {
+                            "onhover": {
+                                "enable": true,
+                                "mode": "grab"
+                            },
+                            "onclick": {
+                                "enable": false,
+                                "mode": "push"
+                            },
+                            "resize": true
+                            },
+                            "modes": {
+                            "grab": {
+                                "distance": 400,
+                                "line_linked": {
+                                "opacity": 1
+                                }
+                            },
+                            "bubble": {
+                                "distance": 400,
+                                "size": 40,
+                                "duration": 2,
+                                "opacity": 8,
+                                "speed": 3
+                            },
+                            "repulse": {
+                                "distance": 200,
+                                "duration": 0.4
+                            },
+                            "push": {
+                                "particles_nb": 4
+                            },
+                            "remove": {
+                                "particles_nb": 2
+                            }
+                        }
+                    },
+                    "retina_detect": true
+                }
+            );
+
         }
     }
+}
 </script>

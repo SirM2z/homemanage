@@ -61,17 +61,16 @@
         width: 64px;
         height: 64px;
     }
+    
     .index-box .add-fc {
         position: absolute;
         top: 50%;
-        left:50%;
+        left: 50%;
         margin-top: -57px;
         margin-left: -60px;
     }
-    
 </style>
 <template>
-    <nav-list></nav-list>
     <div class="index-box">
         <div class="row info-head">
             <div class="col-md-8">
@@ -101,80 +100,79 @@
     <foot></foot>
 </template>
 <script>
-    import navList from '../components/comon/navList.vue'
-    import foot from '../components/comon/foot.vue'
-    import {showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
-    import {base_url,img_url} from '../common.js'
-    export default {
-        vuex: {
-            getters: {
-            },
-            actions:{
-                showLoading,
-                showMsg,
-                hideLoading
-            }
+import foot from '../components/comon/foot.vue'
+import {showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
+import {base_url,img_url} from '../common.js'
+export default {
+    vuex: {
+        getters: {
         },
-        data: function() {
-            return {
-                estateList: null
-            }
+        actions:{
+            showLoading,
+            showMsg,
+            hideLoading
+        }
+    },
+    data: function() {
+        return {
+            estateList: null
+        }
+    },
+    ready: function() {
+        console.log(this.$store)
+        this.getEstateList();
+    },
+    components: {
+        foot
+    },
+    beforeDestroy: function() {
+    },
+    computed: {
+        getImgurl: function (img) {
+            console.log(img);
+            console.log(img_url);
+            return img_url + img
+        }
+    },
+    methods: {
+        getEstateList: function(){
+            let _this = this;
+            showLoading(this.$store);
+            this.$http.post(base_url+'/lock/getEstateList').then(function(response) {
+                hideLoading(this.$store);
+                if (!response.ok) {
+                    showMsg(this.$store, '请求超时！', 'error');
+                    return
+                }
+                let resData = response.json();
+                    //console.log(resData);
+                if (resData.code === 0) {
+                    // this.getUserInfo({},this.$router);
+                    this.estateList = resData.data;
+                } 
+                else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
+                    showMsg(this.$store, '请先登陆！', 'error')
+                    _this.$router.go({name: 'login'});
+                }
+                else {
+                    showMsg(this.$store, resData.msg, 'error')
+                }
+            }, function(response) {
+                hideLoading(this.$store);
+                showMsg(this.$store, '请求超时！', 'error')
+            })
         },
-        ready: function() {
-            this.getEstateList();
+        goAddEstate: function(){
+            this.$router.go({name: 'propertyAdd'})
         },
-        components: {
-            navList,
-            foot
-        },
-        beforeDestroy: function() {
-        },
-        computed: {
-            getImgurl: function (img) {
-                console.log(img);
-                console.log(img_url);
-                return img_url + img
-            }
-        },
-        methods: {
-            getEstateList: function(){
-                let _this = this;
-                showLoading(this.$store);
-                this.$http.post(base_url+'/lock/getEstateList').then(function(response) {
-                    hideLoading(this.$store);
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！', 'error');
-                        return
-                    }
-                    let resData = response.json();
-                     //console.log(resData);
-                    if (resData.code === 0) {
-                        // this.getUserInfo({},this.$router);
-                        this.estateList = resData.data;
-                    } 
-                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
-                        showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: 'login'});
-                    }
-                    else {
-                        showMsg(this.$store, resData.msg, 'error')
-                    }
-                }, function(response) {
-                    hideLoading(this.$store);
-                    showMsg(this.$store, '请求超时！', 'error')
-                })
-            },
-            goAddEstate: function(){
-                this.$router.go({name: 'propertyAdd'})
-            },
-            goHomeList: function(id){
-                this.$router.go({
-                    name: 'homeList',
-                    query: {
-                        id: id
-                    }
-                })
-            }
+        goHomeList: function(id){
+            this.$router.go({
+                name: 'homeList',
+                query: {
+                    id: id
+                }
+            })
         }
     }
+}
 </script>

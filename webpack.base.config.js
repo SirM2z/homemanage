@@ -5,7 +5,7 @@ module.exports = {
     // 入口
     entry: {
         main: ['./src/main'],
-        vendors: ['vue', 'vuex', 'vue-resource', 'vue-router', 'fastclick', 'normalize-css', 'vue-strap']  //公共组件
+        vendors: ['vue', 'vuex', 'vue-resource', 'vue-router', 'fastclick', 'normalize-css', 'vue-strap'] //公共组件
     },
     // 输出
     output: {
@@ -13,14 +13,26 @@ module.exports = {
     },
     // 加载器
     module: {
-        loaders: [
-            { test: /\.vue$/, loader: 'vue' },
-            { test: /\.js$/, loader: 'babel', exclude: /node_modules|vue\/dist/ },
-            { test: /\.css$/, loader: 'style!css!autoprefixer'},
-            { test: /\.scss$/, loader: 'style!css!sass?sourceMap'},
-            { test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/, loader: 'url-loader?limit=8192'},
-            { test: /\.(html|tpl)$/, loader: 'html-loader' }
-        ]
+        loaders: [{
+            test: /\.vue$/,
+            loader: 'vue'
+        }, {
+            test: /\.js$/,
+            loader: 'babel',
+            exclude: /node_modules|vue\/dist/
+        }, {
+            test: /\.css$/,
+            loader: 'style!css!autoprefixer'
+        }, {
+            test: /\.scss$/,
+            loader: 'style!css!sass?sourceMap'
+        }, {
+            test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
+            loader: 'url-loader?limit=8192'
+        }, {
+            test: /\.(html|tpl)$/,
+            loader: 'html-loader'
+        }]
     },
     // 转es5
     babel: {
