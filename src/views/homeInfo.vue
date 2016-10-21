@@ -202,10 +202,14 @@
     .home-box a.go-back{
         cursor: pointer;
     }
+	.home-box .clear-box{
+		clear: both;
+	}
 </style>
 <template>
     <navhead></navhead>
     <div class="home-box">
+		<div class="clear-box"></div>
         <div class="row info-head">
             <div class="col-md-8">
                 <h1 class="head-title">

@@ -111,7 +111,7 @@
             </tr>
             <tr v-for="item in lock_list" track-by="$index">
                 <td><a @click="goHomeInfo(get_estate_name,item.id,item.status,item.power)" class="blue-text">{{item.name}}</a></td>
-                <td>{{item.status == "true"?"在线":"离线"}}</td>
+                <td>{{item.status?"在线":"离线"}}</td>
                 <td>{{item.gw_name}}</td>
                 <td>{{item.power}}</td>
                 <td>{{item.tenant == 1?"未住":"已住"}}</td>
@@ -273,7 +273,7 @@ export default {
             }else {
                 power = 0;
             }
-            if(status == "在线") {
+            if(status) {
                 status = 1;
             }else {
                 status = 0;
