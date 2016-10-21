@@ -74,8 +74,8 @@
     <navhead></navhead>
     <div class="index-box">
         <div class="row info-head">
-            <div class="col-md-8">
-                <h1 class="head-title fl">
+            <div class="col-md-12">
+                <h1 class="head-title">
                     房产管理
                 </h1>
             </div>

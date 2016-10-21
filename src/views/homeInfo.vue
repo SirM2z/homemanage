@@ -208,7 +208,7 @@
     <div class="home-box">
         <div class="row info-head">
             <div class="col-md-8">
-                <h1 class="head-title fl">
+                <h1 class="head-title">
                     <a class="go-back blue-text" @click="goHomeList">{{estate_name}}</a>-{{get_LI.name}}
                 </h1>
             </div>
