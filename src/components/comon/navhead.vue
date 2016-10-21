@@ -16,6 +16,10 @@
 	.navhead-box .nav-body .body-logo{
 		cursor: pointer;
 	}
+	
+	.navhead-box .nav-body .body-logo>img{
+		height: 50px;
+	}
 
 	.navhead-box .nav-body .body-title{
 		height: 50px;
@@ -145,9 +149,6 @@
 	}
 	.navhead-box .body-logo:hover,.navhead-box .body-title:hover,.navhead-box .body-content:hover{
 		background-color: #0169C1;
-	}
-	.navhead-box .clear-box{
-		clear: both;
 	}
 </style>
 <template>

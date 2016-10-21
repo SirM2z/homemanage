@@ -91,7 +91,7 @@
                         <div class="fl item-title name-title">输入验证码</div>
                         <div class="fl"><input type="text" v-model="verifi_code" class="form-control code-input"></div>
                         <button v-if="verifi_time===0" @click="getVerifiCode" class="btn btn-link btn-verifi blue-text">获取验证码</button>
-                        <button v-else class="btn btn-link btn-verifi blue-text">重新获取</button>
+                        <button v-else class="btn btn-link btn-verifi color_999">重新获取</button>
                         <span v-if="verifi_time!==0" class="color_999 verifi_time_down">({{verifi_time}})</span>
                     </div>
                     <button @click="cancleVerifi" class="btn btn-default btn-cancle">取消</button>
@@ -231,7 +231,12 @@ export default {
         getVerifiCode:function(){
             let _this = this;
             if(this.verifi_phone.trim()==''){
-                showMsg(this.$store, '请填写手机号！', 'error');
+                showMsg(this.$store, '请填写手机号！', 'warning');
+                return;
+            }
+            if(!/^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\d{8}$/i.test(this.verifi_phone.trim()))
+            {
+                showMsg(this.$store, '请填写正确手机号！', 'warning');
                 return;
             }
             this.verifi_time = 60;
