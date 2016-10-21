@@ -220,6 +220,10 @@ export default {
         },
         changeModalType:function(type){
             this.modal_type = type;
+            this.verifi_phone = '';
+            this.verifi_code = '';
+            this.new_password_verifi= '',
+            this.new_password= ''
             // console.log(this.modal_type);
             this.showModal();
         },
@@ -327,9 +331,16 @@ export default {
                     _this.new_password_verifi= '',
                     _this.new_password= ''
                     showMsg(this.$store, '修改成功！')
+                    _this.hideModal(_this.$store);
                     //this.getUserInfo({},this.$router);
-                } else {
+                }
+                else if(resData.code === 10017){
+                    showMsg(this.$store, '请检查验证码！', 'warning')
+                    _this.modal_type= 'verifi';
+                }
+                else {
                     showMsg(this.$store, resData.msg, 'error')
+                    _this.hideModal(_this.$store);
                 }
             }, function(response) {
                 showMsg(this.$store, '请求超时！', 'error')
