@@ -204,6 +204,7 @@
     }
 </style>
 <template>
+    <navhead></navhead>
     <div class="home-box">
         <div class="row info-head">
             <div class="col-md-8">
@@ -623,9 +624,10 @@
 <script>
 import Modal from '../components/popup/Modal.vue'
 import {showModal, hideModal, showLoading, showMsg, hideLoading} from '../vuex/actions/popupActions'
-import foot from '../components/comon/foot.vue'
-import { tabset,tab,tabGroup,datepicker } from 'vue-strap'
+import { tabset,tab,tabGroup } from 'vue-strap'
 import {base_url} from '../common.js'
+import navhead from '../components/comon/navhead.vue'
+import foot from '../components/comon/foot.vue'
 export default {
     vuex: {
         actions: {
@@ -637,11 +639,11 @@ export default {
     },
     components: {
         Modal,
-        foot,
         tabs:tabset,
         tab,
         tabGroup,
-        datepicker
+        navhead,
+        foot
     },
     data: function() {
         return {
@@ -797,7 +799,11 @@ export default {
         //查询指令结果
         getResult: function() {
             let _this = this;                
-            this.$http.post(base_url+'/lock/getResult').then(function(response) {
+            this.$http.post(base_url+'/lock/getResult',{}, {
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			}).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
                     return
@@ -857,7 +863,11 @@ export default {
         //轮询方法
         longLoop: function(){
             let _this = this;                
-            this.$http.post(base_url+'/lock/getResult').then(function(response) {
+            this.$http.post(base_url+'/lock/getResult',{}, {
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			}).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
                     return
@@ -956,7 +966,11 @@ export default {
             let _this = this;
             this.$http.post(base_url+'/lock/getLockTenant', {
                 id : this.$route.query.id
-            }).then(function(response) {
+            }, {
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			}).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
                     return
@@ -987,7 +1001,11 @@ export default {
             let _this =this;
             this.$http.post(base_url+'/lock/getLockInfo', {
                 id : this.$route.query.id
-            }).then(function(response) {
+            }, {
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			}).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
                     return
@@ -1020,7 +1038,11 @@ export default {
             let _this = this;
             this.$http.post(base_url+'/lock/getTenantCode', {
                 id : this.$route.query.id
-            }).then(function(response) {
+            }, {
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			}).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
                     return
@@ -1058,7 +1080,11 @@ export default {
             let _this = this;
             this.$http.post(base_url+'/lock/getCode', {
                 id : this.$route.query.id
-            }).then(function(response) {
+            }, {
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			}).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
                     return
@@ -1095,7 +1121,11 @@ export default {
                 id : this.$route.query.id,
                 quantity : this.record_pageNum,
                 index : this.lockopen_page*this.record_pageNum
-            }).then(function(response) {
+            }, {
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			}).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
                     return
@@ -1131,7 +1161,11 @@ export default {
                 id : this.$route.query.id,
                 quantity : this.record_pageNum,
                 index : this.operation_page*this.record_pageNum
-            }).then(function(response) {
+            }, {
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			}).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
                     return
@@ -1179,16 +1213,25 @@ export default {
                 showMsg(this.$store, '租客姓名不能超过10个字！', 'warning');
                 return;
             }
-            if(this.tenant_data_temp.phone.length>20){
-                showMsg(this.$store, '租客联系方式不能超过20个数字！', 'warning');
+            if(!/^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\d{8}$/i.test(this.tenant_data_temp.phone.trim()))
+			{
+                showMsg(this.$store, '租客联系方式请填写正确手机号！', 'warning');
                 return;
-            }
+			}
+            // if(this.tenant_data_temp.phone.length>20){
+            //     showMsg(this.$store, '租客联系方式不能超过20个数字！', 'warning');
+            //     return;
+            // }
             let reg=/^[1-9]{1}[0-9]{14}$|^[1-9]{1}[0-9]{16}([0-9]|[xX])$/;
             if(!reg.test(this.tenant_data_temp.IDcard.trim())){
                 showMsg(this.$store, '请输入正确格式的身份证号码！', 'warning');
                 return;
             }
-            this.$http.post(base_url+'/lock/setTenant', this.tenant_data_temp).then(function(response) {
+            this.$http.post(base_url+'/lock/setTenant', this.tenant_data_temp, {
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			}).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
                     return
@@ -1398,7 +1441,11 @@ export default {
                 data.code = this.rene_TC.code.trim();
             }
             showLoading(this.$store,"正在重新配置锁数据，大约需要5秒，请耐心等待！");
-            this.$http.post(base_url+'/lock/operation', data).then(function(response) {
+            this.$http.post(base_url+'/lock/operation', data, {
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			}).then(function(response) {
                 _this.hideModal(_this.$store);
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');

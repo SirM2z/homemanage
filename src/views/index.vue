@@ -71,6 +71,7 @@
     }
 </style>
 <template>
+    <navhead></navhead>
     <div class="index-box">
         <div class="row info-head">
             <div class="col-md-8">
@@ -82,7 +83,8 @@
         <div class="fc-items">
             <div v-for="item in estateList" track-by="$index" class="fc-info">
                 <div class="fc-item" @click="goHomeList(item.id)">
-                    <img src="http://lockmgmt.pstone.cc:8080/img/{{item.image}}">
+                    <img v-if="item.image" src="http://lockmgmt.pstone.cc:8080/img/{{item.image}}">
+                    <img v-else src="../images/hometmp.jpg">
                     <p class="fc-name">{{item.name}}</p>
                     <p>共{{item.lockNum}}间房，已入住{{item.tenant}}间房</p>
                 </div>
@@ -100,9 +102,10 @@
     <foot></foot>
 </template>
 <script>
-import foot from '../components/comon/foot.vue'
 import {showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
 import {base_url,img_url} from '../common.js'
+import navhead from '../components/comon/navhead.vue'
+import foot from '../components/comon/foot.vue'
 export default {
     vuex: {
         getters: {
@@ -119,18 +122,18 @@ export default {
         }
     },
     ready: function() {
-        console.log(this.$store)
         this.getEstateList();
     },
     components: {
+        navhead,
         foot
     },
     beforeDestroy: function() {
     },
     computed: {
         getImgurl: function (img) {
-            console.log(img);
-            console.log(img_url);
+            //console.log(img);
+            //console.log(img_url);
             return img_url + img
         }
     },
@@ -138,7 +141,11 @@ export default {
         getEstateList: function(){
             let _this = this;
             showLoading(this.$store);
-            this.$http.post(base_url+'/lock/getEstateList').then(function(response) {
+            this.$http.post(base_url+'/lock/getEstateList',{}, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function(response) {
                 hideLoading(this.$store);
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');

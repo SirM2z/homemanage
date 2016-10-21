@@ -22,6 +22,11 @@
     .propertyedit-box .propertyedit-info .info-item.wg-item {
         padding-top: 10px;
     }
+
+    .propertyedit-box .propertyedit-info .info-item.wg-item .wg-note{
+        height: 34px;
+        line-height: 34px;
+    }
     
     .propertyedit-box .propertyedit-info .info-item>div {
         padding-right: 15px;
@@ -84,8 +89,65 @@
     .propertyedit-box .pass-btn {
         margin-top: 20px;
     }
+
+    .propertyedit-box .list {
+        overflow: hidden;
+        width: 600px;
+    }
+
+    .propertyedit-box .list-item {
+        height: 34px;
+        line-height: 34px;
+        margin: 0 15px 10px 0;
+    }
+
+    .propertyedit-box .label-checkbox {
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .propertyedit-box .checkbox {
+        cursor: pointer;
+        display: inline-block;
+        position: relative;
+        z-index: 10;
+        margin-right: 5px;
+    }
+
+    .propertyedit-box .checkbox:before {
+        -webkit-transition: all 0.3s ease-in-out;
+        -moz-transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in-out;
+        content: "";
+        position: absolute;
+        left: 0;
+        z-index: 1;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #f2f2f2;
+    }
+    .propertyedit-box .checkbox:checked:before {
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        height: .5rem;
+        border-color: #0275d8;
+        border-top-style: none;
+        border-right-style: none;
+    }
+    .propertyedit-box .checkbox:after {
+        content: "";
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        background: #fff;
+        cursor: pointer;
+    }
 </style>
 <template>
+    <navhead></navhead>
     <div class="propertyedit-box">
         <div class="row info-head">
             <div class="col-md-8">
@@ -108,16 +170,18 @@
                 <div class="fl"><input type="text" v-model="estate_address" class="form-control item-address" id="name"></div>
             </div>
             <div class="info-item wg-item">
-                <div class="fl item-title name-title wg-title">网关绑定：</div>
+                <div class="fl item-title name-title">网关绑定：</div>
                 <div class="fl">
                     <div class="wg-options">
-                        <select class="form-control wg-option" v-for="n in gatewaysNum" track-by="$index" v-model="estate_bindgw_selected[n]">
-                            <option value="0">请选择</option>
-                            <option v-for="item in gatewayList" track-by="$index" :value="item.id">{{item.name}}</option>
-                        </select>
-                        <div class="add-wg wg-option">
-                            <div class="add-wg-btn blue-text" @click="addSelect">添加网关</div>
-                        </div>
+                        <ul v-if="gatewayList && gatewayList.length>0" class="list">
+                            <li v-for="item in gatewayList" track-by="$index" class="list-item fl">
+                              <label class="label-checkbox">
+                                    <input type="checkbox" class="checkbox" :value="item.id" v-model="estate_bindgw_selected">
+                                    <span>{{item.name}}</span>
+                              </label>
+                            </li>
+                        </ul>
+                        <div v-else class="wg-note color_999">暂无可绑定网关</div>
                     </div>
                 </div>
             </div>
@@ -136,9 +200,10 @@
     <foot></foot>
 </template>
 <script>
-import foot from '../components/comon/foot.vue'
 import {base_url} from '../common.js'
 import {showModal, hideModal, showLoading, showMsg} from '../vuex/actions/popupActions'
+import navhead from '../components/comon/navhead.vue'
+import foot from '../components/comon/foot.vue'
 export default {
     vuex: {
         actions: {
@@ -166,6 +231,7 @@ export default {
         this.getEstateGateway();
     },
     components: {
+        navhead,
         foot
     },
     beforeDestroy: function() {
@@ -178,6 +244,10 @@ export default {
             let _this = this;
             this.$http.post(base_url+'/lock/getEstate', {
                 id : this.$route.query.id
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
@@ -206,8 +276,12 @@ export default {
             })
         },
         getEstateGateway: function(){
-            this.$http.post(base_url+'/lock/getEstateGateway', {
+            this.$http.post(base_url+'/lock/getBindGateway', {
                 id : this.$route.query.id
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
@@ -252,15 +326,6 @@ export default {
                 showMsg(this.$store, '请求超时！', 'error')
             })
         },
-        addSelect: function(){
-            let length = this.gatewayList?this.gatewayList.length:1;
-            if(this.gatewaysNum == length){
-                showMsg(this.$store, '不能再添加网关绑定的个数', 'warning')
-                return;
-            }
-            this.estate_bindgw_selected[this.gatewaysNum]=0;
-            this.gatewaysNum++;
-        },
         modifyEstate: function(){
             let _this = this;
             if(!this.estate_name.trim() || !this.estate_address.trim()){
@@ -278,6 +343,10 @@ export default {
                 address : this.estate_address.trim(),
                 note : this.estate_note.trim(),
                 gateways : this.estate_bindgw_selected
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');

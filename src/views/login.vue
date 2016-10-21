@@ -187,6 +187,10 @@ export default {
             this.$http.post(base_url+'/user/login', {
                 user: this.user_name.trim(),
                 password: this.user_password.trim()
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).then(function(response) {
                 if (!response.ok) {//请求出现问题
                     hideLoading(this.$store);//隐藏loading动画
@@ -240,6 +244,10 @@ export default {
             }, 1000);
             this.$http.post(base_url+'/user/sendCode', {
                 phone : this.verifi_phone.trim()
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
@@ -280,6 +288,10 @@ export default {
                 user : this.verifi_phone.trim(),
                 newPassword : this.new_password.trim(),
                 code : this.verifi_code.trim(),
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
@@ -381,12 +393,12 @@ export default {
                                 "mode": "push"
                             },
                             "resize": true
-                            },
-                            "modes": {
+                        },
+                        "modes": {
                             "grab": {
                                 "distance": 400,
                                 "line_linked": {
-                                "opacity": 1
+                                    "opacity": 1
                                 }
                             },
                             "bubble": {
@@ -399,7 +411,7 @@ export default {
                             "repulse": {
                                 "distance": 200,
                                 "duration": 0.4
-                            },
+                             },
                             "push": {
                                 "particles_nb": 4
                             },
@@ -411,7 +423,6 @@ export default {
                     "retina_detect": true
                 }
             );
-
         }
     }
 }

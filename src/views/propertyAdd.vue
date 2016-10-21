@@ -22,6 +22,11 @@
     .propertyadd-box .propertyadd-info .info-item.wg-item {
         padding-top: 10px;
     }
+
+    .propertyadd-box .propertyadd-info .info-item.wg-item .wg-note{
+        height: 34px;
+        line-height: 34px;
+    }
     
     .propertyadd-box .propertyadd-info .info-item>div {
         padding-right: 15px;
@@ -90,8 +95,64 @@
         margin-right: 16px;
         width: 100px;
     }
+
+    .propertyadd-box .list {
+        overflow: hidden;
+        width: 600px;
+    }
+
+    .propertyadd-box .list-item {
+        height: 34px;
+        line-height: 34px;
+        margin: 0 15px 10px 0;
+    }
+
+    .propertyadd-box .label-checkbox {
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .propertyadd-box .checkbox {
+        cursor: pointer;
+        display: inline-block;
+        position: relative;
+        z-index: 10;
+        margin-right: 5px;
+    }
+    .propertyadd-box .checkbox:before {
+        -webkit-transition: all 0.3s ease-in-out;
+        -moz-transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in-out;
+        content: "";
+        position: absolute;
+        left: 0;
+        z-index: 1;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #f2f2f2;
+    }
+    .propertyadd-box .checkbox:checked:before {
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        height: .5rem;
+        border-color: #0275d8;
+        border-top-style: none;
+        border-right-style: none;
+    }
+    .propertyadd-box .checkbox:after {
+        content: "";
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        background: #fff;
+        cursor: pointer;
+    }
 </style>
 <template>
+    <navhead></navhead>
     <div class="propertyadd-box">
         <div class="row info-head">
             <div class="col-md-8">
@@ -114,16 +175,18 @@
                 <div class="fl"><input type="text" v-model="address" class="form-control item-address" id="name"></div>
             </div>
             <div class="info-item wg-item">
-                <div class="fl item-title name-title wg-title">网关绑定：</div>
+                <div class="fl item-title name-title">网关绑定：</div>
                 <div class="fl">
                     <div class="wg-options">
-                        <select v-for="n in gatewayListSelectNum" track-by="$index" v-model="gatewayListSelected[n]" class="form-control wg-option">
-                            <option value="0" selected="selected">请选择</option>
-                            <option v-for="item in gatewayList" track-by="$index" :value="item.id">{{item.name}}</option>
-                        </select>
-                        <div class="add-wg wg-option">
-                            <div class="add-wg-btn" @click="addSelect">添加网关</div>
-                        </div>
+                        <ul v-if="gatewayList && gatewayList.length>0" class="list">
+                            <li v-for="item in gatewayList" track-by="$index" class="list-item fl">
+                              <label class="label-checkbox">
+                                  <input type="checkbox" class="checkbox" :value="item.id" v-model="gatewayListSelected">
+                                    {{item.name}}
+                              </label>
+                            </li>
+                        </ul>
+                        <div v-else class="wg-note color_999">暂无可绑定网关</div>
                     </div>
                 </div>
             </div>
@@ -142,9 +205,10 @@
     <foot></foot>
 </template>
 <script>
-import foot from '../components/comon/foot.vue'
 import {showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
 import {base_url} from '../common.js'
+import navhead from '../components/comon/navhead.vue'
+import foot from '../components/comon/foot.vue'
 export default {
     vuex: {
         getters: {
@@ -172,6 +236,7 @@ export default {
         this.getGatewayList();
     },
     components: {
+        navhead,
         foot
     },
     beforeDestroy: function() {
@@ -180,7 +245,11 @@ export default {
     methods: {
         getGatewayList: function(){
             let _this =this;
-            this.$http.post(base_url+'/lock/getGatewayList').then(function(response) {
+            this.$http.post(base_url+'/lock/getGatewayList',{}, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
                     return
@@ -228,17 +297,10 @@ export default {
                 showMsg(this.$store, '请求超时！', 'error')
             })
         },
-        addSelect: function(){
-            let length = this.gatewayList?this.gatewayList.length:1;
-            if(this.gatewayListSelectNum == length){
-                showMsg(this.$store, '不能再添加网关绑定的个数', 'warning')
-                return;
-            }
-            this.gatewayListSelectNum++;
-        },
         addEstate: function(){
             let _this = this;
             //console.log(this.gatewayListSelected);
+            return;
             if(!this.name.trim() || !this.address.trim()){
                 showMsg(this.$store, '请填写完整相关信息！','warning');
                 return;
@@ -254,6 +316,10 @@ export default {
                 image  : this.imgurl,
                 note : this.note.trim(),
                 gateways : this.gatewayListSelected
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).then(function(response) {
                 hideLoading(this.$store);
                 if (!response.ok) {

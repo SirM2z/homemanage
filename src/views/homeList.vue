@@ -81,6 +81,7 @@
     }
 </style>
 <template>
+    <navhead></navhead>
     <div class="list-box">
         <div class="row info-head">
             <div class="col-md-8">
@@ -132,8 +133,9 @@
 <script>
 import Modal from '../components/popup/Modal.vue'
 import {showModal, hideModal, showLoading, showMsg} from '../vuex/actions/popupActions'
-import foot from '../components/comon/foot.vue'
 import {base_url} from '../common.js'
+import navhead from '../components/comon/navhead.vue'
+import foot from '../components/comon/foot.vue'
 export default {
     vuex: {
         actions: {
@@ -160,6 +162,7 @@ export default {
     },
     components: {
         Modal,
+        navhead,
         foot
     },
     beforeDestroy: function() {
@@ -170,6 +173,10 @@ export default {
             let _this = this;
             this.$http.post(base_url+'/lock/getEstate', {
                 id : this.$route.query.id
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
@@ -199,6 +206,10 @@ export default {
             let _this = this;
             this.$http.post(base_url+'/lock/getLockList', {
                 id : this.$route.query.id  
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
@@ -224,6 +235,10 @@ export default {
             let _this = this;
             this.$http.post(base_url+'/lock/delEstate', { 
                 id : this.$route.query.id
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');

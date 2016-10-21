@@ -3,7 +3,6 @@
 </style>
 <template>
     <div>
-        <navhead></navhead>
         <router-view></router-view>
         <Msg></Msg>
         <Load></Load>
@@ -19,7 +18,6 @@ import store from '../vuex/store'
 import Msg from './popup/Msg.vue'
 import Load from './popup/Load.vue'
 import Top from './popup/gotop.vue'
-import navhead from './comon/navhead.vue'
 
 FastClick.attach(document.body);
 
@@ -28,12 +26,10 @@ export default {
     components: { 
         Msg,
         Load,
-        Top,
-        navhead
+        Top
     },
     data: function() {
         return {
-
         }
     },
     ready: function() {

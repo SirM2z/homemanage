@@ -75,6 +75,7 @@
     }
 </style>
 <template>
+    <navhead></navhead>
     <div class="personal-box">
         <div class="row info-head">
             <div class="col-md-8">
@@ -150,8 +151,9 @@
 <script>
 import Modal from '../components/popup/Modal.vue'
 import {showModal, hideModal, showLoading, showMsg} from '../vuex/actions/popupActions'
-import foot from '../components/comon/foot.vue'
 import {base_url} from '../common.js'
+import navhead from '../components/comon/navhead.vue'
+import foot from '../components/comon/foot.vue'
 export default {
     vuex: {
         getters: {
@@ -178,6 +180,7 @@ export default {
     },
     components: {
         Modal,
+        navhead,
         foot
     },
     beforeDestroy: function() {
@@ -189,7 +192,11 @@ export default {
         getUserInfo: function(){
             // this.$route.query.id
             let _this = this;
-            this.$http.post(base_url+'/user/info').then(function(response) {
+            this.$http.post(base_url+'/user/info',{}, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
                     return
@@ -245,6 +252,10 @@ export default {
             }, 1000);
             this.$http.post(base_url+'/user/sendCode', {
                 phone : this.verifi_phone.trim()
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
@@ -285,6 +296,10 @@ export default {
                 user : this.verifi_phone.trim(),
                 newPassword : this.new_password.trim(),
                 code : this.verifi_code.trim(),
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
@@ -315,6 +330,10 @@ export default {
             }
             this.$http.post(base_url+'/user/modifyName', {
                 name : this.user_name
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).then(function(response) {
                 if (!response.ok) {
                     showMsg(this.$store, '请求超时！', 'error');
@@ -325,6 +344,7 @@ export default {
                 if (resData.code === 0) {
                     window.localStorage.setItem('homemanage_username',_this.user_name);
                     showMsg(this.$store, "保存成功!");
+                    window.location.reload();
                 } else {
                     showMsg(this.$store, resData.msg, 'error')
                 }

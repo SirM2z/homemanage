@@ -13,6 +13,10 @@
 		position: relative;
 	}
 
+	.navhead-box .nav-body .body-logo{
+		cursor: pointer;
+	}
+
 	.navhead-box .nav-body .body-title{
 		height: 50px;
 		line-height: 50px;
@@ -74,6 +78,7 @@
 	.navhead-box .nav-body .body-content {
 		height: 50px;
 		color: #fff;
+		cursor: pointer;
 	}
 	
 	.navhead-box .nav-body .body-content:active {
@@ -110,20 +115,21 @@
 		z-index: 100;
 	}
 
-	.navhead-box .nav-body .body-bottom>li>a{
+	.navhead-box .nav-body .body-bottom>li{
 		color: #fff;
 		display: inline-block;
 	    height: 50px;
 	    line-height: 50px;
 	    padding: 0 20px;
 	    width: 147px;
+	    cursor: pointer;;
 	}
 
-	.navhead-box .nav-body .body-bottom>li>a:active{
+	.navhead-box .nav-body .body-bottom>li:active{
 		background-color: #0169C1;
 	}
 
-	.navhead-box .nav-body .body-bottom>li>a .des{
+	.navhead-box .nav-body .body-bottom>li .des{
 		height: 45px;
 		line-height: 45px;
 		margin-top: 3px;
@@ -140,34 +146,27 @@
 <template>
 	<div class="navhead-box">
 		<div class="nav-body">
-			<div class="body-logo fl"><img src="../../images/logo_1.png" alt=""></div>
+			<div @click="goIndex" class="body-logo fl"><img src="../../images/logo_1.png" alt=""></div>
 			<div class="body-title fl">房产管理</div>
 			<div class="body-content fr" @click="showBottom">
 				<div class="content-img fl"><img src="../../images/tx.png" alt=""></div>
-				<div class="content-name fl">{{name}}<span></span></div>
+				<div class="content-name fl">{{user_name?user_name:name}}<span></span></div>
 			</div>
 			<div class="body-search fr">
-				<input type="text" placeholder="输入要搜索的关键词">
-				<div class="search-img text-center"><img src="../../images/search.png" alt=""></div>
-				<ul v-show="show_search"  @blur="searchBlur" class="search-list">
-					<li class="list-item">海创基地</li>
-					<li class="list-item">海创基地海创基地</li>
-					<li class="list-item">海创基地</li>
-					<li class="list-item">海创基地</li>
+				<input type="text" v-model="searchFind" placeholder="输入要搜索的关键词">
+				<div @click="searchHome" class="search-img text-center"><img src="../../images/search.png" alt=""></div>
+				<ul v-show="show_search" class="search-list">
+					<li v-for="item in searchlist" @click="goHomeList(item.estate_id)" class="list-item">item.name</li>
 				</ul>
 			</div>
 			<ul v-show="show_bottom" class="body-bottom">
-				<li>
-					<a class="bottom-first" v-link="{name: 'personal'}">
-						<img src="../../images/personal.png" alt="">
-						<div class="des fr">个人中心</div>
-					</a>
+				<li class="bottom-item" @click="goPersonal">
+					<img src="../../images/personal.png" alt="">
+					<div class="des fr">个人中心</div>
 				</li>
-				<li>
-					<a class="bottom-first" v-link="{name: 'login'}">
-						<img src="../../images/signOut.png" alt="">
-						<div class="des fr">退出登录</div>
-					</a>
+				<li class="bottom-item" @click="goLogin">
+					<img src="../../images/signOut.png" alt="">
+					<div class="des fr">退出登录</div>
 				</li>
 			</ul>
 			<div v-show="show_search || show_bottom" @click="hideShow" class="body-cover"></div>
@@ -175,25 +174,31 @@
 	</div>
 </template>
 <script>
-import { navbar,dropdown } from 'vue-strap'
+import {base_url} from '../../common.js'
+import {showModal, hideModal, showLoading, showMsg} from '../../vuex/actions/popupActions'
 export default {
     vuex: {
         getters: {
+			user_name:({userInfo})=>userInfo.obj.name
         },
         actions: {
+            showMsg
         }
     },
 	components: {
-		navbar,
-		dropdown
 	},
 	data: function(){
 		return {
 			name: window.localStorage.getItem('homemanage_username'),
+			searchFind: '',
 			show_bottom: false,
 			show_search: false,
 			searchlist: []
 		}
+	},
+	created: function(){
+		// console.log(this.user_name);
+		// this.name=this.user_name?this.user_name:window.localStorage.getItem('homemanage_username');
 	},
 	ready: function() {
 		// console.log(this.name);
@@ -202,12 +207,63 @@ export default {
 		showBottom: function(){
 			this.show_bottom=!this.show_bottom;
 		},
-		searchBlur: function(){
-			this.show_bottom=!this.show_bottom;
-		},
 		hideShow: function(){
 			this.show_bottom= false;
 			this.show_search= false;
+		},
+		searchHome: function(){
+            let _this = this;
+            if(!this.searchFind.trim()){
+            	showMsg(this.$store, '请填写搜索内容！', 'warning');
+                return;
+            }
+            this.$http.post(base_url+'/lock/find', {
+                find : this.searchFind.trim()
+            }).then(function(response) {
+                if (!response.ok) {
+                    showMsg(this.$store, '请求超时！', 'error');
+                    return;
+                }
+                let resData = response.json();
+                //console.log(resData);
+                if (resData.code === 0) {
+                	if(!resData.data || resData.data.length==0){
+                		showMsg(this.$store, '未检索到查询内容！');
+                		return;
+                	}
+					_this.searchlist= resData.data;
+					_this.show_search= true;
+                }  
+                else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014 ){
+                    showMsg(this.$store, '请先登陆！', 'error')
+                    _this.$router.go({name: 'login'});
+                }
+                else {
+                    showMsg(this.$store, resData.msg, 'error')
+                }
+            }, function(response) {
+                showMsg(this.$store, '请求超时！', 'error')
+            })
+		},
+		goIndex: function(){
+			this.$router.go({name: 'index'})
+		},
+		goPersonal: function(){
+			this.show_bottom= false;
+			this.$router.go({name: 'personal'})
+		},
+		goLogin: function(){
+			this.show_bottom= false;
+			this.$router.go({name: 'login'})
+		},
+		goHomeList: function(id){
+			this.show_search= false;
+            this.$router.go({
+                name: 'homeList',
+                query: {
+                    id: id
+                }
+            })
 		}
 	}
 }	

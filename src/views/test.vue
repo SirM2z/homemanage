@@ -1,5 +1,4 @@
 <style>
-
 </style>
 <template>
     <div style="height: 1200px;">
@@ -39,6 +38,36 @@
             <input type="hidden" id="dtp_input1" value="" /><br/>
         </div>
     </div>
+
+<section class="content">
+    <ul class="list">
+    <li class="list__item">
+      <label class="label--checkbox">
+          <input type="checkbox" class="checkbox fl" checked>
+            你是傻逼
+      </label>
+    </li>
+    <li class="list__item">
+      <label class="label--checkbox">
+          <input type="checkbox" class="checkbox fl">
+            你是傻逼
+      </label>
+    </li>
+    <li class="list__item">
+      <label class="label--checkbox">
+          <input type="checkbox" class="checkbox fl">
+            你是傻逼
+      </label>
+    </li>
+    <li class="list__item">
+      <label class="label--checkbox">
+          <input type="checkbox" class="checkbox fl">
+            你是傻逼
+      </label>
+    </li>
+  </ul>
+</section>
+
 </template>
 <script>
 import Modal from '../components/popup/Modal.vue'
