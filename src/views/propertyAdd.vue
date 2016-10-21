@@ -155,8 +155,8 @@
     <navhead></navhead>
     <div class="propertyadd-box">
         <div class="row info-head">
-            <div class="col-md-8">
-                <h1 class="head-title fl">
+            <div class="col-md-12">
+                <h1 class="head-title">
                     添加房产
                 </h1>
             </div>

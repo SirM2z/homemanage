@@ -84,8 +84,8 @@
     <navhead></navhead>
     <div class="list-box">
         <div class="row info-head">
-            <div class="col-md-8">
-                <h1 class="head-title fl">
+            <div class="col-md-12">
+                <h1 class="head-title">
                     {{get_estate_name}}
                 </h1>
             </div>
@@ -111,7 +111,7 @@
             </tr>
             <tr v-for="item in lock_list" track-by="$index">
                 <td><a @click="goHomeInfo(get_estate_name,item.id,item.status,item.power)" class="blue-text">{{item.name}}</a></td>
-                <td>{{item.status == true?"在线":"离线"}}</td>
+                <td>{{item.status == "true"?"在线":"离线"}}</td>
                 <td>{{item.gw_name}}</td>
                 <td>{{item.power}}</td>
                 <td>{{item.tenant == 1?"未住":"已住"}}</td>
