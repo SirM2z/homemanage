@@ -245,7 +245,7 @@ export default {
     methods: {
         getGatewayList: function(){
             let _this =this;
-            this.$http.post(base_url+'/lock/getGatewayList',{}, {
+            this.$http.post(base_url+'/lock/getIdleGateway',{}, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }

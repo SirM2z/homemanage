@@ -11,6 +11,7 @@
 		width: 998px;
 		margin: 0 auto;
 		position: relative;
+		overflow: hidden;
 	}
 
 	.navhead-box .nav-body .body-logo{
