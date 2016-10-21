@@ -11,7 +11,6 @@
 		width: 998px;
 		margin: 0 auto;
 		position: relative;
-		overflow: hidden;
 	}
 
 	.navhead-box .nav-body .body-logo{
@@ -22,6 +21,7 @@
 		height: 50px;
 		line-height: 50px;
 		color: #fff;
+		cursor: pointer;
 	}
 
 	.navhead-box .nav-body .body-title:active{
@@ -135,7 +135,7 @@
 		line-height: 45px;
 		margin-top: 3px;
 	}
-	.body-cover{
+	.navhead-box .body-cover{
 		z-index: 99;
 		position: fixed;
 		top: 0;
@@ -143,12 +143,18 @@
 		right: 0;
 		bottom: 0;
 	}
+	.navhead-box .body-logo:hover,.navhead-box .body-title:hover,.navhead-box .body-content:hover{
+		background-color: #0169C1;
+	}
+	.navhead-box .clear-box{
+		clear: both;
+	}
 </style>
 <template>
 	<div class="navhead-box">
 		<div class="nav-body">
 			<div @click="goIndex" class="body-logo fl"><img src="../../images/logo_1.png" alt=""></div>
-			<div class="body-title fl">房产管理</div>
+			<div @click="goIndex" class="body-title fl">房产管理</div>
 			<div class="body-content fr" @click="showBottom">
 				<div class="content-img fl"><img src="../../images/tx.png" alt=""></div>
 				<div class="content-name fl">{{user_name?user_name:name}}<span></span></div>
