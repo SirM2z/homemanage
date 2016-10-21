@@ -300,7 +300,7 @@ export default {
         addEstate: function(){
             let _this = this;
             //console.log(this.gatewayListSelected);
-            return;
+            //return;
             if(!this.name.trim() || !this.address.trim()){
                 showMsg(this.$store, '请填写完整相关信息！','warning');
                 return;
