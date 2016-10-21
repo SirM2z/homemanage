@@ -6,20 +6,22 @@ import {
 	showLoading,
 	hideLoading
 } from './popupActions'
-import {base_url} from '../../common.js'
+import {
+	base_url
+} from '../../common.js'
 
 let $http = Vue.http;
 let $router = Vue.router;
 let msg = '请求超时！';
 
 export const getUserInfo = (store, options, route) => {
-    // console.log(router);
+	// console.log(router);
 	let _this = this;
-	$http.post(base_url+'/user/info', options,{
+	$http.post(base_url + '/user/info', options, {
 		headers: {
 			'Content-Type': 'application/x-www-form-urlencoded'
 		}
-	}).then(function(response) {
+	}).then(function (response) {
 		hideLoading(store);
 		if (!response.ok) {
 			store.dispatch(types.FAILURE_USER_INFO)
@@ -33,15 +35,17 @@ export const getUserInfo = (store, options, route) => {
 				name: resData.data.name,
 				image_add: resData.data.image_add
 			};
-			window.localStorage.setItem('homemanage_username',resData.data.name);
+			window.localStorage.setItem('homemanage_username', resData.data.name);
 			store.dispatch(types.SUCCESS_USER_INFO, data)
-            // window.location.href = window.location.origin+'/index';
-            route.go({name: 'index'});
+			// window.location.href = window.location.origin+'/index';
+			route.go({
+				name: 'index'
+			});
 		} else {
 			showMsg(store, resData.m)
 			store.dispatch(types.FAILURE_USER_INFO)
 		}
-	}, function(response) {
+	}, function (response) {
 		showMsg(store, msg)
 		hideLoading(store)
 		store.dispatch(types.FAILURE_USER_INFO)

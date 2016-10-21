@@ -1,19 +1,19 @@
 <style>
-.top-box{
-	position: fixed;
-	width: 1.2rem;
-	height: 1.2rem;
-	text-align: center;
-	color: #fff;
-	right: .3rem;
-	bottom: 2.133rem; 
-	background: url(../../images/top.png) center no-repeat;
-	background-size:1.2rem;
-    z-index: 10;
-}		
+	.top-box {
+		position: fixed;
+		width: 1.2rem;
+		height: 1.2rem;
+		text-align: center;
+		color: #fff;
+		right: .3rem;
+		bottom: 2.133rem;
+		background: url(../../images/top.png) center no-repeat;
+		background-size: 1.2rem;
+		z-index: 10;
+	}
 </style>
 <template>
-<div v-show="show" @click="totop" class="top-box"></div>	
+	<div v-show="show" @click="totop" class="top-box"></div>
 </template>
 <script>
 function scrollToTop(scrollTo, time) {

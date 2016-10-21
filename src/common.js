@@ -1,4 +1,4 @@
-export const base_url = (function(){
+export const base_url = (function () {
     var url = '';
     // url="http://api.pstone.cc:8080/bluetoothlock";
     url = "http://lockmgmt.pstone.cc:8080/lockmgmt";
@@ -6,7 +6,7 @@ export const base_url = (function(){
     return url;
 }());
 
-export const img_url = (function(){
+export const img_url = (function () {
     var url = '';
     url = "http://lockmgmt.pstone.cc:8080/img/";
     return url;

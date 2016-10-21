@@ -18,8 +18,14 @@
         overflow: hidden;
         padding: 15px;
     }
-    .propertyadd-box .propertyadd-info .info-item.wg-item{
+    
+    .propertyadd-box .propertyadd-info .info-item.wg-item {
         padding-top: 10px;
+    }
+
+    .propertyadd-box .propertyadd-info .info-item.wg-item .wg-note{
+        height: 34px;
+        line-height: 34px;
     }
     
     .propertyadd-box .propertyadd-info .info-item>div {
@@ -34,7 +40,8 @@
         height: 34px;
         line-height: 34px;
     }
-    .propertyadd-box .propertyadd-info .info-item .name-title.wg-title{
+    
+    .propertyadd-box .propertyadd-info .info-item .name-title.wg-title {
         line-height: 65px;
     }
     
@@ -74,20 +81,78 @@
         margin-right: 25px;
         margin-bottom: 15px;
     }
+    
     .propertyadd-box .info-head {
         margin-bottom: 35px;
     }
+    
     .propertyadd-box .pass-btn {
         margin-top: 20px;
     }
-    .propertyadd-box .btn-s,.propertyadd-box .btn-c {
+    
+    .propertyadd-box .btn-s,
+    .propertyadd-box .btn-c {
         margin-right: 16px;
         width: 100px;
     }
-    
+
+    .propertyadd-box .list {
+        overflow: hidden;
+        width: 600px;
+    }
+
+    .propertyadd-box .list-item {
+        height: 34px;
+        line-height: 34px;
+        margin: 0 15px 10px 0;
+    }
+
+    .propertyadd-box .label-checkbox {
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .propertyadd-box .checkbox {
+        cursor: pointer;
+        display: inline-block;
+        position: relative;
+        z-index: 10;
+        margin-right: 5px;
+    }
+    .propertyadd-box .checkbox:before {
+        -webkit-transition: all 0.3s ease-in-out;
+        -moz-transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in-out;
+        content: "";
+        position: absolute;
+        left: 0;
+        z-index: 1;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #f2f2f2;
+    }
+    .propertyadd-box .checkbox:checked:before {
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        height: .5rem;
+        border-color: #0275d8;
+        border-top-style: none;
+        border-right-style: none;
+    }
+    .propertyadd-box .checkbox:after {
+        content: "";
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        background: #fff;
+        cursor: pointer;
+    }
 </style>
 <template>
-    <nav-list></nav-list>
+    <navhead></navhead>
     <div class="propertyadd-box">
         <div class="row info-head">
             <div class="col-md-8">
@@ -103,23 +168,25 @@
             </div>
             <div class="info-item">
                 <div class="fl item-title">房产图片：</div>
-                <div class="fl"><input type="file" accept="image/*" @change="uploadFile"/></div>
+                <div class="fl"><input type="file" accept="image/*" @change="uploadFile" /></div>
             </div>
             <div class="info-item">
                 <div class="fl item-title name-title">房产地址：</div>
                 <div class="fl"><input type="text" v-model="address" class="form-control item-address" id="name"></div>
             </div>
             <div class="info-item wg-item">
-                <div class="fl item-title name-title wg-title">网关绑定：</div>
+                <div class="fl item-title name-title">网关绑定：</div>
                 <div class="fl">
                     <div class="wg-options">
-                        <select v-for="n in gatewayListSelectNum" track-by="$index" v-model="gatewayListSelected[n]" class="form-control wg-option">
-                            <option value="0" selected="selected">请选择</option>
-                            <option v-for="item in gatewayList" track-by="$index" :value="item.id">{{item.name}}</option>
-                        </select>
-                        <div class="add-wg wg-option">
-                            <div class="add-wg-btn" @click="addSelect">添加网关</div>
-                        </div>
+                        <ul v-if="gatewayList && gatewayList.length>0" class="list">
+                            <li v-for="item in gatewayList" track-by="$index" class="list-item fl">
+                              <label class="label-checkbox">
+                                  <input type="checkbox" class="checkbox" :value="item.id" v-model="gatewayListSelected">
+                                    {{item.name}}
+                              </label>
+                            </li>
+                        </ul>
+                        <div v-else class="wg-note color_999">暂无可绑定网关</div>
                     </div>
                 </div>
             </div>
@@ -135,149 +202,150 @@
             </div>
         </div>
     </div>
-        <foot></foot>
+    <foot></foot>
 </template>
 <script>
-    import navList from '../components/comon/navList.vue'
-    import foot from '../components/comon/foot.vue'
-    import {showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
-    import {base_url} from '../common.js'
-    export default {
-        vuex: {
-            getters: {
-            },
-            actions: {
-                showMsg,
-                showLoading,
-                hideLoading
-            }
+import {showMsg, showLoading, hideLoading} from '../vuex/actions/popupActions'
+import {base_url} from '../common.js'
+import navhead from '../components/comon/navhead.vue'
+import foot from '../components/comon/foot.vue'
+export default {
+    vuex: {
+        getters: {
         },
-        data: function() {
-            return {
-                file: null,
-                imgurl: '',
-                gatewayListSelectNum : 1,
-                gatewayList : null,
-                gatewayListSelected : [],
-                name : '',
-                address : '',
-                note : '',
-                gateways : ''
-            }
-        },
-        ready: function() {
-            this.getGatewayList();
-        },
-        components: {
-            navList,
-            foot
-        },
-        beforeDestroy: function() {
+        actions: {
+            showMsg,
+            showLoading,
+            hideLoading
+        }
+    },
+    data: function() {
+        return {
+            file: null,
+            imgurl: '',
+            gatewayListSelectNum : 1,
+            gatewayList : null,
+            gatewayListSelected : [],
+            name : '',
+            address : '',
+            note : '',
+            gateways : ''
+        }
+    },
+    ready: function() {
+        this.getGatewayList();
+    },
+    components: {
+        navhead,
+        foot
+    },
+    beforeDestroy: function() {
 
+    },
+    methods: {
+        getGatewayList: function(){
+            let _this =this;
+            this.$http.post(base_url+'/lock/getGatewayList',{}, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function(response) {
+                if (!response.ok) {
+                    showMsg(this.$store, '请求超时！', 'error');
+                    return
+                }
+                let resData = response.json();
+                //console.log(resData);
+                if (resData.code === 0) {
+                    //TO DO
+                    this.gatewayList = resData.data;
+                }  
+                else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
+                    showMsg(this.$store, '请先登陆！', 'error')
+                    _this.$router.go({name: 'login'});
+                }
+                else {
+                    showMsg(this.$store, resData.msg, 'error')
+                }
+            }, function(response) {
+                showMsg(this.$store, '请求超时！', 'error')
+            })
         },
-        methods: {
-            getGatewayList: function(){
-                let _this =this;
-                this.$http.post(base_url+'/lock/getGatewayList').then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！', 'error');
-                        return
-                    }
-                    let resData = response.json();
-                    //console.log(resData);
-                    if (resData.code === 0) {
-                        //TO DO
-                        this.gatewayList = resData.data;
-                    }  
-                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
-                        showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: 'login'});
-                    }
-                    else {
-                        showMsg(this.$store, resData.msg, 'error')
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！', 'error')
-                })
-            },
-            uploadFile: function(e){
-                let formdata = new FormData();  
-                this.file = e.target.files[0];
-                formdata.append("img", this.file);
-                //, {
-                //   headers: {
-                //        'Content-Type': 'multipart/form-data'
-                //    }
-                //}
-                this.$http.post(base_url+'/lock/upload',formdata).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！', 'error');
-                        return
-                    }
-                    let resData = response.json();
-                    console.log(resData);
-                    if (resData.code === 0) {
-                        //TO DO
-                        this.imgurl = resData.data;
-                    } else {
-                        showMsg(this.$store, resData.msg, 'error')
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！', 'error')
-                })
-            },
-            addSelect: function(){
-                let length = this.gatewayList?this.gatewayList.length:1;
-                if(this.gatewayListSelectNum == length){
-                    showMsg(this.$store, '不能再添加网关绑定的个数', 'warning')
-                    return;
+        uploadFile: function(e){
+            let formdata = new FormData();  
+            this.file = e.target.files[0];
+            formdata.append("img", this.file);
+            //, {
+            //   headers: {
+            //        'Content-Type': 'multipart/form-data'
+            //    }
+            //}
+            this.$http.post(base_url+'/lock/upload',formdata).then(function(response) {
+                if (!response.ok) {
+                    showMsg(this.$store, '请求超时！', 'error');
+                    return
                 }
-                this.gatewayListSelectNum++;
-            },
-            addEstate: function(){
-                let _this = this;
-                //console.log(this.gatewayListSelected);
-                if(!this.name.trim() || !this.address.trim()){
-                    showMsg(this.$store, '请填写完整相关信息！','warning');
-                    return;
+                let resData = response.json();
+                console.log(resData);
+                if (resData.code === 0) {
+                    //TO DO
+                    this.imgurl = resData.data;
+                } else {
+                    showMsg(this.$store, resData.msg, 'error')
                 }
-                if(this.note.trim().length>40){
-                    showMsg(this.$store, '请将备注控制在40字以内！','warning');
-                    return;
-                }
-                showLoading(this.$store);
-                this.$http.post(base_url+'/lock/addEstate', {
-                    name : this.name.trim(),
-                    address : this.address.trim(),
-                    image  : this.imgurl,
-                    note : this.note.trim(),
-                    gateways : this.gatewayListSelected
-                }).then(function(response) {
-                    hideLoading(this.$store);
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！', 'error');
-                        return
-                    }
-                    let resData = response.json();
-                    // console.log(resData);
-                    if (resData.code === 0) {
-                        //TO DO
-                        showMsg(this.$store, '添加成功');
-                        _this.$router.go({
-                            name: 'index'
-                        })
-                    } else {
-                        showMsg(this.$store, resData.msg, 'error')
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！', 'error')
-                })
-            },
-            cancleAddEstate: function(){
-                this.$router.go({
-                    name: 'index'
-                })
+            }, function(response) {
+                showMsg(this.$store, '请求超时！', 'error')
+            })
+        },
+        addEstate: function(){
+            let _this = this;
+            //console.log(this.gatewayListSelected);
+            return;
+            if(!this.name.trim() || !this.address.trim()){
+                showMsg(this.$store, '请填写完整相关信息！','warning');
+                return;
             }
+            if(this.note.trim().length>40){
+                showMsg(this.$store, '请将备注控制在40字以内！','warning');
+                return;
+            }
+            showLoading(this.$store);
+            this.$http.post(base_url+'/lock/addEstate', {
+                name : this.name.trim(),
+                address : this.address.trim(),
+                image  : this.imgurl,
+                note : this.note.trim(),
+                gateways : this.gatewayListSelected
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function(response) {
+                hideLoading(this.$store);
+                if (!response.ok) {
+                    showMsg(this.$store, '请求超时！', 'error');
+                    return
+                }
+                let resData = response.json();
+                // console.log(resData);
+                if (resData.code === 0) {
+                    //TO DO
+                    showMsg(this.$store, '添加成功');
+                    _this.$router.go({
+                        name: 'index'
+                    })
+                } else {
+                    showMsg(this.$store, resData.msg, 'error')
+                }
+            }, function(response) {
+                showMsg(this.$store, '请求超时！', 'error')
+            })
+        },
+        cancleAddEstate: function(){
+            this.$router.go({
+                name: 'index'
+            })
         }
     }
+}
 </script>

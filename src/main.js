@@ -27,8 +27,8 @@ Vue.http.interceptors.push((request, next) => {
 	request.timeout = 20000; //请求超时20秒
 	// console.log(request)
 	// if(request.url.indexOf('/lock/upload')>0){
-		// request.headers['Content-type'] = 'multipart/form-data';
-		// console.log('1111');
+	// request.headers['Content-type'] = 'multipart/form-data';
+	// console.log('1111');
 	// }
 	request.credentials = true;
 	next();
@@ -36,9 +36,9 @@ Vue.http.interceptors.push((request, next) => {
 
 // 路由配置
 var router = new VueRouter({
-    // 是否开启History模式的路由,默认开发环境开启,生产环境不开启。如果生产环境的服务端没有进行相关配置,请慎用
-    // history: Env != 'production',
-    history: true,
+	// 是否开启History模式的路由,默认开发环境开启,生产环境不开启。如果生产环境的服务端没有进行相关配置,请慎用
+	// history: Env != 'production',
+	history: true,
 	hashbang: false,
 	root: '',
 	saveScrollPosition: true,
@@ -46,13 +46,13 @@ var router = new VueRouter({
 });
 
 router.beforeEach(function (transition) {
-    window.scrollTo(0, 0);
-    transition.next();
+	window.scrollTo(0, 0);
+	transition.next();
 });
 
 router.afterEach(function (transition) {
-    document.title = transition.to.title || '天策房屋管理后台';
-    //微信修改title hack
+	document.title = transition.to.title || '天策房屋管理后台';
+	//微信修改title hack
 	// var iframe = document.createElement('iframe');
 	// iframe.style.opacity = 0;
 	// iframe.src = "/favicon.ico"

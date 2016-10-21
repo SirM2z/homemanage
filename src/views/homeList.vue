@@ -1,5 +1,5 @@
 <style>
-    .list-box{
+    .list-box {
         /*padding: 50px 250px 100px;*/
         width: 998px;
         min-width: 998px;
@@ -8,7 +8,8 @@
         height: auto !important;
         height: 100%;
     }
-    .list-box .info-body{
+    
+    .list-box .info-body {
         margin-top: 20px;
         width: 100%;
         padding: 20px 50px;
@@ -18,56 +19,69 @@
         display: flex;
         align-items: center;
     }
-    .list-box .info-body .body-left{
+    
+    .list-box .info-body .body-left {
         flex: 1;
     }
-    .list-box .info-body .body-left>div{
+    
+    .list-box .info-body .body-left>div {
         height: 24px;
         line-height: 24px;
     }
-    .list-box .info-body .body-btn>button{
+    
+    .list-box .info-body .body-btn>button {
         display: block;
     }
-    .list-box .info-body .body-btn>button.btn-primary{
-        margin-bottom: 10px; 
+    
+    .list-box .info-body .body-btn>button.btn-primary {
+        margin-bottom: 10px;
     }
-    .list-box .home-list{
+    
+    .list-box .home-list {
         margin-top: 50px;
     }
-    .list-box .table>tbody>tr>td{
+    
+    .list-box .table>tbody>tr>td {
         padding: 12px;
     }
-    .list-box .table>tbody>tr>td>a{
+    
+    .list-box .table>tbody>tr>td>a {
         cursor: pointer;
     }
+    
     .list-box .modal-ne .delete-bottom {
         padding-top: 30px;
         height: 150px;
     }
+    
     .list-box .modal-ne .delete-bottom .delete-text {
         margin-bottom: 30px;
     }
+    
     .list-box .head-title {
         color: #202224;
         font-size: 24px;
         font-weight: bold;
         margin: 50px 0 30px;
     }
+    
     .list-box .info-box {
         color: #161617;
         font-size: 16px;
         margin-bottom: 20px;
     }
+    
     .list-box .list-text {
         font-weight: bold;
     }
+    
     .list-box .note-box {
         color: #161617;
         font-size: 16px;
     }
 </style>
 <template>
-    <nav-list></nav-list>
+    <navhead></navhead>
     <div class="list-box">
         <div class="row info-head">
             <div class="col-md-8">
@@ -117,151 +131,164 @@
     <foot></foot>
 </template>
 <script>
-    import navList from '../components/comon/navList.vue'
-    import Modal from '../components/popup/Modal.vue'
-    import {showModal, hideModal, showLoading, showMsg} from '../vuex/actions/popupActions'
-    import foot from '../components/comon/foot.vue'
-    import {base_url} from '../common.js'
-    export default {
-        vuex: {
-            actions: {
-                showModal,
-                hideModal,
-                showLoading,
-                showMsg
-            }
-        },
-        data: function() {
-            return {
-                //房产信息
-                get_estate_name: '',
-                get_estate_address: '',
-                //锁列表'
-                lock_list: null,
-                get_estate_gwNames: '',
-                get_estate_note: ''
-            }
-        },
-        ready: function() {
-            this.getEstate();
-            this.getLockList();
-        },
-        components: {
-            Modal,
-            navList,
-            foot
-        },
-        beforeDestroy: function() {
+import Modal from '../components/popup/Modal.vue'
+import {showModal, hideModal, showLoading, showMsg} from '../vuex/actions/popupActions'
+import {base_url} from '../common.js'
+import navhead from '../components/comon/navhead.vue'
+import foot from '../components/comon/foot.vue'
+export default {
+    vuex: {
+        actions: {
+            showModal,
+            hideModal,
+            showLoading,
+            showMsg
+        }
+    },
+    data: function() {
+        return {
+            //房产信息
+            get_estate_name: '',
+            get_estate_address: '',
+            //锁列表'
+            lock_list: null,
+            get_estate_gwNames: '',
+            get_estate_note: ''
+        }
+    },
+    ready: function() {
+        this.getEstate();
+        this.getLockList();
+    },
+    components: {
+        Modal,
+        navhead,
+        foot
+    },
+    beforeDestroy: function() {
 
-        },
-        methods: {
-            getEstate: function(){
-                let _this = this;
-                this.$http.post(base_url+'/lock/getEstate', {
-                    id : this.$route.query.id
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！', 'error');
-                        return
-                    }
-                    let resData = response.json();
-                    //console.log(resData);
-                    if (resData.code === 0) {
-                        this.get_estate_name = resData.data.name;
-                        this.get_estate_address = resData.data.address;
-                        this.get_estate_gwNames = resData.data.gwNames;
-                        this.get_estate_note = resData.data.note;
+    },
+    methods: {
+        getEstate: function(){
+            let _this = this;
+            this.$http.post(base_url+'/lock/getEstate', {
+                id : this.$route.query.id
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function(response) {
+                if (!response.ok) {
+                    showMsg(this.$store, '请求超时！', 'error');
+                    return
+                }
+                let resData = response.json();
+                //console.log(resData);
+                if (resData.code === 0) {
+                    this.get_estate_name = resData.data.name;
+                    this.get_estate_address = resData.data.address;
+                    this.get_estate_gwNames = resData.data.gwNames;
+                    this.get_estate_note = resData.data.note;
 
-                    }  
-                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
-                        showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: 'login'});
-                    }
-                    else {
-                        showMsg(this.$store, resData.msg, 'error')
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！', 'error')
-                })
-            },
-            getLockList:function(){
-                let _this = this;
-                this.$http.post(base_url+'/lock/getLockList', {
-                    id : this.$route.query.id  
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！', 'error');
-                        return
-                    }
-                    let resData = response.json();
-                    //console.log(resData.data);
-                    if (resData.code === 0) {
-                        this.lock_list = resData.data;
-                    }  
-                    else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
-                        showMsg(this.$store, '请先登陆！', 'error')
-                        _this.$router.go({name: 'login'});
-                    }
-                    else {
-                        showMsg(this.$store, resData.msg, 'error')
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！', 'error')
-                })
-            },
-            deleteEstate: function(){
-                let _this = this;
-                this.$http.post(base_url+'/lock/delEstate', { 
-                    id : this.$route.query.id
-                }).then(function(response) {
-                    if (!response.ok) {
-                        showMsg(this.$store, '请求超时！', 'error');
-                        return
-                    }
-                    let resData = response.json();
-                    //console.log(resData);
-                    if (resData.code === 0) {
-                        showMsg(this.$store, "删除成功!");
-                        _this.hideModal(_this.$store);
-                        _this.$router.go({
-                            name: 'index'
-                        })
-                    } else {
-                        showMsg(this.$store, resData.msg, 'error')
-                    }
-                }, function(response) {
-                    showMsg(this.$store, '请求超时！', 'error')
-                })
-            },
-            goPropertyEdit: function(){
-                this.$router.go({
-                    name: 'propertyEdit',
-                    query: {
-                        id: this.$route.query.id
-                    }
-                })
-            },
-            goHomeInfo: function(name,id,status,power){
-                if(power == "正常") {
-                    power = 1;
-                }else {
-                    power = 0;
+                }  
+                else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
+                    showMsg(this.$store, '请先登陆！', 'error')
+                    _this.$router.go({name: 'login'});
                 }
-                if(status == "在线") {
-                    status = 1;
-                }else {
-                    status = 0;
+                else {
+                    showMsg(this.$store, resData.msg, 'error')
                 }
-                this.$router.go({
-                    name: 'homeInfo',
-                    query: {
-                        estate_name: name,
-                        id: id,
-                        status: status,
-                        power: power
-                    }
-                })
+            }, function(response) {
+                showMsg(this.$store, '请求超时！', 'error')
+            })
+        },
+        getLockList:function(){
+            let _this = this;
+            this.$http.post(base_url+'/lock/getLockList', {
+                id : this.$route.query.id  
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function(response) {
+                if (!response.ok) {
+                    showMsg(this.$store, '请求超时！', 'error');
+                    return
+                }
+                let resData = response.json();
+                //console.log(resData.data);
+                if (resData.code === 0) {
+                    this.lock_list = resData.data;
+                }  
+                else if(resData.code === 10102 || resData.code === 10010 || resData.code === 10014){
+                    showMsg(this.$store, '请先登陆！', 'error')
+                    _this.$router.go({name: 'login'});
+                }
+                else {
+                    showMsg(this.$store, resData.msg, 'error')
+                }
+            }, function(response) {
+                showMsg(this.$store, '请求超时！', 'error')
+            })
+        },
+        deleteEstate: function(){
+            let _this = this;
+            this.$http.post(base_url+'/lock/delEstate', { 
+                id : this.$route.query.id
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function(response) {
+                if (!response.ok) {
+                    showMsg(this.$store, '请求超时！', 'error');
+                    return
+                }
+                let resData = response.json();
+                //console.log(resData);
+                if (resData.code === 0) {
+                    showMsg(this.$store, "删除成功!");
+                    _this.hideModal(_this.$store);
+                    _this.$router.go({
+                        name: 'index'
+                    })
+                } else {
+                    showMsg(this.$store, resData.msg, 'error')
+                }
+            }, function(response) {
+                showMsg(this.$store, '请求超时！', 'error')
+            })
+        },
+        goPropertyEdit: function(){
+            this.$router.go({
+                name: 'propertyEdit',
+                query: {
+                    id: this.$route.query.id
+                }
+            })
+        },
+        goHomeInfo: function(name,id,status,power){
+            if(power == "正常") {
+                power = 1;
+            }else {
+                power = 0;
             }
+            if(status == "在线") {
+                status = 1;
+            }else {
+                status = 0;
+            }
+            this.$router.go({
+                name: 'homeInfo',
+                query: {
+                    estate_name: name,
+                    id: id,
+                    status: status,
+                    power: power,
+                    homelistid: this.$route.query.id
+                }
+            })
         }
     }
+}
 </script>
