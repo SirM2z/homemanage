@@ -59,8 +59,7 @@
     }
 </style>
 <template>
-    <div id="particles-js" style="background-color: rgb(46, 147, 242); background-image: url("
-        "); background-size: cover; background-repeat: no-repeat; background-position: 50% 50%;"></div>
+    <div id="particles-js" style="background-color: rgb(46, 147, 242); background-size: cover; background-repeat: no-repeat; background-position: 50% 50%;"></div>
     <div class="login-box">
         <div class="login-modal">
             <div class="form-group text-title">
