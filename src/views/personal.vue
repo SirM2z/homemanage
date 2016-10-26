@@ -8,66 +8,59 @@
         height: auto !important;
         height: 100%;
     }
-    
+    .personal-box .head-title {
+        color: #202224;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 50px 0 35px;
+    }
+    .personal-box .item-title {
+        font-size: 16px;
+        font-weight: bold;
+    }
     .personal-box .btn-s,
     .btn-c {
         margin-right: 16px;
         width: 100px;
     }
-    
     .personal-box .personal-info .info-item {
         overflow: hidden;
         padding: 15px;
     }
-    
     .personal-box .personal-info .info-item>div {
         padding-right: 15px;
     }
-    
     .personal-box .personal-info .info-item .pass-link>div:first-child {
         padding-bottom: 10px;
     }
-    
     .personal-box .personal-info .info-item .name-title {
         height: 34px;
         line-height: 34px;
     }
-    
     .personal-box .personal-info .item-title {
         margin-right: 25px;
     }
-    
     .personal-box .personal-info .user-img {
         width: 80px;
         height: 80px;
     }
-    
-    .personal-box .info-head {
-        margin-bottom: 35px;
-    }
-    
     .personal-box .pass-btn {
         margin-top: 20px;
     }
-
     .personal-box .modal-ne .modal-item .tel-input {
         width: 300px;
     }
-    
     .personal-box .modal-ne .modal-item .code-input {
         width: 200px;
     }
-    
     .personal-box .btn-verifi {
         margin-top: -5px;
     }
-    
     .personal-box .btn-verifi:focus,
     .personal-box .btn-verifi:active:focus {
         outline: none;
         outline-offset: -2px;
     }
-    
     .personal-box .verifi_time_down {
         display: inline-block;
         height: 40px;

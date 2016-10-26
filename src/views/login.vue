@@ -118,8 +118,8 @@
                 <div class="modal-head">申请开通</div>
                 <div class="modal-bottom">
                     <p>目前管理平台仍未开启注册功能，如需使用请联系客服进行开通：</p>
-                    <p>热线电话：0571-87654321</p>
-                    <p>客服邮箱：service@pstone.cc</p>
+                    <p>热线电话：0571-87717229</p>
+                    <p>客服邮箱：adf@pstone.cc</p>
                     <button @click="hideModal" class="btn btn-primary btn-confirm fr blue-btn">确认</button>
                 </div>
             </div>

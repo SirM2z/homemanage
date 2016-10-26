@@ -8,51 +8,64 @@
         height: auto !important;
         height: 100%;
     }
-    
+    .home-box .head-title {
+        color: #202224;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 50px 0 30px;
+    }
+    .home-box .info-title {
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .home-box .info-item {
+        margin-bottom: 20px;
+    }
     .home-box .info-head .status-btn {
-        margin-top: 20px;
+        margin-top: 41px;
         border: 1px solid #e5e5e5;
         width: 100%;
         border-radius: 50px;
         text-align: center;
         height: 37px;
         line-height: 37px;
-    }
-    
+    } 
     .home-box .info-head .status-green {
         color: #2aa160;
     }
-    
     .home-box .info-head .status-red {
         color: #d9736a;
     }
-    
     .home-box .info-body {
-        margin-top: 20px;
         width: 100%;
-        padding: 10px 50px;
+        padding: 20px 29px;
         border: 1px solid #e5e5e5;
         border-radius: 3px;
         background-color: #fafafa;
     }
-    
     .home-box .info-body .btn-row-dev {
         height: 34px;
         line-height: 34px;
     }
-    
-    .home-box .table>tbody>tr>td {
-        padding: 12px;
+    .home-box .info-tab ul {
+        margin-bottom: 0;
     }
-    
+    .home-box .table>tbody>tr>td {
+        padding: 18px 12px 18px 30px;
+        height: 60px;
+    }
+    .home-box tr:first-child td {
+        border-top: none;
+    }
     .home-box .info-tab {
         margin: 30px 0;
     }
-    
+    .home-box .info-tab ul>li>a {
+        padding:10px 29px;
+    }
     .home-box .info-tab .no-password {
         width: 100%;
     }
-    
     .home-box .info-tab .no-password .no-password-btn {
         margin: 50px auto;
         width: 150px;
@@ -65,146 +78,119 @@
         background: #f5f9fc url("../images/addPass.png") 15px no-repeat;
         padding-left: 28px;
     }
-    
     .home-box .info-tab .rent-pass-manage .rent-password-btn {
         padding-left: 22px;
         cursor: pointer;
     }
-    
     .home-box .info-tab .rent-pass-manage .ice-password {
         background: url("../images/icePass.png") center left no-repeat;
     }
-    
     .home-box .info-tab .rent-pass-manage .rene-password {
         background: url("../images/renePass.png") center left no-repeat;
     }
-    
     .home-box .info-tab .rent-pass-manage .change-password {
         background: url("../images/changePass.png") center left no-repeat;
     }
-    
     .home-box .info-tab .rent-pass-manage .delete-password {
         background: url("../images/deletePass.png") center left no-repeat;
     }
-    
     .home-box .info-tab .rent-pass-manage .solve-password {
         background: url("../images/solvePass.png") center left no-repeat;
     }
-    
     .home-box .info-tab .rent-pass-manage .reset-password {
         background: url("../images/resetPass.png") center left no-repeat;
     }
-    
     .home-box .info-tab .rent-pass-manage .no-use {
         color: #b3d5f3;
     }
-    
     .home-box .info-tab .ready-pass {
         cursor: pointer;
     }
-    
     .home-box .info-tab .ready-pass .no-set {
         color: #9f9f9f;
     }
-    
     .home-box .info-tab .ready-pass .tr-click {
         background-color: #f5f9fc;
     }
-    
     .home-box .info-tab .page {
         margin-right: 50px;
     }
-    
     .home-box .modal-ne .name-title {
         margin-right: 20px;
     }
-    
     .home-box .modal-ne .modal-bottom.add-password {
         height: 380px;
     }
-    
     .home-box .modal-ne .another-password,
     .home-box .modal-ne .change-another-password {
         height: 300px;
     }
-    
     .home-box .modal-ne .btn-code-random {
         margin-left: -80px;
         height: 34px;
     }
-    
     .home-box .modal-ne .admin-password {
         padding-top: 20px;
         border-top: 1px dashed rgba(0, 0, 0, 0.15);
     }
-    
     .home-box .modal-ne .info-edit {
         height: 380px;
     }
-    
     .home-box .btn-code-random:focus,
     .home-box .btn-code-random:active:focus {
         outline: none;
         outline-offset: -2px;
     }
-    
     .home-box .operation-day {
         padding: 20px 0;
         border-bottom: solid 1px rgba(0, 0, 0, 0.1);
     }
-    
     .home-box .operation-time {
         padding: 15px 0;
         margin-left: 25px;
         box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.1);
     }
-    
     .home-box .btn-more {
         margin: 15px;
     }
-    
     .home-box .bycode-btn {
         position: relative;
     }
-    
     .home-box .bycode-btn>div {
         position: absolute;
         width: 100px;
         color: #0275d8;
         padding-left: 28px;
     }
-    
     .home-box .bycode-btn>div.bycode-change {
         right: 80%;
         background: url("../images/changePass.png") center left no-repeat;
     }
-    
     .home-box .bycode-btn>div.bycode-del {
         right: 50%;
         background: url("../images/deletePass.png") center left no-repeat;
     }
-    
     .home-box .bycode-btn>div.bycode-add {
         right: 100%;
         background: url("../images/addPWD.png") center left no-repeat;
     }
-    
     .home-box .modal-ne .modal-item input.TC-input {
         background-color: #fff;
         width: 219px;
     }
-    
     .home-box .head-title {
         font-size: 24px;
         font-weight: bold;
     }
-
     .home-box a.go-back{
         cursor: pointer;
     }
 	.home-box .clear-box{
 		clear: both;
 	}
+    .home-box .page>div {
+        margin-bottom: 15px;
+    }
 </style>
 <template>
     <navhead></navhead>
@@ -232,16 +218,16 @@
             </div>
             <div v-else>
                 <div class="row">
-                    <div class="col-md-4">租客姓名：{{tenant_data.name}}</div>
-                    <div class="col-md-4">联系方式：{{tenant_data.phone}}</div>
+                    <div class="col-md-4 info-item"><span class="info-title">租客姓名：</span>{{tenant_data.name}}</div>
+                    <div class="col-md-4 info-item"><span class="info-title">联系方式：</span>{{tenant_data.phone}}</div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4 btn-row-dev">身份证：{{tenant_data.IDcard}}</div>
-                    <div class="col-md-4 btn-row-dev">合同到期时间：{{tenant_data.time}}</div>
+                    <div class="col-md-4 btn-row-dev info-item"><span class="info-title">身份证：</span>{{tenant_data.IDcard}}</div>
+                    <div class="col-md-4 btn-row-dev info-item"><span class="info-title">合同到期时间：</span>{{tenant_data.time}}</div>
                     <div class="col-md-4"><button type="button" class="btn btn-primary fr blue-btn" @click="changeModalType('set_tenant','change')">修改信息</button></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">入住情况：{{tenant_data.status==1?"未入住":"已入住"}}</div>
+                    <div class="col-md-3"><span class="info-title info-item">入住情况：</span>{{tenant_data.status==1?"未入住":"已入住"}}</div>
                 </div>
             </div>
         </div>

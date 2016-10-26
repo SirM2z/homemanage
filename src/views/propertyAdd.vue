@@ -8,51 +8,50 @@
         height: auto !important;
         height: 100%;
     }
-    
+    .propertyadd-box .head-title {
+        color: #202224;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 50px 0 35px;
+    }
+    .propertyadd-box .item-title {
+        font-size: 16px;
+        font-weight: bold;
+    }
     .propertyadd-box button {
         margin-right: 10px;
         width: 150px;
     }
-    
     .propertyadd-box .propertyadd-info .info-item {
         overflow: hidden;
         padding: 15px;
     }
-    
     .propertyadd-box .propertyadd-info .info-item.wg-item {
-        padding-top: 10px;
+        height: 64px;
     }
-
     .propertyadd-box .propertyadd-info .info-item.wg-item .wg-note{
         height: 34px;
         line-height: 34px;
     }
-    
     .propertyadd-box .propertyadd-info .info-item>div {
         padding-right: 15px;
     }
-    
     .propertyadd-box .propertyadd-info .info-item .pass-link>div:first-child {
         padding-bottom: 10px;
     }
-    
     .propertyadd-box .propertyadd-info .info-item .name-title {
         height: 34px;
         line-height: 34px;
     }
-    
     .propertyadd-box .propertyadd-info .info-item .name-title.wg-title {
         line-height: 65px;
     }
-    
     .propertyadd-box .propertyadd-info .item-title {
         margin-right: 25px;
     }
-    
     .propertyadd-box .propertyadd-info .add-wg {
         width: 100%;
     }
-    
     .propertyadd-box .propertyadd-info .add-wg-btn {
         width: 180px;
         border: 1px dashed #e5e5e5;
@@ -64,15 +63,12 @@
         background: #f5f9fc url("../images/addPass.png") 35px no-repeat;
         padding-left: 6px;
     }
-    
     .propertyadd-box .propertyadd-info .item-address {
         width: 600px;
     }
-    
     .propertyadd-box .propertyadd-info .wg-options {
         width: 800px;
     }
-    
     .propertyadd-box .propertyadd-info .wg-option {
         display: inline-block;
         height: 40px;
@@ -81,37 +77,27 @@
         margin-right: 25px;
         margin-bottom: 15px;
     }
-    
-    .propertyadd-box .info-head {
-        margin-bottom: 35px;
-    }
-    
     .propertyadd-box .pass-btn {
         margin-top: 20px;
     }
-    
     .propertyadd-box .btn-s,
     .propertyadd-box .btn-c {
         margin-right: 16px;
         width: 100px;
     }
-
     .propertyadd-box .list {
         overflow: hidden;
         width: 600px;
     }
-
     .propertyadd-box .list-item {
         height: 34px;
         line-height: 34px;
         margin: 0 15px 10px 0;
     }
-
     .propertyadd-box .label-checkbox {
         cursor: pointer;
         font-weight: 500;
     }
-
     .propertyadd-box .checkbox {
         cursor: pointer;
         display: inline-block;

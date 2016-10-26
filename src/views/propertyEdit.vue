@@ -8,51 +8,50 @@
         height: auto !important;
         height: 100%;
     }
-    
+    .propertyedit-box .head-title {
+        color: #202224;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 50px 0 35px;
+    }
+    .propertyedit-box .item-title {
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .propertyedit-box .wg-item {
+        height: 64px;
+    }
     .propertyedit-box button {
         margin-right: 16px;
         width: 100px;
     }
-    
     .propertyedit-box .propertyedit-info .info-item {
         overflow: hidden;
         padding: 15px;
-    }
-    
-    .propertyedit-box .propertyedit-info .info-item.wg-item {
-        padding-top: 10px;
-    }
-
+    }    
     .propertyedit-box .propertyedit-info .info-item.wg-item .wg-note{
         height: 34px;
         line-height: 34px;
     }
-    
     .propertyedit-box .propertyedit-info .info-item>div {
         padding-right: 15px;
     }
-    
     .propertyedit-box .propertyedit-info .info-item .pass-link>div:first-child {
         padding-bottom: 10px;
     }
-    
     .propertyedit-box .propertyedit-info .info-item .name-title {
         height: 34px;
         line-height: 34px;
     }
-    
     .propertyedit-box .propertyedit-info .info-item .name-title.wg-title {
         line-height: 65px;
     }
-    
     .propertyedit-box .propertyedit-info .item-title {
         margin-right: 25px;
     }
-    
     .propertyedit-box .propertyedit-info .add-wg {
         width: 100%;
     }
-    
     .propertyedit-box .propertyedit-info .add-wg-btn {
         width: 180px;
         border: 1px dashed #e5e5e5;
@@ -64,15 +63,12 @@
         background: #f5f9fc url("../images/addPass.png") 35px no-repeat;
         padding-left: 6px;
     }
-    
     .propertyedit-box .propertyedit-info .item-address {
         width: 600px;
     }
-    
     .propertyedit-box .propertyedit-info .wg-options {
         width: 800px;
     }
-    
     .propertyedit-box .propertyedit-info .wg-option {
         display: inline-block;
         height: 40px;
@@ -81,31 +77,22 @@
         margin-right: 25px;
         margin-bottom: 15px;
     }
-    
-    .propertyedit-box .info-head {
-        margin-bottom: 35px;
-    }
-    
     .propertyedit-box .pass-btn {
         margin-top: 20px;
     }
-
     .propertyedit-box .list {
         overflow: hidden;
         width: 600px;
     }
-
     .propertyedit-box .list-item {
         height: 34px;
         line-height: 34px;
         margin: 0 15px 10px 0;
     }
-
     .propertyedit-box .label-checkbox {
         cursor: pointer;
         font-weight: 500;
     }
-
     .propertyedit-box .checkbox {
         cursor: pointer;
         display: inline-block;
@@ -113,7 +100,6 @@
         z-index: 10;
         margin-right: 5px;
     }
-
     .propertyedit-box .checkbox:before {
         -webkit-transition: all 0.3s ease-in-out;
         -moz-transition: all 0.3s ease-in-out;

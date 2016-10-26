@@ -8,73 +8,62 @@
         height: auto !important;
         height: 100%;
     }
-    
     .list-box .info-body {
-        margin-top: 20px;
         width: 100%;
-        padding: 20px 50px;
+        padding: 20px 29px;
         border: 1px solid #e5e5e5;
         border-radius: 3px;
         background-color: #fafafa;
         display: flex;
         align-items: center;
     }
-    
     .list-box .info-body .body-left {
         flex: 1;
     }
-    
     .list-box .info-body .body-left>div {
-        height: 24px;
-        line-height: 24px;
+        height: 16px;
+        line-height: 16px;
     }
-    
     .list-box .info-body .body-btn>button {
         display: block;
     }
-    
     .list-box .info-body .body-btn>button.btn-primary {
         margin-bottom: 10px;
     }
-    
     .list-box .home-list {
         margin-top: 50px;
     }
-    
-    .list-box .table>tbody>tr>td {
-        padding: 12px;
+    .list-box .home-list th {
+        padding-left: 30px;
     }
-    
+    .list-box .table>tbody>tr>td {
+        padding: 18px 12px 18px 30px;
+        height: 60px;
+    }
     .list-box .table>tbody>tr>td>a {
         cursor: pointer;
     }
-    
     .list-box .modal-ne .delete-bottom {
         padding-top: 30px;
         height: 150px;
     }
-    
     .list-box .modal-ne .delete-bottom .delete-text {
         margin-bottom: 30px;
     }
-    
     .list-box .head-title {
         color: #202224;
         font-size: 24px;
         font-weight: bold;
         margin: 50px 0 30px;
     }
-    
     .list-box .info-box {
         color: #161617;
         font-size: 16px;
         margin-bottom: 20px;
     }
-    
     .list-box .list-text {
         font-weight: bold;
     }
-    
     .list-box .note-box {
         color: #161617;
         font-size: 16px;
