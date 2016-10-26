@@ -150,7 +150,7 @@
         <div class="propertyadd-info">
             <div class="info-item">
                 <div class="fl item-title name-title">房产名称：</div>
-                <div class="fl"><input type="text" v-model="name" class="form-control" id="name"></div>
+                <div class="fl"><input type="text" v-model="name" maxlength="10" class="form-control" id="name"></div>
             </div>
             <div class="info-item">
                 <div class="fl item-title">房产图片：</div>
@@ -158,7 +158,7 @@
             </div>
             <div class="info-item">
                 <div class="fl item-title name-title">房产地址：</div>
-                <div class="fl"><input type="text" v-model="address" class="form-control item-address" id="name"></div>
+                <div class="fl"><input type="text" v-model="address" maxlength="10" class="form-control item-address" id="name"></div>
             </div>
             <div class="info-item wg-item">
                 <div class="fl item-title name-title">网关绑定：</div>

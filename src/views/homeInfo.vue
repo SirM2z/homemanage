@@ -364,11 +364,11 @@
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">租客姓名</div>
-                        <div class="fl"><input type="text" v-model="tenant_data_temp.name" class="form-control"></div>
+                        <div class="fl"><input type="text" v-model="tenant_data_temp.name" maxlength="10" class="form-control"></div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">联系方式</div>
-                        <div class="fl"><input type="number" v-model="tenant_data_temp.phone" class="form-control"></div>
+                        <div class="fl"><input type="number" v-model="tenant_data_temp.phone" maxlength="11" class="form-control"></div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">身份证号</div>
@@ -392,12 +392,12 @@
                 <div class="modal-bottom add-password">
                     <div class="modal-item">
                         <div class="fl item-title name-title">密码备注名</div>
-                        <div class="fl"><input type="text" v-model="add_TC.name" class="form-control"></div>
+                        <div class="fl"><input type="text" v-model="add_TC.name" maxlength="10" class="form-control"></div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">输入租客密码</div>
                         <div class="fl">
-                            <input type="number" v-model="add_TC.password" class="form-control fl" placeholder="请输入4~16位数字密码">
+                            <input type="number" v-model="add_TC.password" maxlength="16" class="form-control fl" placeholder="请输入4~16位数字密码">
                             <button @click="generatePass('add')" class="btn btn-link btn-code-random blue-text">随机生成</button>
                         </div>
                     </div>
@@ -432,12 +432,12 @@
                 <div class="modal-bottom add-password">
                     <div class="modal-item">
                         <div class="fl item-title name-title">密码备注名</div>
-                        <div class="fl"><input type="text" v-model="modify_TC.name" class="form-control"></div>
+                        <div class="fl"><input type="text" v-model="modify_TC.name" maxlength="10" class="form-control"></div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">输入租客密码</div>
                         <div class="fl">
-                            <input type="number" v-model="modify_TC.password" class="form-control fl" placeholder="请输入4~16位数字密码">
+                            <input type="number" v-model="modify_TC.password" maxlength="16" class="form-control fl" placeholder="请输入4~16位数字密码">
                             <button @click="generatePass('change')" class="btn btn-link btn-code-random blue-text">随机生成</button>
                         </div>
                     </div>
@@ -534,7 +534,7 @@
                 <div class="modal-bottom check-password">
                     <div class="modal-item">
                         <div class="fl item-title name-title">输入原有密码</div>
-                        <div class="fl"><input type="password" class="form-control" placeholder="输入4~16位密码"></div>
+                        <div class="fl"><input type="password" maxlength="16" class="form-control" placeholder="输入4~16位密码"></div>
                     </div>
                     <button class="btn btn-default btn-cancle" @click="hideModal">取消</button>
                     <button class="btn btn-primary btn-confirm blue-btn" @click="hideModal">下一步</button>
@@ -546,12 +546,12 @@
                 <div class="modal-bottom another-password">
                     <div class="modal-item">
                         <div class="fl item-title name-title">密码备注名</div>
-                        <div class="fl"><input type="text" v-model="add_code.name" class="form-control"></div>
+                        <div class="fl"><input type="text" v-model="add_code.name" maxlength="10" class="form-control"></div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">输入新租客密码</div>
                         <div class="fl">
-                            <input type="password" v-model="add_code.password" class="form-control fl" placeholder="请输入4~16位数字密码">
+                            <input type="password" v-model="add_code.password" maxlength="16" class="form-control fl" placeholder="请输入4~16位数字密码">
                         </div>
                     </div>
                     <div class="modal-item admin-password">
@@ -582,12 +582,12 @@
                 <div class="modal-bottom change-another-password">
                     <div class="modal-item">
                         <div class="fl item-title name-title">密码备注名</div>
-                        <div class="fl"><input type="text" v-model="modify_code.name" class="form-control"></div>
+                        <div class="fl"><input type="text" v-model="modify_code.name" maxlength="10" class="form-control"></div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">输入新租客密码</div>
                         <div class="fl">
-                            <input type="password" v-model="modify_code.password" class="form-control fl" placeholder="请输入4~16位数字密码">
+                            <input type="password" v-model="modify_code.password" maxlength="16" class="form-control fl" placeholder="请输入4~16位数字密码">
                         </div>
                     </div>
                     <div class="modal-item admin-password">
@@ -1203,7 +1203,7 @@ export default {
                 showMsg(this.$store, '租客姓名不能超过10个字！', 'warning');
                 return;
             }
-            if(!/^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\d{8}$/i.test(this.tenant_data_temp.phone.trim()))
+            if(!/^(13[0-9]|14[0-9]|15[0-9]|17[0-9]|18[0-9])\d{8}$/i.test(this.tenant_data_temp.phone.trim()))
 			{
                 showMsg(this.$store, '租客联系方式请填写正确手机号！', 'warning');
                 return;

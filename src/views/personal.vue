@@ -80,7 +80,7 @@
         <div class="personal-info">
             <div class="info-item">
                 <div class="fl item-title name-title">姓　　名：</div>
-                <div class="fl"><input type="text" class="form-control" id="name" v-model="user_name"></div>
+                <div class="fl"><input type="text" class="form-control" id="name" v-model="user_name" maxlength="10"></div>
             </div>
             <!--<div class="info-item">
                 <div class="fl item-title">个人照片：</div>
@@ -108,7 +108,7 @@
                     <p class="text-muted">为了保障安全，请先验证身份。验证成功后可进行下一步操作。</p>
                     <div class="modal-item">
                         <div class="fl item-title name-title">注册手机号</div>
-                        <div class="fl"><input type="text" v-model="verifi_phone" class="form-control tel-input"></div>
+                        <div class="fl"><input type="text" v-model="verifi_phone" maxlength="11" class="form-control tel-input"></div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">输入验证码</div>
@@ -127,11 +127,11 @@
                 <div class="modal-bottom">
                     <div class="modal-item">
                         <div class="fl item-title name-title">输入新密码</div>
-                        <div class="fl"><input type="password" v-model="new_password_verifi" class="form-control" placeholder="输入4~16位密码"></div>
+                        <div class="fl"><input type="password" v-model="new_password_verifi" maxlength="16" class="form-control" placeholder="输入4~16位密码"></div>
                     </div>
                     <div class="modal-item">
                         <div class="fl item-title name-title">再次输入密码</div>
-                        <div class="fl"><input type="password" v-model="new_password" class="form-control" placeholder="输入4~16位密码"></div>
+                        <div class="fl"><input type="password" v-model="new_password" maxlength="16" class="form-control" placeholder="输入4~16位密码"></div>
                     </div>
                     <button @click="cancleChangePass" class="btn btn-default btn-cancle">取消</button>
                     <button @click="sureChangePass" class="btn btn-primary btn-confirm blue-btn">确认</button>
@@ -239,7 +239,7 @@ export default {
                 showMsg(this.$store, '请填写手机号！', 'warning');
                 return;
             }
-            if(!/^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\d{8}$/i.test(this.verifi_phone.trim()))
+            if(!/^(13[0-9]|14[0-9]|15[0-9]|17[0-9]|18[0-9])\d{8}$/i.test(this.verifi_phone.trim()))
             {
                 showMsg(this.$store, '请填写正确手机号！', 'warning');
                 return;

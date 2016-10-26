@@ -170,7 +170,7 @@
 				<input type="text" v-model="searchFind" placeholder="输入要搜索的关键词">
 				<div @click="searchHome" class="search-img text-center"><img src="../../images/search.png" alt=""></div>
 				<ul v-show="show_search" class="search-list">
-					<li v-for="item in searchlist" @click="goHomeList(item.estate_id)" class="list-item">item.name</li>
+					<li v-for="item in searchlist" @click="goHomeList(item.estate_id)" class="list-item">{{item.name}}</li>
 				</ul>
 			</div>
 			<ul v-show="show_bottom" class="body-bottom">
