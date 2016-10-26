@@ -220,6 +220,10 @@ export default {
         },
         changeModalType:function(type){
             this.modal_type = type;
+            this.verifi_phone = '';
+            this.verifi_code = '';
+            this.new_password_verifi= '',
+            this.new_password= ''
             // console.log(this.modal_type);
             this.showModal();
         },
@@ -280,11 +284,15 @@ export default {
         cancleVerifi:function(){
             this.verifi_time = 0;
             this.verifi_code = '';
+            this.verifi_phone= '';
             this.hideModal();
         },
         cancleChangePass:function(){
             this.modal_type = 'verifi';
             this.verifi_code = '';
+            this.verifi_phone= '',
+            this.new_password_verifi= '',
+            this.new_password= ''
             this.hideModal();
         },
         sureChangePass:function(){
@@ -295,6 +303,10 @@ export default {
             }
             if(this.new_password_verifi.trim() != this.new_password.trim()){
                 showMsg(this.$store, '两次密码输入不一致！', 'warning');
+                return;
+            }
+            if(this.new_password.trim().length<4 || this.new_password.trim().length>16){
+                showMsg(this.$store, '请填写规定长度的密码！', 'warning');
                 return;
             }
             this.$http.post(base_url+'/user/modifyPassword', {
@@ -314,10 +326,21 @@ export default {
                 // console.log(resData);
                 if (resData.code === 0) {
                     _this.hideModal(_this.$store);
+                    _this.verifi_phone= '',
+                    _this.verifi_code= '',
+                    _this.new_password_verifi= '',
+                    _this.new_password= ''
                     showMsg(this.$store, '修改成功！')
+                    _this.hideModal(_this.$store);
                     //this.getUserInfo({},this.$router);
-                } else {
+                }
+                else if(resData.code === 10017){
+                    showMsg(this.$store, '请检查验证码！', 'warning')
+                    _this.modal_type= 'verifi';
+                }
+                else {
                     showMsg(this.$store, resData.msg, 'error')
+                    _this.hideModal(_this.$store);
                 }
             }, function(response) {
                 showMsg(this.$store, '请求超时！', 'error')
