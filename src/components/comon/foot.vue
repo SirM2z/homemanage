@@ -32,8 +32,8 @@
 <template>
     <div class="foot-box">
         <div class="foot-first">
-            <div class="first">联系方式：0571-88888888</div>
-            <div>客服邮箱：service@pstone.cc</div>
+            <div class="first">联系方式：0571-87717229</div>
+            <div>客服邮箱：adf@pstone.cc</div>
         </div>
         <div class="foot-second">杭州权石科技有限公司 Copyright © 2015 PStone Corporation, All Rights.</div>
     </div>

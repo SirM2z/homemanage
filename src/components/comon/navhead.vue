@@ -26,6 +26,7 @@
 		line-height: 50px;
 		color: #fff;
 		cursor: pointer;
+		padding: 0 20px;
 	}
 
 	.navhead-box .nav-body .body-title:active{
@@ -84,6 +85,7 @@
 		height: 50px;
 		color: #fff;
 		cursor: pointer;
+		padding: 0 20px;
 	}
 	
 	.navhead-box .nav-body .body-content:active {
@@ -127,8 +129,12 @@
 	    line-height: 50px;
 	    padding: 0 20px;
 	    width: 147px;
-	    cursor: pointer;;
+	    cursor: pointer;
 	}
+
+.navhead-box .nav-body .body-bottom>li:hover{
+		background-color: #0169C1;	
+}
 
 	.navhead-box .nav-body .body-bottom>li:active{
 		background-color: #0169C1;

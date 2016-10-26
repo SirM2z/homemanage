@@ -8,11 +8,17 @@
         height: auto !important;
         height: 100%;
     }
+
+    .index-box .head-title {
+        color: #202224;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 50px 0 30px;
+    }
     
     .index-box .fc-items {
         /*display: flex;*/
         padding: 0 50px;
-        margin-top: 20px;
         width: 100%;
         overflow: hidden;
     }
