@@ -117,7 +117,7 @@ npm run dev
 npm run build
 ```
 
-将dist文件夹和index.html文件放入服务器目录，并在index.html文件所在目录建立 src/libs/文件夹，将项目中同级目录（src/libs/）下的文件拷贝到服务器同级目录（src/libs/）下，以后服务器更新只需运行打包命令后，将dist文件夹和index.html文件覆盖进服务器目录中即可
+将dist文件夹和index_prod.html(改名为index.html再放入服务器)文件放入服务器目录，并在服务器index.html文件所在目录建立 src/libs/文件夹，将本地项目中同级目录（src/libs/）下的文件拷贝到服务器同级目录（src/libs/）下，以后服务器更新只需运行打包命令后，将dist文件夹和index_prod.html(改名为index.html)文件覆盖进服务器目录中即可
 
 #### 访问
 在浏览器地址栏输入http://pstonetest.cn/login

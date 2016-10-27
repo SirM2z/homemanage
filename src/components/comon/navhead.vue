@@ -170,7 +170,7 @@
 				<input type="text" v-model="searchFind" placeholder="输入要搜索的关键词">
 				<div @click="searchHome" class="search-img text-center"><img src="../../images/search.png" alt=""></div>
 				<ul v-show="show_search" class="search-list">
-					<li v-for="item in searchlist" @click="goHomeList(item.estate_id)" class="list-item">{{item.name}}</li>
+					<li v-for="item in searchlist" @click="goHomeInfo(item)" class="list-item">{{item.name}}</li>
 				</ul>
 			</div>
 			<ul v-show="show_bottom" class="body-bottom">
@@ -270,12 +270,18 @@ export default {
 			this.show_bottom= false;
 			this.$router.go({name: 'login'})
 		},
-		goHomeList: function(id){
+		goHomeInfo: function(item){
 			this.show_search= false;
+			let power = item.power == "正常"?1:0;
+			let status = item.status==true?1:0;
             this.$router.go({
-                name: 'homeList',
+                name: 'homeInfo',
                 query: {
-                    id: id
+                    estate_name: item.name,
+                    id: item.lock_id,
+                    status: status,
+                    power: power,
+                    homelistid: item.estate_id
                 }
             })
 		}
