@@ -277,7 +277,7 @@ export default {
             this.$router.go({
                 name: 'homeInfo',
                 query: {
-                    estate_name: item.name,
+                    estate_name: item.estate_name,
                     id: item.lock_id,
                     status: status,
                     power: power,
